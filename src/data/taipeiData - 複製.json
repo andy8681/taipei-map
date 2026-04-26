@@ -1,0 +1,326 @@
+[
+  {
+    "id": "北投",
+    "name": "北投區",
+    "residenceData": {
+      "childResidenceCount": 1206
+    },
+    "schoolLocationData": {
+      "count": 1076,
+      "percentage": 8.2
+    },
+    "preschoolTypes": {
+      "totalValid": 1076,
+      "public": { "count": 415, "districtRatio": 38.6 },
+      "nonProfit": { "count": 69, "districtRatio": 6.4 },
+      "quasiPublic": { "count": 180, "districtRatio": 16.7 },
+      "private": { "count": 407, "districtRatio": 37.8 },
+      "workplace": { "count": 5, "districtRatio": 0.5 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 48.44, "109": 48.44, "110": 53.13, "111": 54.41, "112": 55.22, "113": 56.72, "114": 57.58
+      },
+      "populationChange_109_to_114": {
+        "109": -7.36, "110": -10.16, "111": -11.79, "112": -6.93, "113": -4.83, "114": -8.51
+      }
+    }
+  },
+  {
+    "id": "士林",
+    "name": "士林區",
+    "residenceData": {
+      "childResidenceCount": 1266
+    },
+    "schoolLocationData": {
+      "count": 1324,
+      "percentage": 10.1
+    },
+    "preschoolTypes": {
+      "totalValid": 1324,
+      "public": { "count": 536, "districtRatio": 40.5 },
+      "nonProfit": { "count": 169, "districtRatio": 12.8 },
+      "quasiPublic": { "count": 293, "districtRatio": 22.1 },
+      "private": { "count": 325, "districtRatio": 24.5 },
+      "workplace": { "count": 1, "districtRatio": 0.1 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 47.44, "109": 50.00, "110": 58.44, "111": 60.26, "112": 62.03, "113": 62.82, "114": 62.82
+      },
+      "populationChange_109_to_114": {
+        "109": -7.88, "110": -11.38, "111": -12.13, "112": -7.12, "113": -6.61, "114": -8.02
+      }
+    }
+  },
+  {
+    "id": "內湖",
+    "name": "內湖區",
+    "residenceData": {
+      "childResidenceCount": 1694
+    },
+    "schoolLocationData": {
+      "count": 1513,
+      "percentage": 11.6
+    },
+    "preschoolTypes": {
+      "totalValid": 1513,
+      "public": { "count": 557, "districtRatio": 36.8 },
+      "nonProfit": { "count": 211, "districtRatio": 13.9 },
+      "quasiPublic": { "count": 174, "districtRatio": 11.5 },
+      "private": { "count": 566, "districtRatio": 37.4 },
+      "workplace": { "count": 5, "districtRatio": 0.3 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 31.40, "109": 37.08, "110": 41.38, "111": 45.45, "112": 45.45, "113": 44.83, "114": 43.53
+      },
+      "populationChange_109_to_114": {
+        "109": -6.31, "110": -9.28, "111": -10.12, "112": -6.76, "113": -4.63, "114": -7.04
+      }
+    }
+  },
+  {
+    "id": "中山",
+    "name": "中山區",
+    "residenceData": {
+      "childResidenceCount": 966
+    },
+    "schoolLocationData": {
+      "count": 926,
+      "percentage": 7.1
+    },
+    "preschoolTypes": {
+      "totalValid": 926,
+      "public": { "count": 445, "districtRatio": 48.1 },
+      "nonProfit": { "count": 46, "districtRatio": 5.0 },
+      "quasiPublic": { "count": 91, "districtRatio": 9.8 },
+      "private": { "count": 330, "districtRatio": 35.6 },
+      "workplace": { "count": 14, "districtRatio": 1.5 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 31.48, "109": 33.33, "110": 41.82, "111": 42.86, "112": 50.00, "113": 52.94, "114": 54.00
+      },
+      "populationChange_109_to_114": {
+        "109": -8.09, "110": -11.97, "111": -12.79, "112": -5.00, "113": -4.99, "114": -8.25
+      }
+    }
+  },
+  {
+    "id": "大同",
+    "name": "大同區",
+    "residenceData": {
+      "childResidenceCount": 646
+    },
+    "schoolLocationData": {
+      "count": 592,
+      "percentage": 4.5
+    },
+    "preschoolTypes": {
+      "totalValid": 592,
+      "public": { "count": 376, "districtRatio": 63.5 },
+      "nonProfit": { "count": 77, "districtRatio": 13.0 },
+      "quasiPublic": { "count": 67, "districtRatio": 11.3 },
+      "private": { "count": 72, "districtRatio": 12.2 },
+      "workplace": { "count": 0, "districtRatio": 0.0 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 46.15, "109": 44.44, "110": 69.23, "111": 75.00, "112": 81.48, "113": 81.48, "114": 81.48
+      },
+      "populationChange_109_to_114": {
+        "109": -7.61, "110": -9.64, "111": -14.00, "112": -8.65, "113": 0.89, "114": -9.30
+      }
+    }
+  },
+  {
+    "id": "松山",
+    "name": "松山區",
+    "residenceData": {
+      "childResidenceCount": 1036
+    },
+    "schoolLocationData": {
+      "count": 946,
+      "percentage": 7.2
+    },
+    "preschoolTypes": {
+      "totalValid": 946,
+      "public": { "count": 354, "districtRatio": 37.4 },
+      "nonProfit": { "count": 71, "districtRatio": 7.5 },
+      "quasiPublic": { "count": 162, "districtRatio": 17.1 },
+      "private": { "count": 353, "districtRatio": 37.3 },
+      "workplace": { "count": 6, "districtRatio": 0.6 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 30.36, "109": 33.33, "110": 44.83, "111": 49.18, "112": 50.00, "113": 50.00, "114": 49.18
+      },
+      "populationChange_109_to_114": {
+        "109": -8.56, "110": -10.09, "111": -10.16, "112": -5.36, "113": -5.53, "114": -5.50
+      }
+    }
+  },
+  {
+    "id": "萬華",
+    "name": "萬華區",
+    "residenceData": {
+      "childResidenceCount": 676
+    },
+    "schoolLocationData": {
+      "count": 760,
+      "percentage": 5.8
+    },
+    "preschoolTypes": {
+      "totalValid": 760,
+      "public": { "count": 450, "districtRatio": 59.2 },
+      "nonProfit": { "count": 80, "districtRatio": 10.5 },
+      "quasiPublic": { "count": 106, "districtRatio": 13.9 },
+      "private": { "count": 123, "districtRatio": 16.2 },
+      "workplace": { "count": 1, "districtRatio": 0.1 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 72.97, "109": 75.68, "110": 75.68, "111": 78.95, "112": 76.92, "113": 78.95, "114": 81.08
+      },
+      "populationChange_109_to_114": {
+        "109": -9.72, "110": -14.50, "111": -14.28, "112": -8.50, "113": -8.02, "114": -9.89
+      }
+    }
+  },
+  {
+    "id": "中正",
+    "name": "中正區",
+    "residenceData": {
+      "childResidenceCount": 864
+    },
+    "schoolLocationData": {
+      "count": 602,
+      "percentage": 4.6
+    },
+    "preschoolTypes": {
+      "totalValid": 602,
+      "public": { "count": 298, "districtRatio": 49.5 },
+      "nonProfit": { "count": 38, "districtRatio": 6.3 },
+      "quasiPublic": { "count": 73, "districtRatio": 12.1 },
+      "private": { "count": 167, "districtRatio": 27.7 },
+      "workplace": { "count": 26, "districtRatio": 4.3 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 43.75, "109": 48.39, "110": 53.13, "111": 61.54, "112": 61.90, "113": 69.05, "114": 69.05
+      },
+      "populationChange_109_to_114": {
+        "109": -8.00, "110": -9.38, "111": -11.38, "112": -7.20, "113": -6.41, "114": -6.76
+      }
+    }
+  },
+  {
+    "id": "大安",
+    "name": "大安區",
+    "residenceData": {
+      "childResidenceCount": 1528
+    },
+    "schoolLocationData": {
+      "count": 1434,
+      "percentage": 11.0
+    },
+    "preschoolTypes": {
+      "totalValid": 1434,
+      "public": { "count": 515, "districtRatio": 35.9 },
+      "nonProfit": { "count": 201, "districtRatio": 14.0 },
+      "quasiPublic": { "count": 147, "districtRatio": 10.3 },
+      "private": { "count": 553, "districtRatio": 38.6 },
+      "workplace": { "count": 18, "districtRatio": 1.3 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 25.69, "109": 26.36, "110": 30.63, "111": 34.55, "112": 34.86, "113": 39.05, "114": 39.62
+      },
+      "populationChange_109_to_114": {
+        "109": -6.99, "110": -10.74, "111": -11.37, "112": -5.65, "113": -3.69, "114": -6.99
+      }
+    }
+  },
+  {
+    "id": "信義",
+    "name": "信義區",
+    "residenceData": {
+      "childResidenceCount": 863
+    },
+    "schoolLocationData": {
+      "count": 839,
+      "percentage": 6.4
+    },
+    "preschoolTypes": {
+      "totalValid": 839,
+      "public": { "count": 387, "districtRatio": 46.1 },
+      "nonProfit": { "count": 166, "districtRatio": 19.8 },
+      "quasiPublic": { "count": 100, "districtRatio": 11.9 },
+      "private": { "count": 180, "districtRatio": 21.5 },
+      "workplace": { "count": 6, "districtRatio": 0.7 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 46.34, "109": 52.38, "110": 59.09, "111": 59.52, "112": 65.00, "113": 67.50, "114": 67.50
+      },
+      "populationChange_109_to_114": {
+        "109": -8.76, "110": -11.99, "111": -13.71, "112": -5.46, "113": -4.97, "114": -5.71
+      }
+    }
+  },
+  {
+    "id": "南港",
+    "name": "南港區",
+    "residenceData": {
+      "childResidenceCount": 695
+    },
+    "schoolLocationData": {
+      "count": 713,
+      "percentage": 5.5
+    },
+    "preschoolTypes": {
+      "totalValid": 713,
+      "public": { "count": 246, "districtRatio": 34.5 },
+      "nonProfit": { "count": 94, "districtRatio": 13.2 },
+      "quasiPublic": { "count": 107, "districtRatio": 15.0 },
+      "private": { "count": 265, "districtRatio": 37.2 },
+      "workplace": { "count": 1, "districtRatio": 0.1 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 39.39, "109": 44.12, "110": 51.43, "111": 52.78, "112": 50.00, "113": 51.35, "114": 54.05
+      },
+      "populationChange_109_to_114": {
+        "109": -8.55, "110": -11.09, "111": -11.96, "112": -9.71, "113": -7.10, "114": -9.94
+      }
+    }
+  },
+  {
+    "id": "文山",
+    "name": "文山區",
+    "residenceData": {
+      "childResidenceCount": 1266
+    },
+    "schoolLocationData": {
+      "count": 1197,
+      "percentage": 9.2
+    },
+    "preschoolTypes": {
+      "totalValid": 1197,
+      "public": { "count": 466, "districtRatio": 38.9 },
+      "nonProfit": { "count": 260, "districtRatio": 21.7 },
+      "quasiPublic": { "count": 245, "districtRatio": 20.5 },
+      "private": { "count": 226, "districtRatio": 18.9 },
+      "workplace": { "count": 0, "districtRatio": 0.0 }
+    },
+    "trends": {
+      "publicRatio_108_to_114": {
+        "108": 55.88, "109": 55.71, "110": 66.20, "111": 69.86, "112": 72.97, "113": 77.14, "114": 77.78
+      },
+      "populationChange_109_to_114": {
+        "109": -7.89, "110": -10.54, "111": -11.89, "112": -7.93, "113": -6.11, "114": -8.75
+      }
+    }
+  }
+]
