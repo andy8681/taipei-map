@@ -3,31 +3,138 @@
     "id": "台北市",
     "name": "臺北市",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 103190, "appEnroll": 77500, "stuAmount": 70810, "occupancyRate": 91.4, "publicCount": 157, "nonProfitCount": 59, "quasiPublicCount": 186, "workplaceCount": 39, "privateCount": 331, "totalKindergartens": 772},
-      {"year": "109年", "childPopulation": 99260, "appEnroll": 79680, "stuAmount": 72850, "occupancyRate": 91.4, "publicCount": 157, "nonProfitCount": 59, "quasiPublicCount": 186, "workplaceCount": 39, "privateCount": 331, "totalKindergartens": 772},
-      {"year": "110年", "childPopulation": 94730, "appEnroll": 82080, "stuAmount": 75880, "occupancyRate": 92.4, "publicCount": 157, "nonProfitCount": 59, "quasiPublicCount": 186, "workplaceCount": 39, "privateCount": 331, "totalKindergartens": 772},
-      {"year": "111年", "childPopulation": 90240, "appEnroll": 84600, "stuAmount": 77780, "occupancyRate": 91.9, "publicCount": 157, "nonProfitCount": 59, "quasiPublicCount": 186, "workplaceCount": 39, "privateCount": 331, "totalKindergartens": 772},
-      {"year": "112年", "childPopulation": 85980, "appEnroll": 86630, "stuAmount": 79880, "occupancyRate": 92.2, "publicCount": 157, "nonProfitCount": 59, "quasiPublicCount": 186, "workplaceCount": 39, "privateCount": 331, "totalKindergartens": 772},
-      {"year": "113年", "childPopulation": 81810, "appEnroll": 88330, "stuAmount": 81510, "occupancyRate": 92.3, "publicCount": 157, "nonProfitCount": 59, "quasiPublicCount": 186, "workplaceCount": 39, "privateCount": 331, "totalKindergartens": 772}
+      {
+        "year": "108年",
+        "childPopulation": 110909,
+        "appEnroll": 31374,
+        "stuAmount": 29393,
+        "occupancyRate": 93.7,
+        "publicCount": 149,
+        "nonProfitCount": 37,
+        "quasiPublicCount": 90,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 276
+      },
+      {
+        "year": "109年",
+        "childPopulation": 103478,
+        "appEnroll": 33489,
+        "stuAmount": 31542,
+        "occupancyRate": 94.2,
+        "publicCount": 149,
+        "nonProfitCount": 41,
+        "quasiPublicCount": 108,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 298
+      },
+      {
+        "year": "110年",
+        "childPopulation": 92559,
+        "appEnroll": 37836,
+        "stuAmount": 34517,
+        "occupancyRate": 91.2,
+        "publicCount": 149,
+        "nonProfitCount": 49,
+        "quasiPublicCount": 150,
+        "workplaceCount": 0,
+        "privateCount": 1,
+        "totalKindergartens": 349
+      },
+      {
+        "year": "111年",
+        "childPopulation": 81295,
+        "appEnroll": 39030,
+        "stuAmount": 33924,
+        "occupancyRate": 86.9,
+        "publicCount": 146,
+        "nonProfitCount": 52,
+        "quasiPublicCount": 156,
+        "workplaceCount": 3,
+        "privateCount": 2,
+        "totalKindergartens": 359
+      },
+      {
+        "year": "112年",
+        "childPopulation": 75400,
+        "appEnroll": 39601,
+        "stuAmount": 33378,
+        "occupancyRate": 84.3,
+        "publicCount": 146,
+        "nonProfitCount": 53,
+        "quasiPublicCount": 164,
+        "workplaceCount": 3,
+        "privateCount": 2,
+        "totalKindergartens": 368
+      },
+      {
+        "year": "113年",
+        "childPopulation": 69572,
+        "appEnroll": 28918,
+        "stuAmount": 23197,
+        "occupancyRate": 80.2,
+        "publicCount": 147,
+        "nonProfitCount": 54,
+        "quasiPublicCount": 0,
+        "workplaceCount": 1,
+        "privateCount": 0,
+        "totalKindergartens": 202
+      }
     ],
-    "sub_districts": [
-    ],
+    "sub_districts": [],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -35,35 +142,1267 @@
     "id": "松山",
     "name": "松山區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 7250, "appEnroll": 5420, "stuAmount": 4980, "occupancyRate": 91.9, "publicCount": 10, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 3, "privateCount": 22, "totalKindergartens": 50},
-      {"year": "109年", "childPopulation": 6980, "appEnroll": 5580, "stuAmount": 5120, "occupancyRate": 91.8, "publicCount": 10, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 3, "privateCount": 22, "totalKindergartens": 50},
-      {"year": "110年", "childPopulation": 6650, "appEnroll": 5720, "stuAmount": 5280, "occupancyRate": 92.3, "publicCount": 10, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 3, "privateCount": 22, "totalKindergartens": 50},
-      {"year": "111年", "childPopulation": 6320, "appEnroll": 5890, "stuAmount": 5450, "occupancyRate": 92.5, "publicCount": 10, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 3, "privateCount": 22, "totalKindergartens": 50},
-      {"year": "112年", "childPopulation": 6080, "appEnroll": 6010, "stuAmount": 5590, "occupancyRate": 93.0, "publicCount": 10, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 3, "privateCount": 22, "totalKindergartens": 50},
-      {"year": "113年", "childPopulation": 5810, "appEnroll": 6120, "stuAmount": 5680, "occupancyRate": 92.8, "publicCount": 10, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 3, "privateCount": 22, "totalKindergartens": 50}
+      {
+        "year": "108年",
+        "childPopulation": 8335,
+        "appEnroll": 1961,
+        "stuAmount": 1888,
+        "occupancyRate": 96.3,
+        "publicCount": 8,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 8,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 17
+      },
+      {
+        "year": "109年",
+        "childPopulation": 7727,
+        "appEnroll": 2114,
+        "stuAmount": 2027,
+        "occupancyRate": 95.9,
+        "publicCount": 8,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 10,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 19
+      },
+      {
+        "year": "110年",
+        "childPopulation": 6991,
+        "appEnroll": 2571,
+        "stuAmount": 2423,
+        "occupancyRate": 94.2,
+        "publicCount": 8,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 15,
+        "workplaceCount": 0,
+        "privateCount": 1,
+        "totalKindergartens": 26
+      },
+      {
+        "year": "111年",
+        "childPopulation": 6202,
+        "appEnroll": 2611,
+        "stuAmount": 2415,
+        "occupancyRate": 92.5,
+        "publicCount": 8,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 16,
+        "workplaceCount": 0,
+        "privateCount": 1,
+        "totalKindergartens": 27
+      },
+      {
+        "year": "112年",
+        "childPopulation": 5807,
+        "appEnroll": 2611,
+        "stuAmount": 2360,
+        "occupancyRate": 90.4,
+        "publicCount": 8,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 16,
+        "workplaceCount": 0,
+        "privateCount": 1,
+        "totalKindergartens": 27
+      },
+      {
+        "year": "113年",
+        "childPopulation": 5421,
+        "appEnroll": 1632,
+        "stuAmount": 1273,
+        "occupancyRate": 78.0,
+        "publicCount": 8,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 10
+      }
     ],
     "sub_districts": [
-      {"name": "三民次分區", "appEnroll": 1520, "stuAmount": 1410, "kindergartenCount": 12, "occupancyRate": 92.8},
-      {"name": "中崙次分區", "appEnroll": 1480, "stuAmount": 1380, "kindergartenCount": 11, "occupancyRate": 93.2},
-      {"name": "本鎮次分區", "appEnroll": 1350, "stuAmount": 1250, "kindergartenCount": 13, "occupancyRate": 92.6},
-      {"name": "東社次分區", "appEnroll": 1770, "stuAmount": 1640, "kindergartenCount": 14, "occupancyRate": 92.7}
+      {
+        "name": "三民次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 562,
+            "stuAmount": 556,
+            "occupancyRate": 98.9,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 715,
+            "stuAmount": 678,
+            "occupancyRate": 94.8,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "110年",
+            "appEnroll": 968,
+            "stuAmount": 893,
+            "occupancyRate": 92.3,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "111年",
+            "appEnroll": 968,
+            "stuAmount": 918,
+            "occupancyRate": 94.8,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "112年",
+            "appEnroll": 968,
+            "stuAmount": 915,
+            "occupancyRate": 94.5,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "113年",
+            "appEnroll": 608,
+            "stuAmount": 462,
+            "occupancyRate": 76.0,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "中崙次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 317,
+            "stuAmount": 307,
+            "occupancyRate": 96.8,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "109年",
+            "appEnroll": 317,
+            "stuAmount": 316,
+            "occupancyRate": 99.7,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 343,
+            "stuAmount": 333,
+            "occupancyRate": 97.1,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 383,
+            "stuAmount": 360,
+            "occupancyRate": 94.0,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "112年",
+            "appEnroll": 383,
+            "stuAmount": 344,
+            "occupancyRate": 89.8,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 120,
+            "stuAmount": 103,
+            "occupancyRate": 85.8,
+            "kindergartenCount": 1
+          }
+        ]
+      },
+      {
+        "name": "本鎮次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 272,
+            "stuAmount": 275,
+            "occupancyRate": 101.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 272,
+            "stuAmount": 269,
+            "occupancyRate": 98.9,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 288,
+            "stuAmount": 286,
+            "occupancyRate": 99.3,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 288,
+            "stuAmount": 285,
+            "occupancyRate": 99.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 288,
+            "stuAmount": 271,
+            "occupancyRate": 94.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "113年",
+            "appEnroll": 288,
+            "stuAmount": 251,
+            "occupancyRate": 87.2,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "東社次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 810,
+            "stuAmount": 750,
+            "occupancyRate": 92.6,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "109年",
+            "appEnroll": 810,
+            "stuAmount": 764,
+            "occupancyRate": 94.3,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "110年",
+            "appEnroll": 972,
+            "stuAmount": 911,
+            "occupancyRate": 93.7,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "111年",
+            "appEnroll": 972,
+            "stuAmount": 852,
+            "occupancyRate": 87.7,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "112年",
+            "appEnroll": 972,
+            "stuAmount": 830,
+            "occupancyRate": 85.4,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "113年",
+            "appEnroll": 616,
+            "stuAmount": 457,
+            "occupancyRate": 74.2,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "西湖次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 922,
+            "stuAmount": 877,
+            "occupancyRate": 95.1,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "109年",
+            "appEnroll": 922,
+            "stuAmount": 902,
+            "occupancyRate": 97.8,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "110年",
+            "appEnroll": 922,
+            "stuAmount": 897,
+            "occupancyRate": 97.3,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "111年",
+            "appEnroll": 922,
+            "stuAmount": 862,
+            "occupancyRate": 93.5,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "112年",
+            "appEnroll": 952,
+            "stuAmount": 813,
+            "occupancyRate": 85.4,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 772,
+            "stuAmount": 656,
+            "occupancyRate": 85.0,
+            "kindergartenCount": 5
+          }
+        ]
+      },
+      {
+        "name": "金龍次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 333,
+            "stuAmount": 329,
+            "occupancyRate": 98.8,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 333,
+            "stuAmount": 329,
+            "occupancyRate": 98.8,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 333,
+            "stuAmount": 325,
+            "occupancyRate": 97.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 397,
+            "stuAmount": 371,
+            "occupancyRate": 93.5,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 397,
+            "stuAmount": 368,
+            "occupancyRate": 92.7,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 350,
+            "stuAmount": 292,
+            "occupancyRate": 83.4,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "東湖次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 967,
+            "stuAmount": 926,
+            "occupancyRate": 95.8,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "109年",
+            "appEnroll": 1219,
+            "stuAmount": 1153,
+            "occupancyRate": 94.6,
+            "kindergartenCount": 11
+          },
+          {
+            "year": "110年",
+            "appEnroll": 1263,
+            "stuAmount": 1207,
+            "occupancyRate": 95.6,
+            "kindergartenCount": 13
+          },
+          {
+            "year": "111年",
+            "appEnroll": 1384,
+            "stuAmount": 1253,
+            "occupancyRate": 90.5,
+            "kindergartenCount": 14
+          },
+          {
+            "year": "112年",
+            "appEnroll": 1384,
+            "stuAmount": 1206,
+            "occupancyRate": 87.1,
+            "kindergartenCount": 14
+          },
+          {
+            "year": "113年",
+            "appEnroll": 960,
+            "stuAmount": 806,
+            "occupancyRate": 84.0,
+            "kindergartenCount": 7
+          }
+        ]
+      },
+      {
+        "name": "紫陽次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 469,
+            "stuAmount": 450,
+            "occupancyRate": 95.9,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 589,
+            "stuAmount": 577,
+            "occupancyRate": 98.0,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 643,
+            "stuAmount": 617,
+            "occupancyRate": 96.0,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 683,
+            "stuAmount": 647,
+            "occupancyRate": 94.7,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "112年",
+            "appEnroll": 683,
+            "stuAmount": 625,
+            "occupancyRate": 91.5,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 463,
+            "stuAmount": 393,
+            "occupancyRate": 84.9,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "灣仔次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 286,
+            "stuAmount": 286,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 302,
+            "stuAmount": 302,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 433,
+            "stuAmount": 408,
+            "occupancyRate": 94.2,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 569,
+            "stuAmount": 501,
+            "occupancyRate": 88.0,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 599,
+            "stuAmount": 502,
+            "occupancyRate": 83.8,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "113年",
+            "appEnroll": 544,
+            "stuAmount": 451,
+            "occupancyRate": 82.9,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "洲尾次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 195,
+            "stuAmount": 110,
+            "occupancyRate": 56.4,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 233,
+            "stuAmount": 221,
+            "occupancyRate": 94.8,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "110年",
+            "appEnroll": 233,
+            "stuAmount": 233,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "111年",
+            "appEnroll": 233,
+            "stuAmount": 217,
+            "occupancyRate": 93.1,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 233,
+            "stuAmount": 217,
+            "occupancyRate": 93.1,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "113年",
+            "appEnroll": 233,
+            "stuAmount": 199,
+            "occupancyRate": 85.4,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "社子次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 936,
+            "stuAmount": 915,
+            "occupancyRate": 97.8,
+            "kindergartenCount": 10
+          },
+          {
+            "year": "109年",
+            "appEnroll": 963,
+            "stuAmount": 933,
+            "occupancyRate": 96.9,
+            "kindergartenCount": 11
+          },
+          {
+            "year": "110年",
+            "appEnroll": 996,
+            "stuAmount": 902,
+            "occupancyRate": 90.6,
+            "kindergartenCount": 11
+          },
+          {
+            "year": "111年",
+            "appEnroll": 996,
+            "stuAmount": 876,
+            "occupancyRate": 88.0,
+            "kindergartenCount": 11
+          },
+          {
+            "year": "112年",
+            "appEnroll": 996,
+            "stuAmount": 865,
+            "occupancyRate": 86.8,
+            "kindergartenCount": 11
+          },
+          {
+            "year": "113年",
+            "appEnroll": 626,
+            "stuAmount": 518,
+            "occupancyRate": 82.7,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "後港次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 713,
+            "stuAmount": 663,
+            "occupancyRate": 93.0,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "109年",
+            "appEnroll": 713,
+            "stuAmount": 665,
+            "occupancyRate": 93.3,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "110年",
+            "appEnroll": 753,
+            "stuAmount": 716,
+            "occupancyRate": 95.1,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "111年",
+            "appEnroll": 1113,
+            "stuAmount": 861,
+            "occupancyRate": 77.4,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "112年",
+            "appEnroll": 1129,
+            "stuAmount": 865,
+            "occupancyRate": 76.6,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "113年",
+            "appEnroll": 512,
+            "stuAmount": 349,
+            "occupancyRate": 68.2,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "街上次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 348,
+            "stuAmount": 336,
+            "occupancyRate": 96.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 348,
+            "stuAmount": 341,
+            "occupancyRate": 98.0,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 656,
+            "stuAmount": 578,
+            "occupancyRate": 88.1,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 672,
+            "stuAmount": 571,
+            "occupancyRate": 85.0,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "112年",
+            "appEnroll": 672,
+            "stuAmount": 559,
+            "occupancyRate": 83.2,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "113年",
+            "appEnroll": 394,
+            "stuAmount": 323,
+            "occupancyRate": 82.0,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "蘭雅次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 512,
+            "stuAmount": 427,
+            "occupancyRate": 83.4,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 539,
+            "stuAmount": 455,
+            "occupancyRate": 84.4,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 620,
+            "stuAmount": 522,
+            "occupancyRate": 84.2,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 620,
+            "stuAmount": 519,
+            "occupancyRate": 83.7,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "112年",
+            "appEnroll": 684,
+            "stuAmount": 529,
+            "occupancyRate": 77.3,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 272,
+            "stuAmount": 238,
+            "occupancyRate": 87.5,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "芝山岩次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 568,
+            "stuAmount": 567,
+            "occupancyRate": 99.8,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "109年",
+            "appEnroll": 568,
+            "stuAmount": 567,
+            "occupancyRate": 99.8,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 607,
+            "stuAmount": 593,
+            "occupancyRate": 97.7,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 607,
+            "stuAmount": 574,
+            "occupancyRate": 94.6,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "112年",
+            "appEnroll": 723,
+            "stuAmount": 596,
+            "occupancyRate": 82.4,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 500,
+            "stuAmount": 410,
+            "occupancyRate": 82.0,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "天母次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 585,
+            "stuAmount": 571,
+            "occupancyRate": 97.6,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "109年",
+            "appEnroll": 583,
+            "stuAmount": 570,
+            "occupancyRate": 97.8,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 643,
+            "stuAmount": 619,
+            "occupancyRate": 96.3,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "111年",
+            "appEnroll": 643,
+            "stuAmount": 592,
+            "occupancyRate": 92.1,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "112年",
+            "appEnroll": 667,
+            "stuAmount": 587,
+            "occupancyRate": 88.0,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "113年",
+            "appEnroll": 568,
+            "stuAmount": 480,
+            "occupancyRate": 84.5,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "陽明山次分區(士林區)",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 90,
+            "stuAmount": 80,
+            "occupancyRate": 88.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 90,
+            "stuAmount": 85,
+            "occupancyRate": 94.4,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 90,
+            "stuAmount": 77,
+            "occupancyRate": 85.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 90,
+            "stuAmount": 61,
+            "occupancyRate": 67.8,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "112年",
+            "appEnroll": 90,
+            "stuAmount": 44,
+            "occupancyRate": 48.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "113年",
+            "appEnroll": 90,
+            "stuAmount": 45,
+            "occupancyRate": 50.0,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "關渡次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 210,
+            "stuAmount": 207,
+            "occupancyRate": 98.6,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 226,
+            "stuAmount": 225,
+            "occupancyRate": 99.6,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 226,
+            "stuAmount": 224,
+            "occupancyRate": 99.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 226,
+            "stuAmount": 219,
+            "occupancyRate": 96.9,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 226,
+            "stuAmount": 202,
+            "occupancyRate": 89.4,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "113年",
+            "appEnroll": 226,
+            "stuAmount": 186,
+            "occupancyRate": 82.3,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "大屯次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 593,
+            "stuAmount": 519,
+            "occupancyRate": 87.5,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "109年",
+            "appEnroll": 593,
+            "stuAmount": 527,
+            "occupancyRate": 88.9,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "110年",
+            "appEnroll": 609,
+            "stuAmount": 561,
+            "occupancyRate": 92.1,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "111年",
+            "appEnroll": 609,
+            "stuAmount": 532,
+            "occupancyRate": 87.4,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "112年",
+            "appEnroll": 609,
+            "stuAmount": 488,
+            "occupancyRate": 80.1,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "113年",
+            "appEnroll": 196,
+            "stuAmount": 155,
+            "occupancyRate": 79.1,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "陽明山次分區(北投區)",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 90,
+            "stuAmount": 71,
+            "occupancyRate": 78.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 90,
+            "stuAmount": 76,
+            "occupancyRate": 84.4,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 90,
+            "stuAmount": 78,
+            "occupancyRate": 86.7,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 90,
+            "stuAmount": 70,
+            "occupancyRate": 77.8,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "112年",
+            "appEnroll": 90,
+            "stuAmount": 62,
+            "occupancyRate": 68.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "113年",
+            "appEnroll": 90,
+            "stuAmount": 57,
+            "occupancyRate": 63.3,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "新北投次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 196,
+            "stuAmount": 197,
+            "occupancyRate": 100.5,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 196,
+            "stuAmount": 195,
+            "occupancyRate": 99.5,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 212,
+            "stuAmount": 211,
+            "occupancyRate": 99.5,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 348,
+            "stuAmount": 262,
+            "occupancyRate": 75.3,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "112年",
+            "appEnroll": 371,
+            "stuAmount": 324,
+            "occupancyRate": 87.3,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 318,
+            "stuAmount": 267,
+            "occupancyRate": 84.0,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "舊北投次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 324,
+            "stuAmount": 324,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 356,
+            "stuAmount": 354,
+            "occupancyRate": 99.4,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 418,
+            "stuAmount": 384,
+            "occupancyRate": 91.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 418,
+            "stuAmount": 361,
+            "occupancyRate": 86.4,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "112年",
+            "appEnroll": 418,
+            "stuAmount": 326,
+            "occupancyRate": 78.0,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "113年",
+            "appEnroll": 356,
+            "stuAmount": 307,
+            "occupancyRate": 86.2,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "唭哩岸次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 715,
+            "stuAmount": 696,
+            "occupancyRate": 97.3,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "109年",
+            "appEnroll": 715,
+            "stuAmount": 697,
+            "occupancyRate": 97.5,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "110年",
+            "appEnroll": 715,
+            "stuAmount": 688,
+            "occupancyRate": 96.2,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "111年",
+            "appEnroll": 625,
+            "stuAmount": 556,
+            "occupancyRate": 89.0,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "112年",
+            "appEnroll": 567,
+            "stuAmount": 508,
+            "occupancyRate": 89.6,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "113年",
+            "appEnroll": 485,
+            "stuAmount": 383,
+            "occupancyRate": 79.0,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "石牌次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 837,
+            "stuAmount": 699,
+            "occupancyRate": 83.5,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "109年",
+            "appEnroll": 899,
+            "stuAmount": 743,
+            "occupancyRate": 82.6,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "110年",
+            "appEnroll": 967,
+            "stuAmount": 813,
+            "occupancyRate": 84.1,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "111年",
+            "appEnroll": 967,
+            "stuAmount": 780,
+            "occupancyRate": 80.7,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "112年",
+            "appEnroll": 967,
+            "stuAmount": 768,
+            "occupancyRate": 79.4,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "113年",
+            "appEnroll": 492,
+            "stuAmount": 379,
+            "occupancyRate": 77.0,
+            "kindergartenCount": 3
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -71,36 +1410,374 @@
     "id": "信義",
     "name": "信義區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 8120, "appEnroll": 5890, "stuAmount": 5380, "occupancyRate": 91.3, "publicCount": 11, "nonProfitCount": 6, "quasiPublicCount": 14, "workplaceCount": 2, "privateCount": 25, "totalKindergartens": 58},
-      {"year": "109年", "childPopulation": 7850, "appEnroll": 6050, "stuAmount": 5520, "occupancyRate": 91.2, "publicCount": 11, "nonProfitCount": 6, "quasiPublicCount": 14, "workplaceCount": 2, "privateCount": 25, "totalKindergartens": 58},
-      {"year": "110年", "childPopulation": 7490, "appEnroll": 6210, "stuAmount": 5690, "occupancyRate": 91.6, "publicCount": 11, "nonProfitCount": 6, "quasiPublicCount": 14, "workplaceCount": 2, "privateCount": 25, "totalKindergartens": 58},
-      {"year": "111年", "childPopulation": 7150, "appEnroll": 6410, "stuAmount": 5880, "occupancyRate": 91.7, "publicCount": 11, "nonProfitCount": 6, "quasiPublicCount": 14, "workplaceCount": 2, "privateCount": 25, "totalKindergartens": 58},
-      {"year": "112年", "childPopulation": 6820, "appEnroll": 6550, "stuAmount": 6020, "occupancyRate": 91.9, "publicCount": 11, "nonProfitCount": 6, "quasiPublicCount": 14, "workplaceCount": 2, "privateCount": 25, "totalKindergartens": 58},
-      {"year": "113年", "childPopulation": 6490, "appEnroll": 6680, "stuAmount": 6150, "occupancyRate": 92.1, "publicCount": 11, "nonProfitCount": 6, "quasiPublicCount": 14, "workplaceCount": 2, "privateCount": 25, "totalKindergartens": 58}
+      {
+        "year": "108年",
+        "childPopulation": 8787,
+        "appEnroll": 2401,
+        "stuAmount": 2312,
+        "occupancyRate": 96.3,
+        "publicCount": 10,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 6,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 19
+      },
+      {
+        "year": "109年",
+        "childPopulation": 8044,
+        "appEnroll": 2723,
+        "stuAmount": 2588,
+        "occupancyRate": 95.0,
+        "publicCount": 10,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 9,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 22
+      },
+      {
+        "year": "110年",
+        "childPopulation": 7092,
+        "appEnroll": 3073,
+        "stuAmount": 2781,
+        "occupancyRate": 90.5,
+        "publicCount": 10,
+        "nonProfitCount": 5,
+        "quasiPublicCount": 10,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 25
+      },
+      {
+        "year": "111年",
+        "childPopulation": 6179,
+        "appEnroll": 2777,
+        "stuAmount": 2468,
+        "occupancyRate": 88.9,
+        "publicCount": 8,
+        "nonProfitCount": 5,
+        "quasiPublicCount": 10,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 23
+      },
+      {
+        "year": "112年",
+        "childPopulation": 5778,
+        "appEnroll": 2800,
+        "stuAmount": 2474,
+        "occupancyRate": 88.4,
+        "publicCount": 8,
+        "nonProfitCount": 5,
+        "quasiPublicCount": 11,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 24
+      },
+      {
+        "year": "113年",
+        "childPopulation": 5384,
+        "appEnroll": 2586,
+        "stuAmount": 2184,
+        "occupancyRate": 84.5,
+        "publicCount": 9,
+        "nonProfitCount": 5,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 14
+      }
     ],
     "sub_districts": [
-      {"name": "三張犁次分區", "appEnroll": 1380, "stuAmount": 1270, "kindergartenCount": 12, "occupancyRate": 92.0},
-      {"name": "五分埔次分區", "appEnroll": 1420, "stuAmount": 1310, "kindergartenCount": 13, "occupancyRate": 92.3},
-      {"name": "六張犁次分區", "appEnroll": 1150, "stuAmount": 1060, "kindergartenCount": 10, "occupancyRate": 92.2},
-      {"name": "吳興次分區", "appEnroll": 1280, "stuAmount": 1180, "kindergartenCount": 11, "occupancyRate": 92.2},
-      {"name": "福德次分區", "appEnroll": 1450, "stuAmount": 1330, "kindergartenCount": 12, "occupancyRate": 91.7}
+      {
+        "name": "三張犁次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 732,
+            "stuAmount": 687,
+            "occupancyRate": 93.9,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "109年",
+            "appEnroll": 852,
+            "stuAmount": 802,
+            "occupancyRate": 94.1,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "110年",
+            "appEnroll": 902,
+            "stuAmount": 835,
+            "occupancyRate": 92.6,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "111年",
+            "appEnroll": 902,
+            "stuAmount": 818,
+            "occupancyRate": 90.7,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "112年",
+            "appEnroll": 846,
+            "stuAmount": 731,
+            "occupancyRate": 86.4,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 632,
+            "stuAmount": 535,
+            "occupancyRate": 84.7,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "五分埔次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 674,
+            "stuAmount": 663,
+            "occupancyRate": 98.4,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 774,
+            "stuAmount": 724,
+            "occupancyRate": 93.5,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "110年",
+            "appEnroll": 774,
+            "stuAmount": 745,
+            "occupancyRate": 96.3,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 478,
+            "stuAmount": 388,
+            "occupancyRate": 81.2,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 478,
+            "stuAmount": 411,
+            "occupancyRate": 86.0,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 750,
+            "stuAmount": 636,
+            "occupancyRate": 84.8,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "六張犁次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 201,
+            "stuAmount": 185,
+            "occupancyRate": 92.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 217,
+            "stuAmount": 205,
+            "occupancyRate": 94.5,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 217,
+            "stuAmount": 209,
+            "occupancyRate": 96.3,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 217,
+            "stuAmount": 199,
+            "occupancyRate": 91.7,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 217,
+            "stuAmount": 198,
+            "occupancyRate": 91.2,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "113年",
+            "appEnroll": 182,
+            "stuAmount": 155,
+            "occupancyRate": 85.2,
+            "kindergartenCount": 1
+          }
+        ]
+      },
+      {
+        "name": "吳興次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 512,
+            "stuAmount": 497,
+            "occupancyRate": 97.1,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 520,
+            "stuAmount": 511,
+            "occupancyRate": 98.3,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "110年",
+            "appEnroll": 566,
+            "stuAmount": 499,
+            "occupancyRate": 88.2,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "111年",
+            "appEnroll": 566,
+            "stuAmount": 518,
+            "occupancyRate": 91.5,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 566,
+            "stuAmount": 495,
+            "occupancyRate": 87.5,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 476,
+            "stuAmount": 412,
+            "occupancyRate": 86.6,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "福德次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 282,
+            "stuAmount": 280,
+            "occupancyRate": 99.3,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 360,
+            "stuAmount": 346,
+            "occupancyRate": 96.1,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 614,
+            "stuAmount": 493,
+            "occupancyRate": 80.3,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "111年",
+            "appEnroll": 614,
+            "stuAmount": 545,
+            "occupancyRate": 88.8,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "112年",
+            "appEnroll": 693,
+            "stuAmount": 639,
+            "occupancyRate": 92.2,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 546,
+            "stuAmount": 446,
+            "occupancyRate": 81.7,
+            "kindergartenCount": 3
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -108,38 +1785,468 @@
     "id": "大安",
     "name": "大安區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 11200, "appEnroll": 8950, "stuAmount": 8210, "occupancyRate": 91.7, "publicCount": 14, "nonProfitCount": 7, "quasiPublicCount": 18, "workplaceCount": 4, "privateCount": 48, "totalKindergartens": 91},
-      {"year": "109年", "childPopulation": 10780, "appEnroll": 9120, "stuAmount": 8390, "occupancyRate": 92.0, "publicCount": 14, "nonProfitCount": 7, "quasiPublicCount": 18, "workplaceCount": 4, "privateCount": 48, "totalKindergartens": 91},
-      {"year": "110年", "childPopulation": 10250, "appEnroll": 9350, "stuAmount": 8620, "occupancyRate": 92.2, "publicCount": 14, "nonProfitCount": 7, "quasiPublicCount": 18, "workplaceCount": 4, "privateCount": 48, "totalKindergartens": 91},
-      {"year": "111年", "childPopulation": 9780, "appEnroll": 9580, "stuAmount": 8850, "occupancyRate": 92.4, "publicCount": 14, "nonProfitCount": 7, "quasiPublicCount": 18, "workplaceCount": 4, "privateCount": 48, "totalKindergartens": 91},
-      {"year": "112年", "childPopulation": 9320, "appEnroll": 9720, "stuAmount": 9010, "occupancyRate": 92.7, "publicCount": 14, "nonProfitCount": 7, "quasiPublicCount": 18, "workplaceCount": 4, "privateCount": 48, "totalKindergartens": 91},
-      {"year": "113年", "childPopulation": 8890, "appEnroll": 9850, "stuAmount": 9120, "occupancyRate": 92.6, "publicCount": 14, "nonProfitCount": 7, "quasiPublicCount": 18, "workplaceCount": 4, "privateCount": 48, "totalKindergartens": 91}
+      {
+        "year": "108年",
+        "childPopulation": 13347,
+        "appEnroll": 3182,
+        "stuAmount": 2932,
+        "occupancyRate": 92.1,
+        "publicCount": 12,
+        "nonProfitCount": 6,
+        "quasiPublicCount": 10,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 28
+      },
+      {
+        "year": "109年",
+        "childPopulation": 12409,
+        "appEnroll": 3099,
+        "stuAmount": 3007,
+        "occupancyRate": 97.0,
+        "publicCount": 12,
+        "nonProfitCount": 7,
+        "quasiPublicCount": 10,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 29
+      },
+      {
+        "year": "110年",
+        "childPopulation": 11161,
+        "appEnroll": 3366,
+        "stuAmount": 3151,
+        "occupancyRate": 93.6,
+        "publicCount": 12,
+        "nonProfitCount": 7,
+        "quasiPublicCount": 14,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 33
+      },
+      {
+        "year": "111年",
+        "childPopulation": 9832,
+        "appEnroll": 3503,
+        "stuAmount": 3261,
+        "occupancyRate": 93.1,
+        "publicCount": 12,
+        "nonProfitCount": 7,
+        "quasiPublicCount": 17,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 36
+      },
+      {
+        "year": "112年",
+        "childPopulation": 9184,
+        "appEnroll": 3503,
+        "stuAmount": 3147,
+        "occupancyRate": 89.8,
+        "publicCount": 12,
+        "nonProfitCount": 7,
+        "quasiPublicCount": 17,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 36
+      },
+      {
+        "year": "113年",
+        "childPopulation": 8787,
+        "appEnroll": 2686,
+        "stuAmount": 2246,
+        "occupancyRate": 83.6,
+        "publicCount": 12,
+        "nonProfitCount": 7,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 19
+      }
     ],
     "sub_districts": [
-      {"name": "新生次分區", "appEnroll": 1420, "stuAmount": 1310, "kindergartenCount": 13, "occupancyRate": 92.3},
-      {"name": "敦南次分區", "appEnroll": 1580, "stuAmount": 1460, "kindergartenCount": 15, "occupancyRate": 92.4},
-      {"name": "和平次分區", "appEnroll": 1350, "stuAmount": 1250, "kindergartenCount": 12, "occupancyRate": 92.6},
-      {"name": "瑞安次分區", "appEnroll": 1480, "stuAmount": 1370, "kindergartenCount": 14, "occupancyRate": 92.6},
-      {"name": "安和次分區", "appEnroll": 1520, "stuAmount": 1410, "kindergartenCount": 13, "occupancyRate": 92.8},
-      {"name": "學府次分區", "appEnroll": 1150, "stuAmount": 1060, "kindergartenCount": 10, "occupancyRate": 92.2},
-      {"name": "臥龍次分區", "appEnroll": 1350, "stuAmount": 1260, "kindergartenCount": 14, "occupancyRate": 93.3}
+      {
+        "name": "新生次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 568,
+            "stuAmount": 558,
+            "occupancyRate": 98.2,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 624,
+            "stuAmount": 615,
+            "occupancyRate": 98.6,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "110年",
+            "appEnroll": 655,
+            "stuAmount": 633,
+            "occupancyRate": 96.6,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "111年",
+            "appEnroll": 724,
+            "stuAmount": 701,
+            "occupancyRate": 96.8,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "112年",
+            "appEnroll": 724,
+            "stuAmount": 677,
+            "occupancyRate": 93.5,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 598,
+            "stuAmount": 511,
+            "occupancyRate": 85.5,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "敦南次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 27,
+            "stuAmount": 26,
+            "occupancyRate": 96.3,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "109年",
+            "appEnroll": 27,
+            "stuAmount": 21,
+            "occupancyRate": 77.8,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "110年",
+            "appEnroll": 27,
+            "stuAmount": 16,
+            "occupancyRate": 59.3,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "111年",
+            "appEnroll": 27,
+            "stuAmount": 7,
+            "occupancyRate": 25.9,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "112年",
+            "appEnroll": 27,
+            "stuAmount": 8,
+            "occupancyRate": 29.6,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "113年",
+            "appEnroll": 0,
+            "stuAmount": 0,
+            "occupancyRate": 0,
+            "kindergartenCount": 0
+          }
+        ]
+      },
+      {
+        "name": "和平次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 185,
+            "stuAmount": 177,
+            "occupancyRate": 95.7,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 213,
+            "stuAmount": 205,
+            "occupancyRate": 96.2,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "110年",
+            "appEnroll": 393,
+            "stuAmount": 301,
+            "occupancyRate": 76.6,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 393,
+            "stuAmount": 319,
+            "occupancyRate": 81.2,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "112年",
+            "appEnroll": 393,
+            "stuAmount": 325,
+            "occupancyRate": 82.7,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "113年",
+            "appEnroll": 120,
+            "stuAmount": 95,
+            "occupancyRate": 79.2,
+            "kindergartenCount": 1
+          }
+        ]
+      },
+      {
+        "name": "瑞安次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 461,
+            "stuAmount": 361,
+            "occupancyRate": 78.3,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 363,
+            "stuAmount": 362,
+            "occupancyRate": 99.7,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 403,
+            "stuAmount": 386,
+            "occupancyRate": 95.8,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "111年",
+            "appEnroll": 471,
+            "stuAmount": 436,
+            "occupancyRate": 92.6,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "112年",
+            "appEnroll": 471,
+            "stuAmount": 425,
+            "occupancyRate": 90.2,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "113年",
+            "appEnroll": 332,
+            "stuAmount": 276,
+            "occupancyRate": 83.1,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "安和次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 240,
+            "stuAmount": 224,
+            "occupancyRate": 93.3,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 240,
+            "stuAmount": 230,
+            "occupancyRate": 95.8,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 240,
+            "stuAmount": 229,
+            "occupancyRate": 95.4,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 240,
+            "stuAmount": 225,
+            "occupancyRate": 93.8,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 240,
+            "stuAmount": 221,
+            "occupancyRate": 92.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "113年",
+            "appEnroll": 120,
+            "stuAmount": 103,
+            "occupancyRate": 85.8,
+            "kindergartenCount": 1
+          }
+        ]
+      },
+      {
+        "name": "學府次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 752,
+            "stuAmount": 747,
+            "occupancyRate": 99.3,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "109年",
+            "appEnroll": 752,
+            "stuAmount": 748,
+            "occupancyRate": 99.5,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "110年",
+            "appEnroll": 768,
+            "stuAmount": 758,
+            "occupancyRate": 98.7,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "111年",
+            "appEnroll": 768,
+            "stuAmount": 741,
+            "occupancyRate": 96.5,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "112年",
+            "appEnroll": 768,
+            "stuAmount": 706,
+            "occupancyRate": 91.9,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 768,
+            "stuAmount": 649,
+            "occupancyRate": 84.5,
+            "kindergartenCount": 7
+          }
+        ]
+      },
+      {
+        "name": "臥龍次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 949,
+            "stuAmount": 839,
+            "occupancyRate": 88.4,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "109年",
+            "appEnroll": 880,
+            "stuAmount": 826,
+            "occupancyRate": 93.9,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "110年",
+            "appEnroll": 880,
+            "stuAmount": 828,
+            "occupancyRate": 94.1,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "111年",
+            "appEnroll": 880,
+            "stuAmount": 832,
+            "occupancyRate": 94.5,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "112年",
+            "appEnroll": 880,
+            "stuAmount": 785,
+            "occupancyRate": 89.2,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "113年",
+            "appEnroll": 748,
+            "stuAmount": 612,
+            "occupancyRate": 81.8,
+            "kindergartenCount": 5
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -147,38 +2254,468 @@
     "id": "中山",
     "name": "中山區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 9450, "appEnroll": 7850, "stuAmount": 7150, "occupancyRate": 91.1, "publicCount": 13, "nonProfitCount": 4, "quasiPublicCount": 16, "workplaceCount": 3, "privateCount": 38, "totalKindergartens": 74},
-      {"year": "109年", "childPopulation": 9120, "appEnroll": 8020, "stuAmount": 7320, "occupancyRate": 91.3, "publicCount": 13, "nonProfitCount": 4, "quasiPublicCount": 16, "workplaceCount": 3, "privateCount": 38, "totalKindergartens": 74},
-      {"year": "110年", "childPopulation": 8750, "appEnroll": 8250, "stuAmount": 7550, "occupancyRate": 91.5, "publicCount": 13, "nonProfitCount": 4, "quasiPublicCount": 16, "workplaceCount": 3, "privateCount": 38, "totalKindergartens": 74},
-      {"year": "111年", "childPopulation": 8320, "appEnroll": 8480, "stuAmount": 7780, "occupancyRate": 91.7, "publicCount": 13, "nonProfitCount": 4, "quasiPublicCount": 16, "workplaceCount": 3, "privateCount": 38, "totalKindergartens": 74},
-      {"year": "112年", "childPopulation": 7950, "appEnroll": 8620, "stuAmount": 7920, "occupancyRate": 91.9, "publicCount": 13, "nonProfitCount": 4, "quasiPublicCount": 16, "workplaceCount": 3, "privateCount": 38, "totalKindergartens": 74},
-      {"year": "113年", "childPopulation": 7580, "appEnroll": 8750, "stuAmount": 8050, "occupancyRate": 92.0, "publicCount": 13, "nonProfitCount": 4, "quasiPublicCount": 16, "workplaceCount": 3, "privateCount": 38, "totalKindergartens": 74}
+      {
+        "year": "108年",
+        "childPopulation": 9229,
+        "appEnroll": 2472,
+        "stuAmount": 2293,
+        "occupancyRate": 92.8,
+        "publicCount": 13,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 3,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 17
+      },
+      {
+        "year": "109年",
+        "childPopulation": 8530,
+        "appEnroll": 2692,
+        "stuAmount": 2500,
+        "occupancyRate": 92.9,
+        "publicCount": 13,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 3,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 18
+      },
+      {
+        "year": "110年",
+        "childPopulation": 7550,
+        "appEnroll": 2922,
+        "stuAmount": 2717,
+        "occupancyRate": 93.0,
+        "publicCount": 13,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 8,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 23
+      },
+      {
+        "year": "111年",
+        "childPopulation": 6560,
+        "appEnroll": 2906,
+        "stuAmount": 2608,
+        "occupancyRate": 89.7,
+        "publicCount": 13,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 8,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 23
+      },
+      {
+        "year": "112年",
+        "childPopulation": 6169,
+        "appEnroll": 3053,
+        "stuAmount": 2621,
+        "occupancyRate": 85.8,
+        "publicCount": 13,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 10,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 25
+      },
+      {
+        "year": "113年",
+        "childPopulation": 5689,
+        "appEnroll": 2376,
+        "stuAmount": 1894,
+        "occupancyRate": 79.7,
+        "publicCount": 13,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 15
+      }
     ],
     "sub_districts": [
-      {"name": "大直次分區", "appEnroll": 1650, "stuAmount": 1520, "kindergartenCount": 14, "occupancyRate": 92.1},
-      {"name": "圓山次分區", "appEnroll": 1120, "stuAmount": 1030, "kindergartenCount": 10, "occupancyRate": 92.0},
-      {"name": "新庄次分區", "appEnroll": 1180, "stuAmount": 1080, "kindergartenCount": 10, "occupancyRate": 91.5},
-      {"name": "下埤頭次分區", "appEnroll": 1350, "stuAmount": 1240, "kindergartenCount": 12, "occupancyRate": 91.9},
-      {"name": "林森次分區", "appEnroll": 1080, "stuAmount": 990, "kindergartenCount": 9, "occupancyRate": 91.7},
-      {"name": "長春次分區", "appEnroll": 1120, "stuAmount": 1030, "kindergartenCount": 9, "occupancyRate": 92.0},
-      {"name": "朱厝崙次分區", "appEnroll": 1250, "stuAmount": 1160, "kindergartenCount": 10, "occupancyRate": 92.8}
+      {
+        "name": "大直次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 814,
+            "stuAmount": 765,
+            "occupancyRate": 94.0,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "109年",
+            "appEnroll": 1034,
+            "stuAmount": 955,
+            "occupancyRate": 92.4,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "110年",
+            "appEnroll": 1172,
+            "stuAmount": 1081,
+            "occupancyRate": 92.2,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "111年",
+            "appEnroll": 1124,
+            "stuAmount": 1038,
+            "occupancyRate": 92.3,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "112年",
+            "appEnroll": 1195,
+            "stuAmount": 1065,
+            "occupancyRate": 89.1,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "113年",
+            "appEnroll": 988,
+            "stuAmount": 806,
+            "occupancyRate": 81.6,
+            "kindergartenCount": 6
+          }
+        ]
+      },
+      {
+        "name": "圓山次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 180,
+            "stuAmount": 180,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "109年",
+            "appEnroll": 180,
+            "stuAmount": 179,
+            "occupancyRate": 99.4,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "110年",
+            "appEnroll": 180,
+            "stuAmount": 179,
+            "occupancyRate": 99.4,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "111年",
+            "appEnroll": 196,
+            "stuAmount": 192,
+            "occupancyRate": 98.0,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "112年",
+            "appEnroll": 196,
+            "stuAmount": 179,
+            "occupancyRate": 91.3,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "113年",
+            "appEnroll": 196,
+            "stuAmount": 158,
+            "occupancyRate": 80.6,
+            "kindergartenCount": 1
+          }
+        ]
+      },
+      {
+        "name": "新庄次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 38,
+            "stuAmount": 38,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "109年",
+            "appEnroll": 38,
+            "stuAmount": 38,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "110年",
+            "appEnroll": 38,
+            "stuAmount": 38,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "111年",
+            "appEnroll": 38,
+            "stuAmount": 38,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "112年",
+            "appEnroll": 38,
+            "stuAmount": 38,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "113年",
+            "appEnroll": 0,
+            "stuAmount": 0,
+            "occupancyRate": 0,
+            "kindergartenCount": 0
+          }
+        ]
+      },
+      {
+        "name": "下埤頭次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 566,
+            "stuAmount": 445,
+            "occupancyRate": 78.6,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 566,
+            "stuAmount": 468,
+            "occupancyRate": 82.7,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "110年",
+            "appEnroll": 586,
+            "stuAmount": 490,
+            "occupancyRate": 83.6,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "111年",
+            "appEnroll": 586,
+            "stuAmount": 478,
+            "occupancyRate": 81.6,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "112年",
+            "appEnroll": 646,
+            "stuAmount": 494,
+            "occupancyRate": 76.5,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "113年",
+            "appEnroll": 286,
+            "stuAmount": 224,
+            "occupancyRate": 78.3,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "林森次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 0,
+            "stuAmount": 0,
+            "occupancyRate": 0,
+            "kindergartenCount": 0
+          },
+          {
+            "year": "109年",
+            "appEnroll": 0,
+            "stuAmount": 0,
+            "occupancyRate": 0,
+            "kindergartenCount": 0
+          },
+          {
+            "year": "110年",
+            "appEnroll": 0,
+            "stuAmount": 0,
+            "occupancyRate": 0,
+            "kindergartenCount": 0
+          },
+          {
+            "year": "111年",
+            "appEnroll": 0,
+            "stuAmount": 0,
+            "occupancyRate": 0,
+            "kindergartenCount": 0
+          },
+          {
+            "year": "112年",
+            "appEnroll": 0,
+            "stuAmount": 0,
+            "occupancyRate": 0,
+            "kindergartenCount": 0
+          },
+          {
+            "year": "113年",
+            "appEnroll": 0,
+            "stuAmount": 0,
+            "occupancyRate": 0,
+            "kindergartenCount": 0
+          }
+        ]
+      },
+      {
+        "name": "長春次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 572,
+            "stuAmount": 564,
+            "occupancyRate": 98.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 572,
+            "stuAmount": 558,
+            "occupancyRate": 97.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 604,
+            "stuAmount": 588,
+            "occupancyRate": 97.4,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "111年",
+            "appEnroll": 604,
+            "stuAmount": 510,
+            "occupancyRate": 84.4,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 604,
+            "stuAmount": 494,
+            "occupancyRate": 81.8,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 572,
+            "stuAmount": 414,
+            "occupancyRate": 72.4,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "朱厝崙次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 302,
+            "stuAmount": 301,
+            "occupancyRate": 99.7,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 302,
+            "stuAmount": 302,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 342,
+            "stuAmount": 341,
+            "occupancyRate": 99.7,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "111年",
+            "appEnroll": 358,
+            "stuAmount": 352,
+            "occupancyRate": 98.3,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 374,
+            "stuAmount": 351,
+            "occupancyRate": 93.9,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 334,
+            "stuAmount": 292,
+            "occupancyRate": 87.4,
+            "kindergartenCount": 3
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -186,37 +2723,421 @@
     "id": "中正",
     "name": "中正區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 6850, "appEnroll": 5210, "stuAmount": 4780, "occupancyRate": 91.7, "publicCount": 9, "nonProfitCount": 2, "quasiPublicCount": 11, "workplaceCount": 8, "privateCount": 18, "totalKindergartens": 48},
-      {"year": "109年", "childPopulation": 6580, "appEnroll": 5380, "stuAmount": 4920, "occupancyRate": 91.4, "publicCount": 9, "nonProfitCount": 2, "quasiPublicCount": 11, "workplaceCount": 8, "privateCount": 18, "totalKindergartens": 48},
-      {"year": "110年", "childPopulation": 6280, "appEnroll": 5520, "stuAmount": 5080, "occupancyRate": 92.0, "publicCount": 9, "nonProfitCount": 2, "quasiPublicCount": 11, "workplaceCount": 8, "privateCount": 18, "totalKindergartens": 48},
-      {"year": "111年", "childPopulation": 5980, "appEnroll": 5690, "stuAmount": 5240, "occupancyRate": 92.1, "publicCount": 9, "nonProfitCount": 2, "quasiPublicCount": 11, "workplaceCount": 8, "privateCount": 18, "totalKindergartens": 48},
-      {"year": "112年", "childPopulation": 5690, "appEnroll": 5820, "stuAmount": 5380, "occupancyRate": 92.4, "publicCount": 9, "nonProfitCount": 2, "quasiPublicCount": 11, "workplaceCount": 8, "privateCount": 18, "totalKindergartens": 48},
-      {"year": "113年", "childPopulation": 5420, "appEnroll": 5950, "stuAmount": 5490, "occupancyRate": 92.3, "publicCount": 9, "nonProfitCount": 2, "quasiPublicCount": 11, "workplaceCount": 8, "privateCount": 18, "totalKindergartens": 48}
+      {
+        "year": "108年",
+        "childPopulation": 7371,
+        "appEnroll": 1543,
+        "stuAmount": 1419,
+        "occupancyRate": 92.0,
+        "publicCount": 9,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 4,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 14
+      },
+      {
+        "year": "109年",
+        "childPopulation": 6962,
+        "appEnroll": 1707,
+        "stuAmount": 1583,
+        "occupancyRate": 92.7,
+        "publicCount": 9,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 5,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 15
+      },
+      {
+        "year": "110年",
+        "childPopulation": 6250,
+        "appEnroll": 1745,
+        "stuAmount": 1568,
+        "occupancyRate": 89.9,
+        "publicCount": 9,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 6,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 16
+      },
+      {
+        "year": "111年",
+        "childPopulation": 5483,
+        "appEnroll": 1715,
+        "stuAmount": 1411,
+        "occupancyRate": 82.3,
+        "publicCount": 8,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 6,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 15
+      },
+      {
+        "year": "112年",
+        "childPopulation": 5171,
+        "appEnroll": 1710,
+        "stuAmount": 1431,
+        "occupancyRate": 83.7,
+        "publicCount": 8,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 8,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 17
+      },
+      {
+        "year": "113年",
+        "childPopulation": 4670,
+        "appEnroll": 1220,
+        "stuAmount": 998,
+        "occupancyRate": 81.8,
+        "publicCount": 8,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 9
+      }
     ],
     "sub_districts": [
-      {"name": "城內次分區", "appEnroll": 950, "stuAmount": 880, "kindergartenCount": 8, "occupancyRate": 92.6},
-      {"name": "東門次分區", "appEnroll": 1080, "stuAmount": 990, "kindergartenCount": 9, "occupancyRate": 91.7},
-      {"name": "南門次分區", "appEnroll": 1120, "stuAmount": 1030, "kindergartenCount": 9, "occupancyRate": 92.0},
-      {"name": "崁頂次分區", "appEnroll": 920, "stuAmount": 850, "kindergartenCount": 7, "occupancyRate": 92.4},
-      {"name": "古亭次分區", "appEnroll": 980, "stuAmount": 900, "kindergartenCount": 8, "occupancyRate": 91.8},
-      {"name": "公館次分區", "appEnroll": 900, "stuAmount": 840, "kindergartenCount": 7, "occupancyRate": 93.3}
+      {
+        "name": "城內次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 362,
+            "stuAmount": 324,
+            "occupancyRate": 89.5,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 256,
+            "stuAmount": 256,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 256,
+            "stuAmount": 252,
+            "occupancyRate": 98.4,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 256,
+            "stuAmount": 253,
+            "occupancyRate": 98.8,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 346,
+            "stuAmount": 298,
+            "occupancyRate": 86.1,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "113年",
+            "appEnroll": 196,
+            "stuAmount": 170,
+            "occupancyRate": 86.7,
+            "kindergartenCount": 1
+          }
+        ]
+      },
+      {
+        "name": "東門次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 360,
+            "stuAmount": 314,
+            "occupancyRate": 87.2,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 360,
+            "stuAmount": 324,
+            "occupancyRate": 90.0,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 390,
+            "stuAmount": 356,
+            "occupancyRate": 91.3,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "111年",
+            "appEnroll": 390,
+            "stuAmount": 339,
+            "occupancyRate": 86.9,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 420,
+            "stuAmount": 323,
+            "occupancyRate": 76.9,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "113年",
+            "appEnroll": 360,
+            "stuAmount": 271,
+            "occupancyRate": 75.3,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "南門次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 240,
+            "stuAmount": 240,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 330,
+            "stuAmount": 299,
+            "occupancyRate": 90.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 330,
+            "stuAmount": 299,
+            "occupancyRate": 90.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 330,
+            "stuAmount": 297,
+            "occupancyRate": 90.0,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "112年",
+            "appEnroll": 369,
+            "stuAmount": 302,
+            "occupancyRate": 81.8,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 240,
+            "stuAmount": 201,
+            "occupancyRate": 83.8,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "崁頂次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 211,
+            "stuAmount": 177,
+            "occupancyRate": 83.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 211,
+            "stuAmount": 188,
+            "occupancyRate": 89.1,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 211,
+            "stuAmount": 160,
+            "occupancyRate": 75.8,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 151,
+            "stuAmount": 121,
+            "occupancyRate": 80.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 151,
+            "stuAmount": 112,
+            "occupancyRate": 74.2,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "113年",
+            "appEnroll": 0,
+            "stuAmount": 0,
+            "occupancyRate": 0,
+            "kindergartenCount": 0
+          }
+        ]
+      },
+      {
+        "name": "古亭次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 264,
+            "stuAmount": 259,
+            "occupancyRate": 98.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 264,
+            "stuAmount": 263,
+            "occupancyRate": 99.6,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 272,
+            "stuAmount": 272,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 302,
+            "stuAmount": 295,
+            "occupancyRate": 97.7,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 318,
+            "stuAmount": 296,
+            "occupancyRate": 93.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "113年",
+            "appEnroll": 318,
+            "stuAmount": 270,
+            "occupancyRate": 84.9,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "公館次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 106,
+            "stuAmount": 105,
+            "occupancyRate": 99.1,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "109年",
+            "appEnroll": 286,
+            "stuAmount": 253,
+            "occupancyRate": 88.5,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 286,
+            "stuAmount": 229,
+            "occupancyRate": 80.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 286,
+            "stuAmount": 106,
+            "occupancyRate": 37.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 106,
+            "stuAmount": 100,
+            "occupancyRate": 94.3,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "113年",
+            "appEnroll": 106,
+            "stuAmount": 86,
+            "occupancyRate": 81.1,
+            "kindergartenCount": 1
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -224,35 +3145,327 @@
     "id": "大同",
     "name": "大同區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 5120, "appEnroll": 3850, "stuAmount": 3520, "occupancyRate": 91.4, "publicCount": 10, "nonProfitCount": 4, "quasiPublicCount": 8, "workplaceCount": 1, "privateCount": 12, "totalKindergartens": 35},
-      {"year": "109年", "childPopulation": 4920, "appEnroll": 3980, "stuAmount": 3650, "occupancyRate": 91.7, "publicCount": 10, "nonProfitCount": 4, "quasiPublicCount": 8, "workplaceCount": 1, "privateCount": 12, "totalKindergartens": 35},
-      {"year": "110年", "childPopulation": 4680, "appEnroll": 4120, "stuAmount": 3780, "occupancyRate": 91.7, "publicCount": 10, "nonProfitCount": 4, "quasiPublicCount": 8, "workplaceCount": 1, "privateCount": 12, "totalKindergartens": 35},
-      {"year": "111年", "childPopulation": 4450, "appEnroll": 4280, "stuAmount": 3940, "occupancyRate": 92.1, "publicCount": 10, "nonProfitCount": 4, "quasiPublicCount": 8, "workplaceCount": 1, "privateCount": 12, "totalKindergartens": 35},
-      {"year": "112年", "childPopulation": 4210, "appEnroll": 4390, "stuAmount": 4050, "occupancyRate": 92.3, "publicCount": 10, "nonProfitCount": 4, "quasiPublicCount": 8, "workplaceCount": 1, "privateCount": 12, "totalKindergartens": 35},
-      {"year": "113年", "childPopulation": 3980, "appEnroll": 4480, "stuAmount": 4120, "occupancyRate": 92.0, "publicCount": 10, "nonProfitCount": 4, "quasiPublicCount": 8, "workplaceCount": 1, "privateCount": 12, "totalKindergartens": 35}
+      {
+        "year": "108年",
+        "childPopulation": 5293,
+        "appEnroll": 1508,
+        "stuAmount": 1475,
+        "occupancyRate": 97.8,
+        "publicCount": 10,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 11
+      },
+      {
+        "year": "109年",
+        "childPopulation": 4977,
+        "appEnroll": 1806,
+        "stuAmount": 1700,
+        "occupancyRate": 94.1,
+        "publicCount": 10,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 13
+      },
+      {
+        "year": "110年",
+        "childPopulation": 4563,
+        "appEnroll": 2185,
+        "stuAmount": 2073,
+        "occupancyRate": 94.9,
+        "publicCount": 10,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 5,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 18
+      },
+      {
+        "year": "111年",
+        "childPopulation": 4015,
+        "appEnroll": 2367,
+        "stuAmount": 2123,
+        "occupancyRate": 89.7,
+        "publicCount": 10,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 6,
+        "workplaceCount": 1,
+        "privateCount": 0,
+        "totalKindergartens": 20
+      },
+      {
+        "year": "112年",
+        "childPopulation": 3604,
+        "appEnroll": 2577,
+        "stuAmount": 2213,
+        "occupancyRate": 85.9,
+        "publicCount": 10,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 7,
+        "workplaceCount": 1,
+        "privateCount": 0,
+        "totalKindergartens": 21
+      },
+      {
+        "year": "113年",
+        "childPopulation": 3261,
+        "appEnroll": 2026,
+        "stuAmount": 1670,
+        "occupancyRate": 82.4,
+        "publicCount": 10,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 0,
+        "workplaceCount": 1,
+        "privateCount": 0,
+        "totalKindergartens": 14
+      }
     ],
     "sub_districts": [
-      {"name": "蘭州次分區", "appEnroll": 1080, "stuAmount": 990, "kindergartenCount": 8, "occupancyRate": 91.7},
-      {"name": "大龍次分區", "appEnroll": 1150, "stuAmount": 1060, "kindergartenCount": 9, "occupancyRate": 92.2},
-      {"name": "延平次分區", "appEnroll": 1120, "stuAmount": 1030, "kindergartenCount": 9, "occupancyRate": 92.0},
-      {"name": "建成次分區", "appEnroll": 1130, "stuAmount": 1040, "kindergartenCount": 9, "occupancyRate": 92.0}
+      {
+        "name": "蘭州次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 226,
+            "stuAmount": 227,
+            "occupancyRate": 100.4,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 332,
+            "stuAmount": 320,
+            "occupancyRate": 96.4,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 348,
+            "stuAmount": 341,
+            "occupancyRate": 98.0,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 348,
+            "stuAmount": 344,
+            "occupancyRate": 98.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "112年",
+            "appEnroll": 558,
+            "stuAmount": 415,
+            "occupancyRate": 74.4,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 348,
+            "stuAmount": 301,
+            "occupancyRate": 86.5,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "大龍次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 370,
+            "stuAmount": 369,
+            "occupancyRate": 99.7,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 530,
+            "stuAmount": 480,
+            "occupancyRate": 90.6,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "110年",
+            "appEnroll": 619,
+            "stuAmount": 578,
+            "occupancyRate": 93.4,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "111年",
+            "appEnroll": 619,
+            "stuAmount": 543,
+            "occupancyRate": 87.7,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "112年",
+            "appEnroll": 619,
+            "stuAmount": 549,
+            "occupancyRate": 88.7,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "113年",
+            "appEnroll": 582,
+            "stuAmount": 459,
+            "occupancyRate": 78.9,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "延平次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 334,
+            "stuAmount": 331,
+            "occupancyRate": 99.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 334,
+            "stuAmount": 331,
+            "occupancyRate": 99.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 403,
+            "stuAmount": 378,
+            "occupancyRate": 93.8,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "111年",
+            "appEnroll": 569,
+            "stuAmount": 449,
+            "occupancyRate": 78.9,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "112年",
+            "appEnroll": 569,
+            "stuAmount": 486,
+            "occupancyRate": 85.4,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "113年",
+            "appEnroll": 470,
+            "stuAmount": 387,
+            "occupancyRate": 82.3,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "建成次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 578,
+            "stuAmount": 548,
+            "occupancyRate": 94.8,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 610,
+            "stuAmount": 569,
+            "occupancyRate": 93.3,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "110年",
+            "appEnroll": 815,
+            "stuAmount": 776,
+            "occupancyRate": 95.2,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 831,
+            "stuAmount": 787,
+            "occupancyRate": 94.7,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "112年",
+            "appEnroll": 831,
+            "stuAmount": 763,
+            "occupancyRate": 91.8,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "113年",
+            "appEnroll": 626,
+            "stuAmount": 523,
+            "occupancyRate": 83.5,
+            "kindergartenCount": 4
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -260,37 +3473,421 @@
     "id": "萬華",
     "name": "萬華區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 6450, "appEnroll": 4680, "stuAmount": 4250, "occupancyRate": 90.8, "publicCount": 13, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 2, "privateCount": 15, "totalKindergartens": 45},
-      {"year": "109年", "childPopulation": 6210, "appEnroll": 4820, "stuAmount": 4380, "occupancyRate": 90.9, "publicCount": 13, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 2, "privateCount": 15, "totalKindergartens": 45},
-      {"year": "110年", "childPopulation": 5920, "appEnroll": 4980, "stuAmount": 4550, "occupancyRate": 91.4, "publicCount": 13, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 2, "privateCount": 15, "totalKindergartens": 45},
-      {"year": "111年", "childPopulation": 5620, "appEnroll": 5150, "stuAmount": 4720, "occupancyRate": 91.7, "publicCount": 13, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 2, "privateCount": 15, "totalKindergartens": 45},
-      {"year": "112年", "childPopulation": 5350, "appEnroll": 5280, "stuAmount": 4850, "occupancyRate": 91.9, "publicCount": 13, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 2, "privateCount": 15, "totalKindergartens": 45},
-      {"year": "113年", "childPopulation": 5080, "appEnroll": 5390, "stuAmount": 4950, "occupancyRate": 91.8, "publicCount": 13, "nonProfitCount": 3, "quasiPublicCount": 12, "workplaceCount": 2, "privateCount": 15, "totalKindergartens": 45}
+      {
+        "year": "108年",
+        "childPopulation": 7190,
+        "appEnroll": 2944,
+        "stuAmount": 2720,
+        "occupancyRate": 92.4,
+        "publicCount": 13,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 11,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 26
+      },
+      {
+        "year": "109年",
+        "childPopulation": 6616,
+        "appEnroll": 3018,
+        "stuAmount": 2816,
+        "occupancyRate": 93.3,
+        "publicCount": 13,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 12,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 27
+      },
+      {
+        "year": "110年",
+        "childPopulation": 5673,
+        "appEnroll": 3150,
+        "stuAmount": 2851,
+        "occupancyRate": 90.5,
+        "publicCount": 13,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 12,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 27
+      },
+      {
+        "year": "111年",
+        "childPopulation": 4801,
+        "appEnroll": 3242,
+        "stuAmount": 2842,
+        "occupancyRate": 87.7,
+        "publicCount": 13,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 12,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 27
+      },
+      {
+        "year": "112年",
+        "childPopulation": 4291,
+        "appEnroll": 3259,
+        "stuAmount": 2691,
+        "occupancyRate": 82.6,
+        "publicCount": 13,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 11,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 27
+      },
+      {
+        "year": "113年",
+        "childPopulation": 3832,
+        "appEnroll": 2656,
+        "stuAmount": 2081,
+        "occupancyRate": 78.4,
+        "publicCount": 13,
+        "nonProfitCount": 4,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 17
+      }
     ],
     "sub_districts": [
-      {"name": "西門次分區", "appEnroll": 850, "stuAmount": 780, "kindergartenCount": 7, "occupancyRate": 91.8},
-      {"name": "龍山次分區", "appEnroll": 920, "stuAmount": 840, "kindergartenCount": 8, "occupancyRate": 91.3},
-      {"name": "大理次分區", "appEnroll": 880, "stuAmount": 810, "kindergartenCount": 7, "occupancyRate": 92.0},
-      {"name": "西園次分區", "appEnroll": 950, "stuAmount": 870, "kindergartenCount": 8, "occupancyRate": 91.6},
-      {"name": "東園次分區", "appEnroll": 890, "stuAmount": 820, "kindergartenCount": 7, "occupancyRate": 92.1},
-      {"name": "青年次分區", "appEnroll": 900, "stuAmount": 830, "kindergartenCount": 8, "occupancyRate": 92.2}
+      {
+        "name": "西門次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 351,
+            "stuAmount": 351,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 351,
+            "stuAmount": 349,
+            "occupancyRate": 99.4,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 365,
+            "stuAmount": 349,
+            "occupancyRate": 95.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 365,
+            "stuAmount": 326,
+            "occupancyRate": 89.3,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "112年",
+            "appEnroll": 365,
+            "stuAmount": 288,
+            "occupancyRate": 78.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "113年",
+            "appEnroll": 452,
+            "stuAmount": 250,
+            "occupancyRate": 55.3,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "龍山次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 490,
+            "stuAmount": 461,
+            "occupancyRate": 94.1,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 490,
+            "stuAmount": 458,
+            "occupancyRate": 93.5,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "110年",
+            "appEnroll": 498,
+            "stuAmount": 466,
+            "occupancyRate": 93.6,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "111年",
+            "appEnroll": 498,
+            "stuAmount": 469,
+            "occupancyRate": 94.2,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 514,
+            "stuAmount": 473,
+            "occupancyRate": 92.0,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 500,
+            "stuAmount": 410,
+            "occupancyRate": 82.0,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "大理次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 871,
+            "stuAmount": 857,
+            "occupancyRate": 98.4,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "109年",
+            "appEnroll": 903,
+            "stuAmount": 875,
+            "occupancyRate": 96.9,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "110年",
+            "appEnroll": 1073,
+            "stuAmount": 968,
+            "occupancyRate": 90.2,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "111年",
+            "appEnroll": 1089,
+            "stuAmount": 966,
+            "occupancyRate": 88.7,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "112年",
+            "appEnroll": 990,
+            "stuAmount": 859,
+            "occupancyRate": 86.8,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "113年",
+            "appEnroll": 756,
+            "stuAmount": 659,
+            "occupancyRate": 87.2,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "西園次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 737,
+            "stuAmount": 617,
+            "occupancyRate": 83.7,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "109年",
+            "appEnroll": 737,
+            "stuAmount": 648,
+            "occupancyRate": 87.9,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "110年",
+            "appEnroll": 677,
+            "stuAmount": 601,
+            "occupancyRate": 88.8,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "111年",
+            "appEnroll": 723,
+            "stuAmount": 585,
+            "occupancyRate": 80.9,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "112年",
+            "appEnroll": 723,
+            "stuAmount": 566,
+            "occupancyRate": 78.3,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 544,
+            "stuAmount": 438,
+            "occupancyRate": 80.5,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "東園次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 210,
+            "stuAmount": 153,
+            "occupancyRate": 72.9,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 210,
+            "stuAmount": 162,
+            "occupancyRate": 77.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 210,
+            "stuAmount": 154,
+            "occupancyRate": 73.3,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 210,
+            "stuAmount": 153,
+            "occupancyRate": 72.9,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 210,
+            "stuAmount": 140,
+            "occupancyRate": 66.7,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "113年",
+            "appEnroll": 0,
+            "stuAmount": 0,
+            "occupancyRate": 0,
+            "kindergartenCount": 0
+          }
+        ]
+      },
+      {
+        "name": "青年次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 285,
+            "stuAmount": 281,
+            "occupancyRate": 98.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 327,
+            "stuAmount": 324,
+            "occupancyRate": 99.1,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "110年",
+            "appEnroll": 327,
+            "stuAmount": 313,
+            "occupancyRate": 95.7,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "111年",
+            "appEnroll": 357,
+            "stuAmount": 343,
+            "occupancyRate": 96.1,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 457,
+            "stuAmount": 365,
+            "occupancyRate": 79.9,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "113年",
+            "appEnroll": 404,
+            "stuAmount": 324,
+            "occupancyRate": 80.2,
+            "kindergartenCount": 3
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -298,36 +3895,374 @@
     "id": "文山",
     "name": "文山區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 10850, "appEnroll": 7420, "stuAmount": 6780, "occupancyRate": 91.4, "publicCount": 18, "nonProfitCount": 8, "quasiPublicCount": 21, "workplaceCount": 4, "privateCount": 32, "totalKindergartens": 83},
-      {"year": "109年", "childPopulation": 10420, "appEnroll": 7650, "stuAmount": 6990, "occupancyRate": 91.4, "publicCount": 18, "nonProfitCount": 8, "quasiPublicCount": 21, "workplaceCount": 4, "privateCount": 32, "totalKindergartens": 83},
-      {"year": "110年", "childPopulation": 9950, "appEnroll": 7890, "stuAmount": 7220, "occupancyRate": 91.5, "publicCount": 18, "nonProfitCount": 8, "quasiPublicCount": 21, "workplaceCount": 4, "privateCount": 32, "totalKindergartens": 83},
-      {"year": "111年", "childPopulation": 9480, "appEnroll": 8120, "stuAmount": 7450, "occupancyRate": 91.7, "publicCount": 18, "nonProfitCount": 8, "quasiPublicCount": 21, "workplaceCount": 4, "privateCount": 32, "totalKindergartens": 83},
-      {"year": "112年", "childPopulation": 9020, "appEnroll": 8350, "stuAmount": 7680, "occupancyRate": 92.0, "publicCount": 18, "nonProfitCount": 8, "quasiPublicCount": 21, "workplaceCount": 4, "privateCount": 32, "totalKindergartens": 83},
-      {"year": "113年", "childPopulation": 8590, "appEnroll": 8520, "stuAmount": 7920, "occupancyRate": 93.0, "publicCount": 18, "nonProfitCount": 8, "quasiPublicCount": 21, "workplaceCount": 4, "privateCount": 32, "totalKindergartens": 83}
+      {
+        "year": "108年",
+        "childPopulation": 11068,
+        "appEnroll": 3886,
+        "stuAmount": 3594,
+        "occupancyRate": 92.5,
+        "publicCount": 19,
+        "nonProfitCount": 7,
+        "quasiPublicCount": 12,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 38
+      },
+      {
+        "year": "109年",
+        "childPopulation": 10411,
+        "appEnroll": 4025,
+        "stuAmount": 3704,
+        "occupancyRate": 92.0,
+        "publicCount": 19,
+        "nonProfitCount": 7,
+        "quasiPublicCount": 13,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 39
+      },
+      {
+        "year": "110年",
+        "childPopulation": 9326,
+        "appEnroll": 5231,
+        "stuAmount": 4362,
+        "occupancyRate": 83.4,
+        "publicCount": 19,
+        "nonProfitCount": 9,
+        "quasiPublicCount": 20,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 48
+      },
+      {
+        "year": "111年",
+        "childPopulation": 8163,
+        "appEnroll": 5533,
+        "stuAmount": 4331,
+        "occupancyRate": 78.3,
+        "publicCount": 19,
+        "nonProfitCount": 9,
+        "quasiPublicCount": 20,
+        "workplaceCount": 2,
+        "privateCount": 0,
+        "totalKindergartens": 50
+      },
+      {
+        "year": "112年",
+        "childPopulation": 7508,
+        "appEnroll": 5513,
+        "stuAmount": 4275,
+        "occupancyRate": 77.5,
+        "publicCount": 19,
+        "nonProfitCount": 10,
+        "quasiPublicCount": 21,
+        "workplaceCount": 2,
+        "privateCount": 0,
+        "totalKindergartens": 52
+      },
+      {
+        "year": "113年",
+        "childPopulation": 6855,
+        "appEnroll": 3837,
+        "stuAmount": 2835,
+        "occupancyRate": 73.9,
+        "publicCount": 19,
+        "nonProfitCount": 11,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 30
+      }
     ],
     "sub_districts": [
-      {"name": "景美次分區", "appEnroll": 1850, "stuAmount": 1720, "kindergartenCount": 18, "occupancyRate": 93.0},
-      {"name": "興隆次分區", "appEnroll": 1780, "stuAmount": 1650, "kindergartenCount": 17, "occupancyRate": 92.7},
-      {"name": "木柵次分區", "appEnroll": 1920, "stuAmount": 1790, "kindergartenCount": 19, "occupancyRate": 93.2},
-      {"name": "萬芳次分區", "appEnroll": 1550, "stuAmount": 1440, "kindergartenCount": 15, "occupancyRate": 92.9},
-      {"name": "二格山次分區", "appEnroll": 1420, "stuAmount": 1320, "kindergartenCount": 14, "occupancyRate": 93.0}
+      {
+        "name": "景美次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 883,
+            "stuAmount": 866,
+            "occupancyRate": 98.1,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "109年",
+            "appEnroll": 1095,
+            "stuAmount": 936,
+            "occupancyRate": 85.5,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "110年",
+            "appEnroll": 1462,
+            "stuAmount": 1133,
+            "occupancyRate": 77.5,
+            "kindergartenCount": 12
+          },
+          {
+            "year": "111年",
+            "appEnroll": 1568,
+            "stuAmount": 1130,
+            "occupancyRate": 72.1,
+            "kindergartenCount": 13
+          },
+          {
+            "year": "112年",
+            "appEnroll": 1328,
+            "stuAmount": 1087,
+            "occupancyRate": 81.9,
+            "kindergartenCount": 12
+          },
+          {
+            "year": "113年",
+            "appEnroll": 1048,
+            "stuAmount": 789,
+            "occupancyRate": 75.3,
+            "kindergartenCount": 9
+          }
+        ]
+      },
+      {
+        "name": "興隆次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 1156,
+            "stuAmount": 1015,
+            "occupancyRate": 87.8,
+            "kindergartenCount": 12
+          },
+          {
+            "year": "109年",
+            "appEnroll": 1114,
+            "stuAmount": 1032,
+            "occupancyRate": 92.6,
+            "kindergartenCount": 12
+          },
+          {
+            "year": "110年",
+            "appEnroll": 1266,
+            "stuAmount": 1171,
+            "occupancyRate": 92.5,
+            "kindergartenCount": 13
+          },
+          {
+            "year": "111年",
+            "appEnroll": 1326,
+            "stuAmount": 1156,
+            "occupancyRate": 87.2,
+            "kindergartenCount": 13
+          },
+          {
+            "year": "112年",
+            "appEnroll": 1522,
+            "stuAmount": 1242,
+            "occupancyRate": 81.6,
+            "kindergartenCount": 15
+          },
+          {
+            "year": "113年",
+            "appEnroll": 1061,
+            "stuAmount": 814,
+            "occupancyRate": 76.7,
+            "kindergartenCount": 8
+          }
+        ]
+      },
+      {
+        "name": "木柵次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 1381,
+            "stuAmount": 1252,
+            "occupancyRate": 90.7,
+            "kindergartenCount": 13
+          },
+          {
+            "year": "109年",
+            "appEnroll": 1350,
+            "stuAmount": 1271,
+            "occupancyRate": 94.1,
+            "kindergartenCount": 13
+          },
+          {
+            "year": "110年",
+            "appEnroll": 1802,
+            "stuAmount": 1480,
+            "occupancyRate": 82.1,
+            "kindergartenCount": 17
+          },
+          {
+            "year": "111年",
+            "appEnroll": 1878,
+            "stuAmount": 1463,
+            "occupancyRate": 77.9,
+            "kindergartenCount": 17
+          },
+          {
+            "year": "112年",
+            "appEnroll": 1902,
+            "stuAmount": 1421,
+            "occupancyRate": 74.7,
+            "kindergartenCount": 18
+          },
+          {
+            "year": "113年",
+            "appEnroll": 1238,
+            "stuAmount": 878,
+            "occupancyRate": 70.9,
+            "kindergartenCount": 8
+          }
+        ]
+      },
+      {
+        "name": "萬芳次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 286,
+            "stuAmount": 282,
+            "occupancyRate": 98.6,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 286,
+            "stuAmount": 285,
+            "occupancyRate": 99.7,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 521,
+            "stuAmount": 399,
+            "occupancyRate": 76.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 581,
+            "stuAmount": 410,
+            "occupancyRate": 70.6,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 581,
+            "stuAmount": 370,
+            "occupancyRate": 63.7,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 286,
+            "stuAmount": 198,
+            "occupancyRate": 69.2,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "二格山次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 120,
+            "stuAmount": 120,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 120,
+            "stuAmount": 120,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 120,
+            "stuAmount": 120,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 120,
+            "stuAmount": 113,
+            "occupancyRate": 94.2,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 120,
+            "stuAmount": 106,
+            "occupancyRate": 88.3,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "113年",
+            "appEnroll": 144,
+            "stuAmount": 117,
+            "occupancyRate": 81.2,
+            "kindergartenCount": 2
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -335,35 +4270,327 @@
     "id": "南港",
     "name": "南港區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 5680, "appEnroll": 4120, "stuAmount": 3780, "occupancyRate": 91.7, "publicCount": 8, "nonProfitCount": 3, "quasiPublicCount": 9, "workplaceCount": 3, "privateCount": 16, "totalKindergartens": 39},
-      {"year": "109年", "childPopulation": 5450, "appEnroll": 4280, "stuAmount": 3920, "occupancyRate": 91.6, "publicCount": 8, "nonProfitCount": 3, "quasiPublicCount": 9, "workplaceCount": 3, "privateCount": 16, "totalKindergartens": 39},
-      {"year": "110年", "childPopulation": 5210, "appEnroll": 4450, "stuAmount": 4090, "occupancyRate": 91.9, "publicCount": 8, "nonProfitCount": 3, "quasiPublicCount": 9, "workplaceCount": 3, "privateCount": 16, "totalKindergartens": 39},
-      {"year": "111年", "childPopulation": 4980, "appEnroll": 4620, "stuAmount": 4260, "occupancyRate": 92.2, "publicCount": 8, "nonProfitCount": 3, "quasiPublicCount": 9, "workplaceCount": 3, "privateCount": 16, "totalKindergartens": 39},
-      {"year": "112年", "childPopulation": 4750, "appEnroll": 4780, "stuAmount": 4390, "occupancyRate": 91.8, "publicCount": 8, "nonProfitCount": 3, "quasiPublicCount": 9, "workplaceCount": 3, "privateCount": 16, "totalKindergartens": 39},
-      {"year": "113年", "childPopulation": 4520, "appEnroll": 4910, "stuAmount": 4510, "occupancyRate": 91.9, "publicCount": 8, "nonProfitCount": 3, "quasiPublicCount": 9, "workplaceCount": 3, "privateCount": 16, "totalKindergartens": 39}
+      {
+        "year": "108年",
+        "childPopulation": 5492,
+        "appEnroll": 1512,
+        "stuAmount": 1435,
+        "occupancyRate": 94.9,
+        "publicCount": 7,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 3,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 13
+      },
+      {
+        "year": "109年",
+        "childPopulation": 5109,
+        "appEnroll": 1752,
+        "stuAmount": 1626,
+        "occupancyRate": 92.8,
+        "publicCount": 7,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 5,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 15
+      },
+      {
+        "year": "110年",
+        "childPopulation": 4647,
+        "appEnroll": 2088,
+        "stuAmount": 1862,
+        "occupancyRate": 89.2,
+        "publicCount": 7,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 8,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 18
+      },
+      {
+        "year": "111年",
+        "childPopulation": 4057,
+        "appEnroll": 2088,
+        "stuAmount": 1713,
+        "occupancyRate": 82.0,
+        "publicCount": 7,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 8,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 18
+      },
+      {
+        "year": "112年",
+        "childPopulation": 3667,
+        "appEnroll": 2042,
+        "stuAmount": 1644,
+        "occupancyRate": 80.5,
+        "publicCount": 7,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 7,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 17
+      },
+      {
+        "year": "113年",
+        "childPopulation": 3276,
+        "appEnroll": 1376,
+        "stuAmount": 1058,
+        "occupancyRate": 76.9,
+        "publicCount": 7,
+        "nonProfitCount": 3,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 10
+      }
     ],
     "sub_districts": [
-      {"name": "後山埤次分區", "appEnroll": 1250, "stuAmount": 1150, "kindergartenCount": 10, "occupancyRate": 92.0},
-      {"name": "新庄仔次分區", "appEnroll": 1280, "stuAmount": 1180, "kindergartenCount": 10, "occupancyRate": 92.2},
-      {"name": "三重埔次分區", "appEnroll": 1180, "stuAmount": 1080, "kindergartenCount": 9, "occupancyRate": 91.5},
-      {"name": "中研次分區", "appEnroll": 1200, "stuAmount": 1100, "kindergartenCount": 10, "occupancyRate": 91.7}
+      {
+        "name": "後山埤次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 566,
+            "stuAmount": 550,
+            "occupancyRate": 97.2,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 686,
+            "stuAmount": 656,
+            "occupancyRate": 95.6,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 982,
+            "stuAmount": 840,
+            "occupancyRate": 85.5,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "111年",
+            "appEnroll": 982,
+            "stuAmount": 762,
+            "occupancyRate": 77.6,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "112年",
+            "appEnroll": 982,
+            "stuAmount": 731,
+            "occupancyRate": 74.4,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 492,
+            "stuAmount": 328,
+            "occupancyRate": 66.7,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "新庄仔次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 498,
+            "stuAmount": 438,
+            "occupancyRate": 88.0,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 498,
+            "stuAmount": 455,
+            "occupancyRate": 91.4,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "110年",
+            "appEnroll": 538,
+            "stuAmount": 496,
+            "occupancyRate": 92.2,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "111年",
+            "appEnroll": 538,
+            "stuAmount": 482,
+            "occupancyRate": 89.6,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "112年",
+            "appEnroll": 554,
+            "stuAmount": 469,
+            "occupancyRate": 84.7,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "113年",
+            "appEnroll": 514,
+            "stuAmount": 413,
+            "occupancyRate": 80.4,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "三重埔次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 106,
+            "stuAmount": 106,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "109年",
+            "appEnroll": 106,
+            "stuAmount": 106,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "110年",
+            "appEnroll": 106,
+            "stuAmount": 104,
+            "occupancyRate": 98.1,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "111年",
+            "appEnroll": 106,
+            "stuAmount": 104,
+            "occupancyRate": 98.1,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "112年",
+            "appEnroll": 106,
+            "stuAmount": 98,
+            "occupancyRate": 92.5,
+            "kindergartenCount": 1
+          },
+          {
+            "year": "113年",
+            "appEnroll": 106,
+            "stuAmount": 92,
+            "occupancyRate": 86.8,
+            "kindergartenCount": 1
+          }
+        ]
+      },
+      {
+        "name": "中研次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 342,
+            "stuAmount": 341,
+            "occupancyRate": 99.7,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 462,
+            "stuAmount": 409,
+            "occupancyRate": 88.5,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 462,
+            "stuAmount": 422,
+            "occupancyRate": 91.3,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "111年",
+            "appEnroll": 462,
+            "stuAmount": 365,
+            "occupancyRate": 79.0,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "112年",
+            "appEnroll": 400,
+            "stuAmount": 346,
+            "occupancyRate": 86.5,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 264,
+            "stuAmount": 225,
+            "occupancyRate": 85.2,
+            "kindergartenCount": 2
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -371,37 +4598,609 @@
     "id": "內湖",
     "name": "內湖區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 12850, "appEnroll": 9850, "stuAmount": 9020, "occupancyRate": 91.6, "publicCount": 15, "nonProfitCount": 9, "quasiPublicCount": 25, "workplaceCount": 4, "privateCount": 42, "totalKindergartens": 95},
-      {"year": "109年", "childPopulation": 12380, "appEnroll": 10120, "stuAmount": 9280, "occupancyRate": 91.7, "publicCount": 15, "nonProfitCount": 9, "quasiPublicCount": 25, "workplaceCount": 4, "privateCount": 42, "totalKindergartens": 95},
-      {"year": "110年", "childPopulation": 11850, "appEnroll": 10450, "stuAmount": 9580, "occupancyRate": 91.7, "publicCount": 15, "nonProfitCount": 9, "quasiPublicCount": 25, "workplaceCount": 4, "privateCount": 42, "totalKindergartens": 95},
-      {"year": "111年", "childPopulation": 11320, "appEnroll": 10780, "stuAmount": 9910, "occupancyRate": 91.9, "publicCount": 15, "nonProfitCount": 9, "quasiPublicCount": 25, "workplaceCount": 4, "privateCount": 42, "totalKindergartens": 95},
-      {"year": "112年", "childPopulation": 10790, "appEnroll": 11050, "stuAmount": 10220, "occupancyRate": 92.5, "publicCount": 15, "nonProfitCount": 9, "quasiPublicCount": 25, "workplaceCount": 4, "privateCount": 42, "totalKindergartens": 95},
-      {"year": "113年", "childPopulation": 10280, "appEnroll": 11280, "stuAmount": 10450, "occupancyRate": 92.6, "publicCount": 15, "nonProfitCount": 9, "quasiPublicCount": 25, "workplaceCount": 4, "privateCount": 42, "totalKindergartens": 95}
+      {
+        "year": "108年",
+        "childPopulation": 13041,
+        "appEnroll": 3172,
+        "stuAmount": 2978,
+        "occupancyRate": 93.9,
+        "publicCount": 14,
+        "nonProfitCount": 6,
+        "quasiPublicCount": 6,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 26
+      },
+      {
+        "year": "109年",
+        "childPopulation": 12309,
+        "appEnroll": 3598,
+        "stuAmount": 3484,
+        "occupancyRate": 96.8,
+        "publicCount": 14,
+        "nonProfitCount": 6,
+        "quasiPublicCount": 11,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 31
+      },
+      {
+        "year": "110年",
+        "childPopulation": 11124,
+        "appEnroll": 3827,
+        "stuAmount": 3687,
+        "occupancyRate": 96.3,
+        "publicCount": 14,
+        "nonProfitCount": 9,
+        "quasiPublicCount": 13,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 36
+      },
+      {
+        "year": "111年",
+        "childPopulation": 10000,
+        "appEnroll": 4188,
+        "stuAmount": 3851,
+        "occupancyRate": 92.0,
+        "publicCount": 14,
+        "nonProfitCount": 11,
+        "quasiPublicCount": 14,
+        "workplaceCount": 0,
+        "privateCount": 1,
+        "totalKindergartens": 40
+      },
+      {
+        "year": "112年",
+        "childPopulation": 9359,
+        "appEnroll": 4248,
+        "stuAmount": 3731,
+        "occupancyRate": 87.8,
+        "publicCount": 14,
+        "nonProfitCount": 10,
+        "quasiPublicCount": 15,
+        "workplaceCount": 0,
+        "privateCount": 1,
+        "totalKindergartens": 40
+      },
+      {
+        "year": "113年",
+        "childPopulation": 8731,
+        "appEnroll": 3322,
+        "stuAmount": 2797,
+        "occupancyRate": 84.2,
+        "publicCount": 14,
+        "nonProfitCount": 9,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 23
+      }
     ],
     "sub_districts": [
-      {"name": "西湖次分區", "appEnroll": 1950, "stuAmount": 1810, "kindergartenCount": 16, "occupancyRate": 92.8},
-      {"name": "金龍次分區", "appEnroll": 1880, "stuAmount": 1740, "kindergartenCount": 16, "occupancyRate": 92.6},
-      {"name": "東湖次分區", "appEnroll": 2150, "stuAmount": 1980, "kindergartenCount": 18, "occupancyRate": 92.1},
-      {"name": "紫陽次分區", "appEnroll": 1820, "stuAmount": 1690, "kindergartenCount": 15, "occupancyRate": 92.9},
-      {"name": "灣仔次分區", "appEnroll": 1750, "stuAmount": 1620, "kindergartenCount": 15, "occupancyRate": 92.6},
-      {"name": "洲尾次分區", "appEnroll": 1730, "stuAmount": 1610, "kindergartenCount": 15, "occupancyRate": 93.1}
+      {
+        "name": "三民次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 562,
+            "stuAmount": 556,
+            "occupancyRate": 98.9,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 715,
+            "stuAmount": 678,
+            "occupancyRate": 94.8,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "110年",
+            "appEnroll": 968,
+            "stuAmount": 893,
+            "occupancyRate": 92.3,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "111年",
+            "appEnroll": 968,
+            "stuAmount": 918,
+            "occupancyRate": 94.8,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "112年",
+            "appEnroll": 968,
+            "stuAmount": 915,
+            "occupancyRate": 94.5,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "113年",
+            "appEnroll": 608,
+            "stuAmount": 462,
+            "occupancyRate": 76.0,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "中崙次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 317,
+            "stuAmount": 307,
+            "occupancyRate": 96.8,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "109年",
+            "appEnroll": 317,
+            "stuAmount": 316,
+            "occupancyRate": 99.7,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 343,
+            "stuAmount": 333,
+            "occupancyRate": 97.1,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 383,
+            "stuAmount": 360,
+            "occupancyRate": 94.0,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "112年",
+            "appEnroll": 383,
+            "stuAmount": 344,
+            "occupancyRate": 89.8,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 120,
+            "stuAmount": 103,
+            "occupancyRate": 85.8,
+            "kindergartenCount": 1
+          }
+        ]
+      },
+      {
+        "name": "本鎮次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 272,
+            "stuAmount": 275,
+            "occupancyRate": 101.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 272,
+            "stuAmount": 269,
+            "occupancyRate": 98.9,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 288,
+            "stuAmount": 286,
+            "occupancyRate": 99.3,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 288,
+            "stuAmount": 285,
+            "occupancyRate": 99.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 288,
+            "stuAmount": 271,
+            "occupancyRate": 94.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "113年",
+            "appEnroll": 288,
+            "stuAmount": 251,
+            "occupancyRate": 87.2,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "東社次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 810,
+            "stuAmount": 750,
+            "occupancyRate": 92.6,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "109年",
+            "appEnroll": 810,
+            "stuAmount": 764,
+            "occupancyRate": 94.3,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "110年",
+            "appEnroll": 972,
+            "stuAmount": 911,
+            "occupancyRate": 93.7,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "111年",
+            "appEnroll": 972,
+            "stuAmount": 852,
+            "occupancyRate": 87.7,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "112年",
+            "appEnroll": 972,
+            "stuAmount": 830,
+            "occupancyRate": 85.4,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "113年",
+            "appEnroll": 616,
+            "stuAmount": 457,
+            "occupancyRate": 74.2,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "西湖次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 922,
+            "stuAmount": 877,
+            "occupancyRate": 95.1,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "109年",
+            "appEnroll": 922,
+            "stuAmount": 902,
+            "occupancyRate": 97.8,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "110年",
+            "appEnroll": 922,
+            "stuAmount": 897,
+            "occupancyRate": 97.3,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "111年",
+            "appEnroll": 922,
+            "stuAmount": 862,
+            "occupancyRate": 93.5,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "112年",
+            "appEnroll": 952,
+            "stuAmount": 813,
+            "occupancyRate": 85.4,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 772,
+            "stuAmount": 656,
+            "occupancyRate": 85.0,
+            "kindergartenCount": 5
+          }
+        ]
+      },
+      {
+        "name": "金龍次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 333,
+            "stuAmount": 329,
+            "occupancyRate": 98.8,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 333,
+            "stuAmount": 329,
+            "occupancyRate": 98.8,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 333,
+            "stuAmount": 325,
+            "occupancyRate": 97.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 397,
+            "stuAmount": 371,
+            "occupancyRate": 93.5,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 397,
+            "stuAmount": 368,
+            "occupancyRate": 92.7,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 350,
+            "stuAmount": 292,
+            "occupancyRate": 83.4,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "東湖次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 967,
+            "stuAmount": 926,
+            "occupancyRate": 95.8,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "109年",
+            "appEnroll": 1219,
+            "stuAmount": 1153,
+            "occupancyRate": 94.6,
+            "kindergartenCount": 11
+          },
+          {
+            "year": "110年",
+            "appEnroll": 1263,
+            "stuAmount": 1207,
+            "occupancyRate": 95.6,
+            "kindergartenCount": 13
+          },
+          {
+            "year": "111年",
+            "appEnroll": 1384,
+            "stuAmount": 1253,
+            "occupancyRate": 90.5,
+            "kindergartenCount": 14
+          },
+          {
+            "year": "112年",
+            "appEnroll": 1384,
+            "stuAmount": 1206,
+            "occupancyRate": 87.1,
+            "kindergartenCount": 14
+          },
+          {
+            "year": "113年",
+            "appEnroll": 960,
+            "stuAmount": 806,
+            "occupancyRate": 84.0,
+            "kindergartenCount": 7
+          }
+        ]
+      },
+      {
+        "name": "紫陽次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 469,
+            "stuAmount": 450,
+            "occupancyRate": 95.9,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 589,
+            "stuAmount": 577,
+            "occupancyRate": 98.0,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 643,
+            "stuAmount": 617,
+            "occupancyRate": 96.0,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 683,
+            "stuAmount": 647,
+            "occupancyRate": 94.7,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "112年",
+            "appEnroll": 683,
+            "stuAmount": 625,
+            "occupancyRate": 91.5,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 463,
+            "stuAmount": 393,
+            "occupancyRate": 84.9,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "灣仔次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 286,
+            "stuAmount": 286,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 302,
+            "stuAmount": 302,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 433,
+            "stuAmount": 408,
+            "occupancyRate": 94.2,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 569,
+            "stuAmount": 501,
+            "occupancyRate": 88.0,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 599,
+            "stuAmount": 502,
+            "occupancyRate": 83.8,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "113年",
+            "appEnroll": 544,
+            "stuAmount": 451,
+            "occupancyRate": 82.9,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "洲尾次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 195,
+            "stuAmount": 110,
+            "occupancyRate": 56.4,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 233,
+            "stuAmount": 221,
+            "occupancyRate": 94.8,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "110年",
+            "appEnroll": 233,
+            "stuAmount": 233,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "111年",
+            "appEnroll": 233,
+            "stuAmount": 217,
+            "occupancyRate": 93.1,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "112年",
+            "appEnroll": 233,
+            "stuAmount": 217,
+            "occupancyRate": 93.1,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "113年",
+            "appEnroll": 233,
+            "stuAmount": 199,
+            "occupancyRate": 85.4,
+            "kindergartenCount": 2
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -409,38 +5208,468 @@
     "id": "士林",
     "name": "士林區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 10250, "appEnroll": 7680, "stuAmount": 6980, "occupancyRate": 90.9, "publicCount": 19, "nonProfitCount": 6, "quasiPublicCount": 22, "workplaceCount": 3, "privateCount": 35, "totalKindergartens": 85},
-      {"year": "109年", "childPopulation": 9820, "appEnroll": 7890, "stuAmount": 7180, "occupancyRate": 91.0, "publicCount": 19, "nonProfitCount": 6, "quasiPublicCount": 22, "workplaceCount": 3, "privateCount": 35, "totalKindergartens": 85},
-      {"year": "110年", "childPopulation": 9380, "appEnroll": 8120, "stuAmount": 7420, "occupancyRate": 91.4, "publicCount": 19, "nonProfitCount": 6, "quasiPublicCount": 22, "workplaceCount": 3, "privateCount": 35, "totalKindergartens": 85},
-      {"year": "111年", "childPopulation": 8920, "appEnroll": 8350, "stuAmount": 7650, "occupancyRate": 91.6, "publicCount": 19, "nonProfitCount": 6, "quasiPublicCount": 22, "workplaceCount": 3, "privateCount": 35, "totalKindergartens": 85},
-      {"year": "112年", "childPopulation": 8490, "appEnroll": 8580, "stuAmount": 7890, "occupancyRate": 92.0, "publicCount": 19, "nonProfitCount": 6, "quasiPublicCount": 22, "workplaceCount": 3, "privateCount": 35, "totalKindergartens": 85},
-      {"year": "113年", "childPopulation": 8050, "appEnroll": 8750, "stuAmount": 8050, "occupancyRate": 92.0, "publicCount": 19, "nonProfitCount": 6, "quasiPublicCount": 22, "workplaceCount": 3, "privateCount": 35, "totalKindergartens": 85}
+      {
+        "year": "108年",
+        "childPopulation": 11240,
+        "appEnroll": 3828,
+        "stuAmount": 3634,
+        "occupancyRate": 94.9,
+        "publicCount": 18,
+        "nonProfitCount": 5,
+        "quasiPublicCount": 14,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 37
+      },
+      {
+        "year": "109年",
+        "childPopulation": 10549,
+        "appEnroll": 3880,
+        "stuAmount": 3690,
+        "occupancyRate": 95.1,
+        "publicCount": 18,
+        "nonProfitCount": 5,
+        "quasiPublicCount": 16,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 39
+      },
+      {
+        "year": "110年",
+        "childPopulation": 9381,
+        "appEnroll": 4441,
+        "stuAmount": 4083,
+        "occupancyRate": 91.9,
+        "publicCount": 18,
+        "nonProfitCount": 5,
+        "quasiPublicCount": 22,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 45
+      },
+      {
+        "year": "111年",
+        "childPopulation": 8182,
+        "appEnroll": 4817,
+        "stuAmount": 4121,
+        "occupancyRate": 85.6,
+        "publicCount": 18,
+        "nonProfitCount": 5,
+        "quasiPublicCount": 23,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 46
+      },
+      {
+        "year": "112年",
+        "childPopulation": 7612,
+        "appEnroll": 5037,
+        "stuAmount": 4113,
+        "occupancyRate": 81.7,
+        "publicCount": 18,
+        "nonProfitCount": 5,
+        "quasiPublicCount": 25,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 48
+      },
+      {
+        "year": "113年",
+        "childPopulation": 6931,
+        "appEnroll": 3038,
+        "stuAmount": 2427,
+        "occupancyRate": 79.9,
+        "publicCount": 18,
+        "nonProfitCount": 5,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 23
+      }
     ],
     "sub_districts": [
-      {"name": "社子次分區", "appEnroll": 1280, "stuAmount": 1180, "kindergartenCount": 12, "occupancyRate": 92.2},
-      {"name": "後港次分區", "appEnroll": 1220, "stuAmount": 1120, "kindergartenCount": 12, "occupancyRate": 91.8},
-      {"name": "街上次分區", "appEnroll": 1350, "stuAmount": 1240, "kindergartenCount": 13, "occupancyRate": 91.9},
-      {"name": "蘭雅次分區", "appEnroll": 1380, "stuAmount": 1270, "kindergartenCount": 13, "occupancyRate": 92.0},
-      {"name": "芝山岩次分區", "appEnroll": 1250, "stuAmount": 1150, "kindergartenCount": 12, "occupancyRate": 92.0},
-      {"name": "天母次分區", "appEnroll": 1420, "stuAmount": 1310, "kindergartenCount": 14, "occupancyRate": 92.3},
-      {"name": "陽明山次分區", "appEnroll": 850, "stuAmount": 780, "kindergartenCount": 9, "occupancyRate": 91.8}
+      {
+        "name": "社子次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 936,
+            "stuAmount": 915,
+            "occupancyRate": 97.8,
+            "kindergartenCount": 10
+          },
+          {
+            "year": "109年",
+            "appEnroll": 963,
+            "stuAmount": 933,
+            "occupancyRate": 96.9,
+            "kindergartenCount": 11
+          },
+          {
+            "year": "110年",
+            "appEnroll": 996,
+            "stuAmount": 902,
+            "occupancyRate": 90.6,
+            "kindergartenCount": 11
+          },
+          {
+            "year": "111年",
+            "appEnroll": 996,
+            "stuAmount": 876,
+            "occupancyRate": 88.0,
+            "kindergartenCount": 11
+          },
+          {
+            "year": "112年",
+            "appEnroll": 996,
+            "stuAmount": 865,
+            "occupancyRate": 86.8,
+            "kindergartenCount": 11
+          },
+          {
+            "year": "113年",
+            "appEnroll": 626,
+            "stuAmount": 518,
+            "occupancyRate": 82.7,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "後港次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 713,
+            "stuAmount": 663,
+            "occupancyRate": 93.0,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "109年",
+            "appEnroll": 713,
+            "stuAmount": 665,
+            "occupancyRate": 93.3,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "110年",
+            "appEnroll": 753,
+            "stuAmount": 716,
+            "occupancyRate": 95.1,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "111年",
+            "appEnroll": 1113,
+            "stuAmount": 861,
+            "occupancyRate": 77.4,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "112年",
+            "appEnroll": 1129,
+            "stuAmount": 865,
+            "occupancyRate": 76.6,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "113年",
+            "appEnroll": 512,
+            "stuAmount": 349,
+            "occupancyRate": 68.2,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "街上次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 348,
+            "stuAmount": 336,
+            "occupancyRate": 96.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 348,
+            "stuAmount": 341,
+            "occupancyRate": 98.0,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 656,
+            "stuAmount": 578,
+            "occupancyRate": 88.1,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 672,
+            "stuAmount": 571,
+            "occupancyRate": 85.0,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "112年",
+            "appEnroll": 672,
+            "stuAmount": 559,
+            "occupancyRate": 83.2,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "113年",
+            "appEnroll": 394,
+            "stuAmount": 323,
+            "occupancyRate": 82.0,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "蘭雅次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 512,
+            "stuAmount": 427,
+            "occupancyRate": 83.4,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "109年",
+            "appEnroll": 539,
+            "stuAmount": 455,
+            "occupancyRate": 84.4,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 620,
+            "stuAmount": 522,
+            "occupancyRate": 84.2,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 620,
+            "stuAmount": 519,
+            "occupancyRate": 83.7,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "112年",
+            "appEnroll": 684,
+            "stuAmount": 529,
+            "occupancyRate": 77.3,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 272,
+            "stuAmount": 238,
+            "occupancyRate": 87.5,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "芝山岩次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 568,
+            "stuAmount": 567,
+            "occupancyRate": 99.8,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "109年",
+            "appEnroll": 568,
+            "stuAmount": 567,
+            "occupancyRate": 99.8,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 607,
+            "stuAmount": 593,
+            "occupancyRate": 97.7,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "111年",
+            "appEnroll": 607,
+            "stuAmount": 574,
+            "occupancyRate": 94.6,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "112年",
+            "appEnroll": 723,
+            "stuAmount": 596,
+            "occupancyRate": 82.4,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "113年",
+            "appEnroll": 500,
+            "stuAmount": 410,
+            "occupancyRate": 82.0,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "天母次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 585,
+            "stuAmount": 571,
+            "occupancyRate": 97.6,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "109年",
+            "appEnroll": 583,
+            "stuAmount": 570,
+            "occupancyRate": 97.8,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "110年",
+            "appEnroll": 643,
+            "stuAmount": 619,
+            "occupancyRate": 96.3,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "111年",
+            "appEnroll": 643,
+            "stuAmount": 592,
+            "occupancyRate": 92.1,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "112年",
+            "appEnroll": 667,
+            "stuAmount": 587,
+            "occupancyRate": 88.0,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "113年",
+            "appEnroll": 568,
+            "stuAmount": 480,
+            "occupancyRate": 84.5,
+            "kindergartenCount": 4
+          }
+        ]
+      },
+      {
+        "name": "陽明山次分區(士林區)",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 90,
+            "stuAmount": 80,
+            "occupancyRate": 88.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 90,
+            "stuAmount": 85,
+            "occupancyRate": 94.4,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 90,
+            "stuAmount": 77,
+            "occupancyRate": 85.6,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 90,
+            "stuAmount": 61,
+            "occupancyRate": 67.8,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "112年",
+            "appEnroll": 90,
+            "stuAmount": 44,
+            "occupancyRate": 48.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "113年",
+            "appEnroll": 90,
+            "stuAmount": 45,
+            "occupancyRate": 50.0,
+            "kindergartenCount": 3
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   },
@@ -448,38 +5677,468 @@
     "id": "北投",
     "name": "北投區",
     "yearly_stats": [
-      {"year": "108年", "childPopulation": 9120, "appEnroll": 6580, "stuAmount": 5980, "occupancyRate": 90.9, "publicCount": 17, "nonProfitCount": 4, "quasiPublicCount": 18, "workplaceCount": 2, "privateCount": 28, "totalKindergartens": 69},
-      {"year": "109年", "childPopulation": 8750, "appEnroll": 6790, "stuAmount": 6180, "occupancyRate": 91.0, "publicCount": 17, "nonProfitCount": 4, "quasiPublicCount": 18, "workplaceCount": 2, "privateCount": 28, "totalKindergartens": 69},
-      {"year": "110年", "childPopulation": 8320, "appEnroll": 7020, "stuAmount": 6420, "occupancyRate": 91.5, "publicCount": 17, "nonProfitCount": 4, "quasiPublicCount": 18, "workplaceCount": 2, "privateCount": 28, "totalKindergartens": 69},
-      {"year": "111年", "childPopulation": 7920, "appEnroll": 7250, "stuAmount": 6650, "occupancyRate": 91.7, "publicCount": 17, "nonProfitCount": 4, "quasiPublicCount": 18, "workplaceCount": 2, "privateCount": 28, "totalKindergartens": 69},
-      {"year": "112年", "childPopulation": 7510, "appEnroll": 7480, "stuAmount": 6880, "occupancyRate": 92.0, "publicCount": 17, "nonProfitCount": 4, "quasiPublicCount": 18, "workplaceCount": 2, "privateCount": 28, "totalKindergartens": 69},
-      {"year": "113年", "childPopulation": 7120, "appEnroll": 7650, "stuAmount": 7020, "occupancyRate": 91.8, "publicCount": 17, "nonProfitCount": 4, "quasiPublicCount": 18, "workplaceCount": 2, "privateCount": 28, "totalKindergartens": 69}
+      {
+        "year": "108年",
+        "childPopulation": 10516,
+        "appEnroll": 2965,
+        "stuAmount": 2713,
+        "occupancyRate": 91.5,
+        "publicCount": 16,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 13,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 30
+      },
+      {
+        "year": "109年",
+        "childPopulation": 9835,
+        "appEnroll": 3075,
+        "stuAmount": 2817,
+        "occupancyRate": 91.6,
+        "publicCount": 16,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 14,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 31
+      },
+      {
+        "year": "110年",
+        "childPopulation": 8801,
+        "appEnroll": 3237,
+        "stuAmount": 2959,
+        "occupancyRate": 91.4,
+        "publicCount": 16,
+        "nonProfitCount": 1,
+        "quasiPublicCount": 17,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 34
+      },
+      {
+        "year": "111年",
+        "childPopulation": 7821,
+        "appEnroll": 3283,
+        "stuAmount": 2780,
+        "occupancyRate": 84.7,
+        "publicCount": 16,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 16,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 34
+      },
+      {
+        "year": "112年",
+        "childPopulation": 7250,
+        "appEnroll": 3248,
+        "stuAmount": 2678,
+        "occupancyRate": 82.5,
+        "publicCount": 16,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 16,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 34
+      },
+      {
+        "year": "113年",
+        "childPopulation": 6735,
+        "appEnroll": 2163,
+        "stuAmount": 1734,
+        "occupancyRate": 80.2,
+        "publicCount": 16,
+        "nonProfitCount": 2,
+        "quasiPublicCount": 0,
+        "workplaceCount": 0,
+        "privateCount": 0,
+        "totalKindergartens": 18
+      }
     ],
     "sub_districts": [
-      {"name": "關渡次分區", "appEnroll": 1150, "stuAmount": 1060, "kindergartenCount": 10, "occupancyRate": 92.2},
-      {"name": "大屯次分區", "appEnroll": 1080, "stuAmount": 990, "kindergartenCount": 10, "occupancyRate": 91.7},
-      {"name": "陽明山次分區", "appEnroll": 820, "stuAmount": 750, "kindergartenCount": 8, "occupancyRate": 91.5},
-      {"name": "新北投次分區", "appEnroll": 1180, "stuAmount": 1080, "kindergartenCount": 11, "occupancyRate": 91.5},
-      {"name": "舊北投次分區", "appEnroll": 1120, "stuAmount": 1030, "kindergartenCount": 10, "occupancyRate": 92.0},
-      {"name": "唭哩岸次分區", "appEnroll": 1120, "stuAmount": 1030, "kindergartenCount": 10, "occupancyRate": 92.0},
-      {"name": "石牌次分區", "appEnroll": 1180, "stuAmount": 1080, "kindergartenCount": 10, "occupancyRate": 91.5}
+      {
+        "name": "關渡次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 210,
+            "stuAmount": 207,
+            "occupancyRate": 98.6,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 226,
+            "stuAmount": 225,
+            "occupancyRate": 99.6,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 226,
+            "stuAmount": 224,
+            "occupancyRate": 99.1,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 226,
+            "stuAmount": 219,
+            "occupancyRate": 96.9,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "112年",
+            "appEnroll": 226,
+            "stuAmount": 202,
+            "occupancyRate": 89.4,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "113年",
+            "appEnroll": 226,
+            "stuAmount": 186,
+            "occupancyRate": 82.3,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "大屯次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 593,
+            "stuAmount": 519,
+            "occupancyRate": 87.5,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "109年",
+            "appEnroll": 593,
+            "stuAmount": 527,
+            "occupancyRate": 88.9,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "110年",
+            "appEnroll": 609,
+            "stuAmount": 561,
+            "occupancyRate": 92.1,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "111年",
+            "appEnroll": 609,
+            "stuAmount": 532,
+            "occupancyRate": 87.4,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "112年",
+            "appEnroll": 609,
+            "stuAmount": 488,
+            "occupancyRate": 80.1,
+            "kindergartenCount": 8
+          },
+          {
+            "year": "113年",
+            "appEnroll": 196,
+            "stuAmount": 155,
+            "occupancyRate": 79.1,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "陽明山次分區(北投區)",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 90,
+            "stuAmount": 71,
+            "occupancyRate": 78.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "109年",
+            "appEnroll": 90,
+            "stuAmount": 76,
+            "occupancyRate": 84.4,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "110年",
+            "appEnroll": 90,
+            "stuAmount": 78,
+            "occupancyRate": 86.7,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 90,
+            "stuAmount": 70,
+            "occupancyRate": 77.8,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "112年",
+            "appEnroll": 90,
+            "stuAmount": 62,
+            "occupancyRate": 68.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "113年",
+            "appEnroll": 90,
+            "stuAmount": 57,
+            "occupancyRate": 63.3,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "新北投次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 196,
+            "stuAmount": 197,
+            "occupancyRate": 100.5,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 196,
+            "stuAmount": 195,
+            "occupancyRate": 99.5,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 212,
+            "stuAmount": 211,
+            "occupancyRate": 99.5,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "111年",
+            "appEnroll": 348,
+            "stuAmount": 262,
+            "occupancyRate": 75.3,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "112年",
+            "appEnroll": 371,
+            "stuAmount": 324,
+            "occupancyRate": 87.3,
+            "kindergartenCount": 4
+          },
+          {
+            "year": "113年",
+            "appEnroll": 318,
+            "stuAmount": 267,
+            "occupancyRate": 84.0,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "舊北投次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 324,
+            "stuAmount": 324,
+            "occupancyRate": 100.0,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "109年",
+            "appEnroll": 356,
+            "stuAmount": 354,
+            "occupancyRate": 99.4,
+            "kindergartenCount": 2
+          },
+          {
+            "year": "110年",
+            "appEnroll": 418,
+            "stuAmount": 384,
+            "occupancyRate": 91.9,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "111年",
+            "appEnroll": 418,
+            "stuAmount": 361,
+            "occupancyRate": 86.4,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "112年",
+            "appEnroll": 418,
+            "stuAmount": 326,
+            "occupancyRate": 78.0,
+            "kindergartenCount": 3
+          },
+          {
+            "year": "113年",
+            "appEnroll": 356,
+            "stuAmount": 307,
+            "occupancyRate": 86.2,
+            "kindergartenCount": 2
+          }
+        ]
+      },
+      {
+        "name": "唭哩岸次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 715,
+            "stuAmount": 696,
+            "occupancyRate": 97.3,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "109年",
+            "appEnroll": 715,
+            "stuAmount": 697,
+            "occupancyRate": 97.5,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "110年",
+            "appEnroll": 715,
+            "stuAmount": 688,
+            "occupancyRate": 96.2,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "111年",
+            "appEnroll": 625,
+            "stuAmount": 556,
+            "occupancyRate": 89.0,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "112年",
+            "appEnroll": 567,
+            "stuAmount": 508,
+            "occupancyRate": 89.6,
+            "kindergartenCount": 5
+          },
+          {
+            "year": "113年",
+            "appEnroll": 485,
+            "stuAmount": 383,
+            "occupancyRate": 79.0,
+            "kindergartenCount": 3
+          }
+        ]
+      },
+      {
+        "name": "石牌次分區",
+        "yearly_stats": [
+          {
+            "year": "108年",
+            "appEnroll": 837,
+            "stuAmount": 699,
+            "occupancyRate": 83.5,
+            "kindergartenCount": 6
+          },
+          {
+            "year": "109年",
+            "appEnroll": 899,
+            "stuAmount": 743,
+            "occupancyRate": 82.6,
+            "kindergartenCount": 7
+          },
+          {
+            "year": "110年",
+            "appEnroll": 967,
+            "stuAmount": 813,
+            "occupancyRate": 84.1,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "111年",
+            "appEnroll": 967,
+            "stuAmount": 780,
+            "occupancyRate": 80.7,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "112年",
+            "appEnroll": 967,
+            "stuAmount": 768,
+            "occupancyRate": 79.4,
+            "kindergartenCount": 9
+          },
+          {
+            "year": "113年",
+            "appEnroll": 492,
+            "stuAmount": 379,
+            "occupancyRate": 77.0,
+            "kindergartenCount": 3
+          }
+        ]
+      }
     ],
     "satisfaction": {
       "parent": [
-        {"dimension": "師資培育與專業知能", "score": 4.54},
-        {"dimension": "課程教學與環境品質", "score": 4.5},
-        {"dimension": "行政與經營管理", "score": 4.53},
-        {"dimension": "家園合作", "score": 4.57},
-        {"dimension": "社區連結與資源運用", "score": 4.37},
-        {"dimension": "整體評價與精進建議", "score": 4.59}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.54
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.5
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.53
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.57
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.37
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.59
+        }
       ],
       "staff": [
-        {"dimension": "師資培育與專業知能", "score": 4.15},
-        {"dimension": "課程教學與環境品質", "score": 4.3},
-        {"dimension": "行政與經營管理", "score": 4.33},
-        {"dimension": "家園合作", "score": 4.43},
-        {"dimension": "社區連結與資源運用", "score": 4.08},
-        {"dimension": "整體評價與精進建議", "score": 4.27}
+        {
+          "dimension": "師資培育與專業知能",
+          "score": 4.15
+        },
+        {
+          "dimension": "課程教學與環境品質",
+          "score": 4.3
+        },
+        {
+          "dimension": "行政與經營管理",
+          "score": 4.33
+        },
+        {
+          "dimension": "家園合作",
+          "score": 4.43
+        },
+        {
+          "dimension": "社區連結與資源運用",
+          "score": 4.08
+        },
+        {
+          "dimension": "整體評價與精進建議",
+          "score": 4.27
+        }
       ]
     }
   }

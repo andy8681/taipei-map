@@ -27,23 +27,19 @@ const districtsMapping = [
   { id: "文山", name: "文山區" }
 ];
 
-// 圖表樣式變數定義 (防止 JSX 內出現空括號)
-// 圓角半徑（數字，如 4px 或 0）
+// 圖表樣式變數定義
 const barRadius = 4;
 const horizontalBarRadius = 4;
-
-// 分數範圍/定義域（通常為包含最小與最大值的陣列 [min, max]）
-const scoreDomain = [0, 5];
-
+// 修正：domain 必須是陣列格式 [最小值, 最大值]
+const scoreDomain = [0, 5]; 
 const yearsList = ['108年', '109年', '110年', '111年', '112年', '113年'];
 
 export default function App() {
-  const [selectedDistrict, setSelectedDistrict] = useState(districtsMapping[0]); // 預設臺北市
-  const [activeTab, setActiveTab] = useState('supply'); // 'supply', 'subdistrict', 'satisfaction', 'population', 或 'ratio'
-  const [searchQuery, setSearchQuery] = useState(''); // 搜尋關鍵字
-  const [selectedSubYear, setSelectedSubYear] = useState('113年'); // 次分區檢視學年度 (108-113年)
+  const [selectedDistrict, setSelectedDistrict] = useState(districtsMapping[0]); 
+  const [activeTab, setActiveTab] = useState('supply'); 
+  const [searchQuery, setSearchQuery] = useState(''); 
+  const [selectedSubYear, setSelectedSubYear] = useState('113年'); 
 
-  // 切換選擇行政區
   const handleSelectDistrict = (id) => {
     const foundData = districtsMapping.find(item => item.id === id);
     if (foundData) {
@@ -54,13 +50,11 @@ export default function App() {
     }
   };
 
-  // 搜尋過濾行政區列表
   const filteredDistricts = useMemo(() => {
     if (!searchQuery.trim()) return districtsMapping;
     return districtsMapping.filter(d => d.name.includes(searchQuery.trim()) || d.id.includes(searchQuery.trim()));
   }, [searchQuery]);
 
-  // 1. 取得幼兒園供給與招生概況資料 (包含次分區與滿意度)
   const currentDistrictData = useMemo(() => {
     if (!selectedDistrict) return null;
     return supplyDemandData.find(d => d.id === selectedDistrict.id) || null;
@@ -70,7 +64,6 @@ export default function App() {
   const rawSubDistricts = currentDistrictData?.sub_districts || [];
   const currentSatisfaction = currentDistrictData?.satisfaction || null;
 
-  // 動態過濾選取年份之次分區數據 (支援 108~113 年)
   const currentSubDistrictsForYear = useMemo(() => {
     if (!rawSubDistricts || rawSubDistricts.length === 0) return [];
     
@@ -88,7 +81,6 @@ export default function App() {
     });
   }, [rawSubDistricts, selectedSubYear]);
 
-  // 2. 併合家長與教保員滿意度資料 (給 BarChart 呈現)
   const combinedSatisfactionData = useMemo(() => {
     if (!currentSatisfaction) return [];
     const parentList = currentSatisfaction.parent || [];
@@ -104,7 +96,6 @@ export default function App() {
     });
   }, [currentSatisfaction]);
 
-  // 3. 取得公共化占比趨勢資料 (行政區)
   const districtTrendData = useMemo(() => {
     if (!selectedDistrict || selectedDistrict.id === '台北市') return [];
     const districtTrends = publicRatioData.find(d => d.id === selectedDistrict.id);
@@ -119,7 +110,6 @@ export default function App() {
     }));
   }, [selectedDistrict]);
 
-  // 4. 取得臺北市總體設籍人數資料
   const cityPopulationData = useMemo(() => {
     if (selectedDistrict?.id !== '台北市') return [];
     const years = ['108', '109', '110', '111', '112', '113', '114'];
@@ -137,13 +127,11 @@ export default function App() {
     });
   }, [selectedDistrict]);
 
-  // 最新學年度（113年）數據
   const latestSupply = currentSupplyData[currentSupplyData.length - 1] || {};
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 flex flex-col items-center font-sans">
       
-      {/* 頁面標頭 */}
       <header className="text-center mb-8 w-full max-w-7xl">
         <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800 mb-2">
           臺北市幼兒教育資源與人口供需整合儀表板
@@ -155,10 +143,8 @@ export default function App() {
 
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* 左側：搜尋、區名選取面板與地圖 (5 欄) */}
         <div className="lg:col-span-5 flex flex-col gap-4">
           
-          {/* 行政區選取與關鍵字搜尋區 */}
           <div className="bg-white p-5 rounded-3xl shadow-md border border-slate-100 flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <label className="text-xs font-extrabold text-slate-600 uppercase tracking-wider">
@@ -169,7 +155,6 @@ export default function App() {
               </span>
             </div>
 
-            {/* 關鍵字搜尋框 */}
             <div className="relative">
               <input 
                 type="text"
@@ -183,7 +168,6 @@ export default function App() {
               </svg>
             </div>
 
-            {/* 清爽標準按鈕網格 */}
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-52 overflow-y-auto">
               {filteredDistricts.map(item => {
                 const isSelected = selectedDistrict?.id === item.id;
@@ -203,7 +187,6 @@ export default function App() {
             </div>
           </div>
           
-          {/* 地圖呈現 */}
           <div className="bg-white p-4 rounded-3xl shadow-md border border-slate-100 flex-grow flex items-center justify-center min-h-[360px]">
             <TaipeiMap 
               selectedId={selectedDistrict?.id}
@@ -215,17 +198,14 @@ export default function App() {
           </div>
         </div>
 
-        {/* 右側：詳細數據與圖表儀表板 (7 欄) */}
         <div className="lg:col-span-7 bg-white p-6 md:p-8 rounded-3xl shadow-md border border-slate-100 flex flex-col gap-6">
           
-          {/* 行政區標題與頁籤切換 */}
           <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b gap-4">
             <div>
               <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">SELECTED REGION</span>
               <h2 className="text-3xl font-bold text-slate-800">{selectedDistrict.name}</h2>
             </div>
 
-            {/* 多維度視圖切換 Tab */}
             <div className="flex bg-slate-100 p-1 rounded-xl text-xs font-bold flex-wrap gap-1">
               <button 
                 onClick={() => setActiveTab('supply')}
@@ -268,11 +248,9 @@ export default function App() {
             </div>
           </div>
 
-          {/* TAB 1: 幼兒園供給與招生概況 */}
           {activeTab === 'supply' && (
             <div className="flex flex-col gap-6">
               
-              {/* 113 學年度最新指標卡片 */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100">
                   <div className="flex items-center justify-between mb-1">
@@ -307,7 +285,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 趨勢圖表 */}
               <div className="bg-slate-50 p-5 rounded-2xl border">
                 <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center">
                   <span className="w-1.5 h-4 bg-blue-500 rounded-full mr-2"></span>
@@ -328,7 +305,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 明細表格 */}
               <div className="overflow-x-auto border rounded-2xl">
                 <table className="w-full text-xs text-center whitespace-nowrap">
                   <thead className="bg-slate-100 text-slate-600 font-bold">
@@ -364,11 +340,9 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 2: 次分區概況分析 (支援 108~113 年份動態切換) */}
           {activeTab === 'subdistrict' && selectedDistrict.id !== '台北市' && (
             <div className="flex flex-col gap-6">
               
-              {/* 年份選擇切換按鈕 */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-slate-100 p-2.5 rounded-2xl border gap-2">
                 <span className="text-xs font-bold text-slate-600 px-1">選擇檢視學年度：</span>
                 <div className="flex gap-1 flex-wrap">
@@ -413,7 +387,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 次分區明細表格 */}
               <div className="overflow-x-auto border rounded-2xl">
                 <table className="w-full text-xs text-center whitespace-nowrap">
                   <thead className="bg-slate-100 text-slate-600 font-bold">
@@ -441,16 +414,15 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 3: 教保品質滿意度調查 (6大構面) */}
           {activeTab === 'satisfaction' && (
             <div className="flex flex-col gap-6">
               <div className="bg-slate-50 p-5 rounded-2xl border">
+                {/* 修正：移除了「5分滿分制」的 span */}
                 <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center justify-between">
                   <span className="flex items-center">
                     <span className="w-1.5 h-4 bg-teal-500 rounded-full mr-2"></span>
                     準公共幼兒園教保服務品質滿意度（家長 vs. 教保員 6大構面）
                   </span>
-                  <span className="text-[10px] bg-teal-100 text-teal-800 font-bold px-2 py-0.5 rounded-full">5分滿分制</span>
                 </h3>
                 <div className="h-60">
                   <ResponsiveContainer width="100%" height="100%">
@@ -467,7 +439,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 構面分數明細表格 */}
               <div className="overflow-x-auto border rounded-2xl">
                 <table className="w-full text-xs text-center whitespace-nowrap">
                   <thead className="bg-slate-100 text-slate-600 font-bold">
@@ -491,7 +462,6 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 4: 人口增減趨勢 */}
           {activeTab === 'population' && selectedDistrict.id === '台北市' && (
             <div className="flex flex-col gap-5">
               <div className="bg-slate-50 p-5 rounded-2xl border">
@@ -515,7 +485,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 人口明細數據表格 */}
               <div className="overflow-x-auto border rounded-2xl">
                 <table className="w-full text-xs text-center whitespace-nowrap">
                   <thead className="bg-slate-100 text-slate-600 font-bold">
@@ -551,7 +520,6 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 5: 公共化占比趨勢 */}
           {activeTab === 'ratio' && selectedDistrict.id !== '台北市' && (
             <div className="flex flex-col gap-5">
               <div className="bg-slate-50 p-5 rounded-2xl border">
@@ -572,7 +540,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 公共化占比明細表格 */}
               <div className="overflow-x-auto border rounded-2xl">
                 <table className="w-full text-xs text-center whitespace-nowrap">
                   <thead className="bg-slate-100 text-slate-600 font-bold">
