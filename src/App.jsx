@@ -27,10 +27,21 @@ const districtsMapping = [
   { id: "文山", name: "文山區" }
 ];
 
+// 圖表樣式變數定義 (防止 JSX 內出現空括號)
+// 圓角半徑（數字，如 4px 或 0）
+const barRadius = 4;
+const horizontalBarRadius = 4;
+
+// 分數範圍/定義域（通常為包含最小與最大值的陣列 [min, max]）
+const scoreDomain = [0, 5];
+
+const yearsList = ['108年', '109年', '110年', '111年', '112年', '113年'];
+
 export default function App() {
   const [selectedDistrict, setSelectedDistrict] = useState(districtsMapping[0]); // 預設臺北市
-  const [activeTab, setActiveTab] = useState('supply'); // 'supply', 'population', 或 'ratio'
+  const [activeTab, setActiveTab] = useState('supply'); // 'supply', 'subdistrict', 'satisfaction', 'population', 或 'ratio'
   const [searchQuery, setSearchQuery] = useState(''); // 搜尋關鍵字
+  const [selectedSubYear, setSelectedSubYear] = useState('113年'); // 次分區檢視學年度 (108-113年)
 
   // 切換選擇行政區
   const handleSelectDistrict = (id) => {
@@ -49,14 +60,51 @@ export default function App() {
     return districtsMapping.filter(d => d.name.includes(searchQuery.trim()) || d.id.includes(searchQuery.trim()));
   }, [searchQuery]);
 
-  // 1. 取得幼兒園供給與招生概況資料 (Excel轉化資料)
-  const currentSupplyData = useMemo(() => {
-    if (!selectedDistrict) return [];
-    const districtInfo = supplyDemandData.find(d => d.id === selectedDistrict.id);
-    return districtInfo ? districtInfo.yearly_stats : [];
+  // 1. 取得幼兒園供給與招生概況資料 (包含次分區與滿意度)
+  const currentDistrictData = useMemo(() => {
+    if (!selectedDistrict) return null;
+    return supplyDemandData.find(d => d.id === selectedDistrict.id) || null;
   }, [selectedDistrict]);
 
-  // 2. 取得公共化占比趨勢資料 (行政區)
+  const currentSupplyData = currentDistrictData?.yearly_stats || [];
+  const rawSubDistricts = currentDistrictData?.sub_districts || [];
+  const currentSatisfaction = currentDistrictData?.satisfaction || null;
+
+  // 動態過濾選取年份之次分區數據 (支援 108~113 年)
+  const currentSubDistrictsForYear = useMemo(() => {
+    if (!rawSubDistricts || rawSubDistricts.length === 0) return [];
+    
+    return rawSubDistricts.map(sub => {
+      const yearStat = sub.yearly_stats?.find(y => y.year === selectedSubYear) 
+        || (sub.yearly_stats ? sub.yearly_stats[sub.yearly_stats.length - 1] : sub);
+        
+      return {
+        name: sub.name,
+        appEnroll: yearStat.appEnroll || 0,
+        stuAmount: yearStat.stuAmount || 0,
+        occupancyRate: yearStat.occupancyRate || 0,
+        kindergartenCount: yearStat.kindergartenCount || 0
+      };
+    });
+  }, [rawSubDistricts, selectedSubYear]);
+
+  // 2. 併合家長與教保員滿意度資料 (給 BarChart 呈現)
+  const combinedSatisfactionData = useMemo(() => {
+    if (!currentSatisfaction) return [];
+    const parentList = currentSatisfaction.parent || [];
+    const staffList = currentSatisfaction.staff || [];
+
+    return parentList.map(item => {
+      const staffItem = staffList.find(s => s.dimension === item.dimension);
+      return {
+        dimension: item.dimension,
+        家長滿意度: item.score,
+        教保員滿意度: staffItem ? staffItem.score : 0
+      };
+    });
+  }, [currentSatisfaction]);
+
+  // 3. 取得公共化占比趨勢資料 (行政區)
   const districtTrendData = useMemo(() => {
     if (!selectedDistrict || selectedDistrict.id === '台北市') return [];
     const districtTrends = publicRatioData.find(d => d.id === selectedDistrict.id);
@@ -71,7 +119,7 @@ export default function App() {
     }));
   }, [selectedDistrict]);
 
-  // 3. 取得臺北市總體設籍人數資料
+  // 4. 取得臺北市總體設籍人數資料
   const cityPopulationData = useMemo(() => {
     if (selectedDistrict?.id !== '台北市') return [];
     const years = ['108', '109', '110', '111', '112', '113', '114'];
@@ -98,9 +146,10 @@ export default function App() {
       {/* 頁面標頭 */}
       <header className="text-center mb-8 w-full max-w-7xl">
         <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800 mb-2">
-          臺北市幼教縱貫性分析
+          臺北市幼兒教育資源與人口供需整合儀表板
         </h1>
         <p className="text-slate-500 text-sm md:text-base">
+          整合設籍人口學齡趨勢、次分區涵蓋率與準公共教保服務品質滿意度調查
         </p>
       </header>
 
@@ -134,7 +183,7 @@ export default function App() {
               </svg>
             </div>
 
-            {/* 清爽標準按鈕網格 (選中藍底白字，未選中簡潔白底) */}
+            {/* 清爽標準按鈕網格 */}
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-52 overflow-y-auto">
               {filteredDistricts.map(item => {
                 const isSelected = selectedDistrict?.id === item.id;
@@ -176,27 +225,44 @@ export default function App() {
               <h2 className="text-3xl font-bold text-slate-800">{selectedDistrict.name}</h2>
             </div>
 
-            {/* 視圖切換 Tab */}
-            <div className="flex bg-slate-100 p-1 rounded-xl text-xs font-bold">
+            {/* 多維度視圖切換 Tab */}
+            <div className="flex bg-slate-100 p-1 rounded-xl text-xs font-bold flex-wrap gap-1">
               <button 
                 onClick={() => setActiveTab('supply')}
-                className={`px-3.5 py-2 rounded-lg transition-all ${activeTab === 'supply' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
+                className={`px-3 py-1.5 rounded-lg transition-all ${activeTab === 'supply' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
               >
-                供給與招生 (108-113)
+                供給招生
               </button>
+              
+              {selectedDistrict.id !== '台北市' && rawSubDistricts.length > 0 && (
+                <button 
+                  onClick={() => setActiveTab('subdistrict')}
+                  className={`px-3 py-1.5 rounded-lg transition-all ${activeTab === 'subdistrict' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
+                >
+                  次分區概況
+                </button>
+              )}
+
+              <button 
+                onClick={() => setActiveTab('satisfaction')}
+                className={`px-3 py-1.5 rounded-lg transition-all ${activeTab === 'satisfaction' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
+              >
+                品質滿意度
+              </button>
+
               {selectedDistrict.id === '台北市' ? (
                 <button 
                   onClick={() => setActiveTab('population')}
-                  className={`px-3.5 py-2 rounded-lg transition-all ${activeTab === 'population' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
+                  className={`px-3 py-1.5 rounded-lg transition-all ${activeTab === 'population' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
                 >
-                  人口增減趨勢
+                  人口趨勢
                 </button>
               ) : (
                 <button 
                   onClick={() => setActiveTab('ratio')}
-                  className={`px-3.5 py-2 rounded-lg transition-all ${activeTab === 'ratio' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
+                  className={`px-3 py-1.5 rounded-lg transition-all ${activeTab === 'ratio' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
                 >
-                  公共化占比趨勢
+                  公共化占比
                 </button>
               )}
             </div>
@@ -255,8 +321,8 @@ export default function App() {
                       <YAxis tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
                       <Tooltip contentStyle={{borderRadius:'12px', border:'none', boxShadow:'0 10px 15px -3px rgba(0,0,0,0.1)'}} />
                       <Legend wrapperStyle={{fontSize:'12px', paddingTop:'8px'}} />
-                      <Bar dataKey="appEnroll" name="核定招收人數" fill="#93c5fd" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="stuAmount" name="實際在園人數" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="appEnroll" name="核定招收人數" fill="#93c5fd" radius={barRadius} />
+                      <Bar dataKey="stuAmount" name="實際在園人數" fill="#3b82f6" radius={barRadius} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -298,7 +364,134 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 2: 人口增減趨勢 (包含折線圖 + 詳細表格) */}
+          {/* TAB 2: 次分區概況分析 (支援 108~113 年份動態切換) */}
+          {activeTab === 'subdistrict' && selectedDistrict.id !== '台北市' && (
+            <div className="flex flex-col gap-6">
+              
+              {/* 年份選擇切換按鈕 */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-slate-100 p-2.5 rounded-2xl border gap-2">
+                <span className="text-xs font-bold text-slate-600 px-1">選擇檢視學年度：</span>
+                <div className="flex gap-1 flex-wrap">
+                  {yearsList.map(y => (
+                    <button
+                      key={y}
+                      onClick={() => setSelectedSubYear(y)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                        selectedSubYear === y 
+                          ? 'bg-purple-600 text-white shadow-sm' 
+                          : 'bg-white text-slate-600 hover:bg-purple-50 hover:text-purple-600 border border-slate-200'
+                      }`}
+                    >
+                      {y}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-slate-50 p-5 rounded-2xl border">
+                <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center justify-between">
+                  <span className="flex items-center">
+                    <span className="w-1.5 h-4 bg-purple-500 rounded-full mr-2"></span>
+                    {selectedDistrict.name} 各次分區幼兒園招收概況 ({selectedSubYear})
+                  </span>
+                  <span className="text-[10px] bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full">
+                    {selectedSubYear}
+                  </span>
+                </h3>
+                <div className="h-56">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={currentSubDistrictsForYear}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                      <XAxis dataKey="name" tickLine={false} tick={{fill:'#64748b', fontSize:11}} />
+                      <YAxis tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
+                      <Tooltip contentStyle={{borderRadius:'12px', border:'none', boxShadow:'0 10px 15px -3px rgba(0,0,0,0.1)'}} />
+                      <Legend wrapperStyle={{fontSize:'12px', paddingTop:'8px'}} />
+                      <Bar dataKey="appEnroll" name="核定招收人數" fill="#c084fc" radius={barRadius} />
+                      <Bar dataKey="stuAmount" name="實際在園人數" fill="#a855f7" radius={barRadius} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* 次分區明細表格 */}
+              <div className="overflow-x-auto border rounded-2xl">
+                <table className="w-full text-xs text-center whitespace-nowrap">
+                  <thead className="bg-slate-100 text-slate-600 font-bold">
+                    <tr>
+                      <th className="px-4 py-2.5 text-left">次分區名稱</th>
+                      <th className="px-4 py-2.5">核定名額 ({selectedSubYear})</th>
+                      <th className="px-4 py-2.5">在園人數 ({selectedSubYear})</th>
+                      <th className="px-4 py-2.5">滿載率 (%)</th>
+                      <th className="px-4 py-2.5">園所總數</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y text-slate-700">
+                    {currentSubDistrictsForYear.map(sub => (
+                      <tr key={sub.name} className="hover:bg-slate-50">
+                        <td className="px-4 py-2 text-left font-semibold text-slate-800">{sub.name}</td>
+                        <td className="px-4 py-2 text-purple-600 font-semibold">{sub.appEnroll.toLocaleString()}</td>
+                        <td className="px-4 py-2 text-blue-600 font-semibold">{sub.stuAmount.toLocaleString()}</td>
+                        <td className="px-4 py-2 text-amber-600 font-bold">{sub.occupancyRate}%</td>
+                        <td className="px-4 py-2">{sub.kindergartenCount} 所</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: 教保品質滿意度調查 (6大構面) */}
+          {activeTab === 'satisfaction' && (
+            <div className="flex flex-col gap-6">
+              <div className="bg-slate-50 p-5 rounded-2xl border">
+                <h3 className="text-sm font-bold text-slate-700 mb-3 flex items-center justify-between">
+                  <span className="flex items-center">
+                    <span className="w-1.5 h-4 bg-teal-500 rounded-full mr-2"></span>
+                    準公共幼兒園教保服務品質滿意度（家長 vs. 教保員 6大構面）
+                  </span>
+                  <span className="text-[10px] bg-teal-100 text-teal-800 font-bold px-2 py-0.5 rounded-full">5分滿分制</span>
+                </h3>
+                <div className="h-60">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={combinedSatisfactionData} layout="vertical">
+                      <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
+                      <XAxis type="number" domain={scoreDomain} tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
+                      <YAxis type="category" dataKey="dimension" tickLine={false} tick={{fill:'#334155', fontSize:11}} width={140} />
+                      <Tooltip contentStyle={{borderRadius:'12px', border:'none', boxShadow:'0 10px 15px -3px rgba(0,0,0,0.1)'}} />
+                      <Legend wrapperStyle={{fontSize:'12px', paddingTop:'8px'}} />
+                      <Bar dataKey="家長滿意度" fill="#14b8a6" radius={horizontalBarRadius} />
+                      <Bar dataKey="教保員滿意度" fill="#f59e0b" radius={horizontalBarRadius} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* 構面分數明細表格 */}
+              <div className="overflow-x-auto border rounded-2xl">
+                <table className="w-full text-xs text-center whitespace-nowrap">
+                  <thead className="bg-slate-100 text-slate-600 font-bold">
+                    <tr>
+                      <th className="px-4 py-2.5 text-left">評估構面維度</th>
+                      <th className="px-4 py-2.5 text-teal-600">家長滿意度平均</th>
+                      <th className="px-4 py-2.5 text-amber-600">教保員滿意度平均</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y text-slate-700">
+                    {combinedSatisfactionData.map(row => (
+                      <tr key={row.dimension} className="hover:bg-slate-50">
+                        <td className="px-4 py-2 text-left font-medium text-slate-800">{row.dimension}</td>
+                        <td className="px-4 py-2 font-bold text-teal-600">{row.家長滿意度.toFixed(2)} / 5.0</td>
+                        <td className="px-4 py-2 font-bold text-amber-600">{row.教保員滿意度.toFixed(2)} / 5.0</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: 人口增減趨勢 */}
           {activeTab === 'population' && selectedDistrict.id === '台北市' && (
             <div className="flex flex-col gap-5">
               <div className="bg-slate-50 p-5 rounded-2xl border">
@@ -358,7 +551,7 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 3: 公共化占比趨勢 (包含折線圖 + 詳細表格) */}
+          {/* TAB 5: 公共化占比趨勢 */}
           {activeTab === 'ratio' && selectedDistrict.id !== '台北市' && (
             <div className="flex flex-col gap-5">
               <div className="bg-slate-50 p-5 rounded-2xl border">
