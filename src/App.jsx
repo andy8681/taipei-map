@@ -4,7 +4,6 @@ import {
   LineChart, Line, BarChart, Bar, ComposedChart, XAxis, YAxis, CartesianGrid, 
   Tooltip, Legend, ResponsiveContainer, ReferenceLine 
 } from 'recharts';
-// 🚀 替換為支援現代 CSS 的 html-to-image
 import { toPng } from 'html-to-image';
 import * as XLSX from 'xlsx';
 
@@ -110,12 +109,12 @@ const exportToExcel = (data, filename) => {
   XLSX.writeFile(wb, `${filename}.xlsx`);
 };
 
-// 🚀 更新截圖邏輯，徹底解決 ResponsiveContainer 與 oklch 報錯
+// 截圖邏輯
 const exportToPNG = async (elementRef, filename) => {
   if (elementRef.current) {
     const el = elementRef.current;
     
-    // 1. 先抓取當前實際的像素寬高，強制鎖死，避免 ResponsiveContainer 變成 -1 崩塌
+    // 鎖死寬高
     const rect = el.getBoundingClientRect();
     const originalWidth = el.style.width;
     const originalHeight = el.style.height;
@@ -124,10 +123,9 @@ const exportToPNG = async (elementRef, filename) => {
     el.style.height = `${rect.height}px`;
 
     try {
-      // 2. 使用 html-to-image 進行渲染
       const dataUrl = await toPng(el, { 
         backgroundColor: '#ffffff',
-        pixelRatio: 2 // 保持高解析度
+        pixelRatio: 2 
       });
       
       const link = document.createElement('a');
@@ -138,7 +136,6 @@ const exportToPNG = async (elementRef, filename) => {
       console.error("圖片匯出失敗：", err);
       alert("圖片匯出時發生錯誤，請檢查開發者工具(Console)。");
     } finally {
-      // 3. 不管成功或失敗，都把寬高恢復原狀，不影響畫面互動
       el.style.width = originalWidth;
       el.style.height = originalHeight;
     }
@@ -170,6 +167,7 @@ export default function App() {
     { id: 'basic___occupancyRate', name: '基本: 入園率(%)', axis: 'right', color: '#fb7185', chartType: 'line' }
   ]);
 
+  // 圖表專用 Refs (將綁定到內部沒有外框的純白區塊)
   const supplyChartRef = useRef(null);
   const institutionChartRef = useRef(null);
   const subDistrictChartRef = useRef(null);
@@ -546,27 +544,30 @@ export default function App() {
           </div>
 
           {activeTab === 'supply' && (
-            <div className="flex flex-col gap-6 bg-white p-2" ref={supplyChartRef}>
+            <div className="flex flex-col gap-6 bg-white p-2">
               <div className="flex justify-end gap-2">
                 <button onClick={() => exportToExcel(currentSupplyData, `供給招生_${selectedDistrict.name}`)} className="text-xs bg-green-500 text-white px-3 py-1 rounded shadow hover:bg-green-600">輸出 Excel</button>
                 <button onClick={() => exportToPNG(supplyChartRef, `供給招生_${selectedDistrict.name}`)} className="text-xs bg-blue-500 text-white px-3 py-1 rounded shadow hover:bg-blue-600">輸出 PNG</button>
               </div>
-              <div className="bg-slate-50 p-5 rounded-2xl border">
-                <h3 className="text-sm font-bold text-slate-700 mb-3">歷年幼兒園核定招收量 vs. 實際在園人數</h3>
-                <div className="h-56">
-                  {currentSupplyData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={currentSupplyData}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                        <XAxis dataKey="year" tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
-                        <YAxis tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
-                        <Tooltip />
-                        <Legend />
-                        <Bar isAnimationActive={false} dataKey="appEnroll" name="核定招收人數" fill="#93c5fd" radius={barRadius} />
-                        <Bar isAnimationActive={false} dataKey="stuAmount" name="實際在園人數" fill="#3b82f6" radius={barRadius} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無符合年份之資料</div>)}
+              <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border">
+                {/* 🚀 Ref 綁定在內層純白區塊 */}
+                <div ref={supplyChartRef} className="bg-white p-2 md:p-4 rounded-xl">
+                  <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">歷年幼兒園核定招收量 vs. 實際在園人數</h3>
+                  <div className="h-56">
+                    {currentSupplyData.length > 0 ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={currentSupplyData}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                          <XAxis dataKey="year" tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
+                          <YAxis tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
+                          <Tooltip />
+                          <Legend />
+                          <Bar isAnimationActive={false} dataKey="appEnroll" name="核定招收人數" fill="#93c5fd" radius={barRadius} />
+                          <Bar isAnimationActive={false} dataKey="stuAmount" name="實際在園人數" fill="#3b82f6" radius={barRadius} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無符合年份之資料</div>)}
+                  </div>
                 </div>
               </div>
               <div className="overflow-x-auto bg-white border rounded-lg shadow-sm">
@@ -585,30 +586,33 @@ export default function App() {
           )}
 
           {activeTab === 'institutions' && (
-            <div className="flex flex-col gap-5 bg-white p-2" ref={institutionChartRef}>
+            <div className="flex flex-col gap-5 bg-white p-2">
               <div className="flex justify-end gap-2">
                 <button onClick={() => exportToExcel(institutionData, `機構與公共化_${selectedDistrict.name}`)} className="text-xs bg-green-500 text-white px-3 py-1 rounded shadow hover:bg-green-600">輸出 Excel</button>
                 <button onClick={() => exportToPNG(institutionChartRef, `機構與公共化_${selectedDistrict.name}`)} className="text-xs bg-blue-500 text-white px-3 py-1 rounded shadow hover:bg-blue-600">輸出 PNG</button>
               </div>
-              <div className="bg-slate-50 p-5 rounded-2xl border">
-                <h3 className="text-sm font-bold text-slate-700 mb-3">{selectedDistrict.name} 歷年機構數量與公共化佔比</h3>
-                <div className="h-72">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={institutionData}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                      <XAxis dataKey="year" tickLine={false} />
-                      <YAxis yAxisId="left" tickLine={false} />
-                      <YAxis yAxisId="right" orientation="right" tickLine={false} unit="%" />
-                      <Tooltip />
-                      <Legend />
-                      <Bar isAnimationActive={false} yAxisId="left" dataKey="publicCount" stackId="a" name="公立" fill="#93c5fd" />
-                      <Bar isAnimationActive={false} yAxisId="left" dataKey="nonProfitCount" stackId="a" name="非營利" fill="#3b82f6" />
-                      <Bar isAnimationActive={false} yAxisId="left" dataKey="quasiPublicCount" stackId="a" name="準公共" fill="#f59e0b" />
-                      <Bar isAnimationActive={false} yAxisId="left" dataKey="educareCount" stackId="a" name="教保中心" fill="#14b8a6" />
-                      <Bar isAnimationActive={false} yAxisId="left" dataKey="privateCount" stackId="a" name="私立" fill="#cbd5e1" radius={[4, 4, 0, 0]} />
-                      <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="publicRatio" name="公共化佔比 (%)" stroke="#ec4899" strokeWidth={3} />
-                    </ComposedChart>
-                  </ResponsiveContainer>
+              <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border">
+                {/* 🚀 Ref 綁定在內層純白區塊 */}
+                <div ref={institutionChartRef} className="bg-white p-2 md:p-4 rounded-xl">
+                  <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 歷年機構數量與公共化佔比</h3>
+                  <div className="h-72">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <ComposedChart data={institutionData}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                        <XAxis dataKey="year" tickLine={false} />
+                        <YAxis yAxisId="left" tickLine={false} />
+                        <YAxis yAxisId="right" orientation="right" tickLine={false} unit="%" />
+                        <Tooltip />
+                        <Legend />
+                        <Bar isAnimationActive={false} yAxisId="left" dataKey="publicCount" stackId="a" name="公立" fill="#93c5fd" />
+                        <Bar isAnimationActive={false} yAxisId="left" dataKey="nonProfitCount" stackId="a" name="非營利" fill="#3b82f6" />
+                        <Bar isAnimationActive={false} yAxisId="left" dataKey="quasiPublicCount" stackId="a" name="準公共" fill="#f59e0b" />
+                        <Bar isAnimationActive={false} yAxisId="left" dataKey="educareCount" stackId="a" name="教保中心" fill="#14b8a6" />
+                        <Bar isAnimationActive={false} yAxisId="left" dataKey="privateCount" stackId="a" name="私立" fill="#cbd5e1" radius={[4, 4, 0, 0]} />
+                        <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="publicRatio" name="公共化佔比 (%)" stroke="#ec4899" strokeWidth={3} />
+                      </ComposedChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
               </div>
               <div className="overflow-x-auto bg-white border rounded-lg shadow-sm">
@@ -627,7 +631,7 @@ export default function App() {
           )}
 
           {activeTab === 'subdistrict' && selectedDistrict.id !== '台北市' && (
-            <div className="flex flex-col gap-6 bg-white p-2" ref={subDistrictChartRef}>
+            <div className="flex flex-col gap-6 bg-white p-2">
               <div className="flex justify-between">
                 <div className="flex gap-2 items-center flex-wrap">
                   <span className="text-xs font-bold">選擇年份(可多選)：</span>
@@ -650,22 +654,25 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="bg-slate-50 p-5 rounded-2xl border">
-                <h3 className="text-sm font-bold text-slate-700 mb-3">{selectedDistrict.name} 次分區招收概況</h3>
-                <div className="h-56">
-                  {currentSubDistrictsForYear.length > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={currentSubDistrictsForYear}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                        <XAxis dataKey="name" tickLine={false} tick={{fontSize: 11}} />
-                        <YAxis tickLine={false} />
-                        <Tooltip />
-                        <Legend />
-                        <Bar isAnimationActive={false} dataKey="appEnroll" name="核定招收人數" fill="#c084fc" radius={barRadius} />
-                        <Bar isAnimationActive={false} dataKey="stuAmount" name="實際在園人數" fill="#a855f7" radius={barRadius} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">請至少選擇一個次分區與年份</div>)}
+              <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border">
+                {/* 🚀 Ref 綁定在內層純白區塊 */}
+                <div ref={subDistrictChartRef} className="bg-white p-2 md:p-4 rounded-xl">
+                  <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 次分區招收概況</h3>
+                  <div className="h-56">
+                    {currentSubDistrictsForYear.length > 0 ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={currentSubDistrictsForYear}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                          <XAxis dataKey="name" tickLine={false} tick={{fontSize: 11}} />
+                          <YAxis tickLine={false} />
+                          <Tooltip />
+                          <Legend />
+                          <Bar isAnimationActive={false} dataKey="appEnroll" name="核定招收人數" fill="#c084fc" radius={barRadius} />
+                          <Bar isAnimationActive={false} dataKey="stuAmount" name="實際在園人數" fill="#a855f7" radius={barRadius} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">請至少選擇一個次分區與年份</div>)}
+                  </div>
                 </div>
               </div>
               <div className="overflow-x-auto bg-white border rounded-lg shadow-sm">
@@ -684,26 +691,29 @@ export default function App() {
           )}
 
           {activeTab === 'population' && (
-            <div className="flex flex-col gap-5 bg-white p-2" ref={populationChartRef}>
+            <div className="flex flex-col gap-5 bg-white p-2">
               <div className="flex justify-end gap-2">
                 <button onClick={() => exportToExcel(cityPopulationData, `人口趨勢_${selectedDistrict.name}`)} className="text-xs bg-green-500 text-white px-3 py-1 rounded shadow hover:bg-green-600">輸出 Excel</button>
                 <button onClick={() => exportToPNG(populationChartRef, `人口趨勢_${selectedDistrict.name}`)} className="text-xs bg-blue-500 text-white px-3 py-1 rounded shadow hover:bg-blue-600">輸出 PNG</button>
               </div>
-              <div className="bg-slate-50 p-5 rounded-2xl border">
-                <h3 className="text-sm font-bold text-slate-700 mb-3">{selectedDistrict.name} 學齡前設籍人數與增減趨勢</h3>
-                <div className="h-56">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={cityPopulationData}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="year" tickLine={false} />
-                      <YAxis yAxisId="left" tickLine={false} />
-                      <YAxis yAxisId="right" orientation="right" tickLine={false} unit="%" />
-                      <Tooltip />
-                      <Legend />
-                      <Line isAnimationActive={false} yAxisId="left" type="monotone" dataKey="total" name="總設籍人數" stroke="#3b82f6" strokeWidth={3} />
-                      <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="changeRatio" name="增減率 (%)" stroke="#ef4444" strokeWidth={2} connectNulls />
-                    </LineChart>
-                  </ResponsiveContainer>
+              <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border">
+                {/* 🚀 Ref 綁定在內層純白區塊 */}
+                <div ref={populationChartRef} className="bg-white p-2 md:p-4 rounded-xl">
+                  <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 學齡前設籍人數與增減趨勢</h3>
+                  <div className="h-56">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={cityPopulationData}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <XAxis dataKey="year" tickLine={false} />
+                        <YAxis yAxisId="left" tickLine={false} />
+                        <YAxis yAxisId="right" orientation="right" tickLine={false} unit="%" />
+                        <Tooltip />
+                        <Legend />
+                        <Line isAnimationActive={false} yAxisId="left" type="monotone" dataKey="total" name="總設籍人數" stroke="#3b82f6" strokeWidth={3} />
+                        <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="changeRatio" name="增減率 (%)" stroke="#ef4444" strokeWidth={2} connectNulls />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
               </div>
               <div className="overflow-x-auto bg-white border rounded-lg shadow-sm">
@@ -722,7 +732,7 @@ export default function App() {
           )}
 
           {activeTab === 'survey' && (
-            <div className="flex flex-col gap-5 bg-white p-2" ref={surveyChartRef}>
+            <div className="flex flex-col gap-5 bg-white p-2">
               <div className="flex justify-between items-center border-b pb-2">
                 <div className="flex">
                   <button onClick={() => setSurveySubTab('dimension')} className={`px-4 py-2 text-sm font-bold border-b-2 transition-all ${surveySubTab === 'dimension' ? 'border-emerald-500 text-emerald-600' : 'border-transparent text-slate-500 hover:text-emerald-400'}`}>四大構面趨勢</button>
@@ -736,25 +746,28 @@ export default function App() {
 
               {surveySubTab === 'dimension' && (
                 <div className="flex flex-col gap-4">
-                  <div className="bg-slate-50 p-5 rounded-2xl border">
-                    <h3 className="text-sm font-bold text-slate-700 mb-3">{selectedDistrict.name} 歷年四大構面 品質落差 (Gap)</h3>
-                    <div className="h-64">
-                      {surveyStats.length > 0 ? (
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={surveyStats}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                            <XAxis dataKey="year" tickLine={false} />
-                            <YAxis tickLine={false} />
-                            <Tooltip />
-                            <Legend />
-                            <ReferenceLine y={0} stroke="#94a3b8" strokeDasharray="3 3" />
-                            <Line isAnimationActive={false} type="monotone" dataKey="gapBase" name="教保基礎條件 Gap" stroke="#3b82f6" strokeWidth={2} />
-                            <Line isAnimationActive={false} type="monotone" dataKey="gapAction" name="教保作為 Gap" stroke="#ec4899" strokeWidth={2} />
-                            <Line isAnimationActive={false} type="monotone" dataKey="gapExtend" name="延長收托安置 Gap" stroke="#f59e0b" strokeWidth={2} />
-                            <Line isAnimationActive={false} type="monotone" dataKey="gapOther" name="其他 Gap" stroke="#10b981" strokeWidth={2} />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無滿意度問卷資料</div>)}
+                  <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border">
+                    {/* 🚀 Ref 綁定在內層純白區塊 */}
+                    <div ref={surveyChartRef} className="bg-white p-2 md:p-4 rounded-xl">
+                      <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 歷年四大構面 品質落差 (Gap)</h3>
+                      <div className="h-64">
+                        {surveyStats.length > 0 ? (
+                          <ResponsiveContainer width="100%" height="100%">
+                            <LineChart data={surveyStats}>
+                              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                              <XAxis dataKey="year" tickLine={false} />
+                              <YAxis tickLine={false} />
+                              <Tooltip />
+                              <Legend />
+                              <ReferenceLine y={0} stroke="#94a3b8" strokeDasharray="3 3" />
+                              <Line isAnimationActive={false} type="monotone" dataKey="gapBase" name="教保基礎條件 Gap" stroke="#3b82f6" strokeWidth={2} />
+                              <Line isAnimationActive={false} type="monotone" dataKey="gapAction" name="教保作為 Gap" stroke="#ec4899" strokeWidth={2} />
+                              <Line isAnimationActive={false} type="monotone" dataKey="gapExtend" name="延長收托安置 Gap" stroke="#f59e0b" strokeWidth={2} />
+                              <Line isAnimationActive={false} type="monotone" dataKey="gapOther" name="其他 Gap" stroke="#10b981" strokeWidth={2} />
+                            </LineChart>
+                          </ResponsiveContainer>
+                        ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無滿意度問卷資料</div>)}
+                      </div>
                     </div>
                   </div>
                   <div className="overflow-x-auto bg-white border rounded-lg shadow-sm">
@@ -774,7 +787,7 @@ export default function App() {
 
               {surveySubTab === 'question' && (
                 <div className="flex flex-col gap-4">
-                  <div className="bg-slate-50 p-5 rounded-2xl border flex flex-col gap-4">
+                  <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border flex flex-col gap-4">
                     <select 
                       value={selectedQuestion} 
                       onChange={(e) => setSelectedQuestion(e.target.value)} 
@@ -782,21 +795,26 @@ export default function App() {
                     >
                       {SURVEY_QUESTIONS.map(q => <option key={q.id} value={q.id}>{q.text}</option>)}
                     </select>
-                    <div className="h-64">
-                      {questionStats.length > 0 ? (
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={questionStats} margin={{ top: 10, right: 10, bottom: 0, left: -20 }}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                            <XAxis dataKey="year" tickLine={false} />
-                            <YAxis tickLine={false} />
-                            <Tooltip />
-                            <Legend />
-                            <Bar isAnimationActive={false} dataKey="需求程度" name="需求程度" fill="#ec4899" radius={barRadius} />
-                            <Bar isAnimationActive={false} dataKey="滿意程度" name="滿意程度" fill="#3b82f6" radius={barRadius} />
-                            <Bar isAnimationActive={false} dataKey="品質落差" name="品質落差 (Gap)" fill="#f59e0b" radius={barRadius} />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無此題問卷資料</div>)}
+                    
+                    {/* 🚀 Ref 綁定在內層純白區塊 */}
+                    <div ref={surveyChartRef} className="bg-white p-2 md:p-4 rounded-xl">
+                      <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{SURVEY_QUESTIONS.find(q=>q.id===selectedQuestion)?.short} 滿意度分析</h3>
+                      <div className="h-64">
+                        {questionStats.length > 0 ? (
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={questionStats} margin={{ top: 10, right: 10, bottom: 0, left: -20 }}>
+                              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                              <XAxis dataKey="year" tickLine={false} />
+                              <YAxis tickLine={false} />
+                              <Tooltip />
+                              <Legend />
+                              <Bar isAnimationActive={false} dataKey="需求程度" name="需求程度" fill="#ec4899" radius={barRadius} />
+                              <Bar isAnimationActive={false} dataKey="滿意程度" name="滿意程度" fill="#3b82f6" radius={barRadius} />
+                              <Bar isAnimationActive={false} dataKey="品質落差" name="品質落差 (Gap)" fill="#f59e0b" radius={barRadius} />
+                            </BarChart>
+                          </ResponsiveContainer>
+                        ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無此題問卷資料</div>)}
+                      </div>
                     </div>
                   </div>
                   <div className="overflow-x-auto bg-white border rounded-lg shadow-sm">
@@ -819,14 +837,14 @@ export default function App() {
       </div>
 
       {/* 🚀 自訂圖表 */}
-      <div className="w-full max-w-7xl bg-white p-6 md:p-8 rounded-3xl shadow-md border border-slate-100 flex flex-col gap-6" ref={customChartRef}>
+      <div className="w-full max-w-7xl bg-white p-6 md:p-8 rounded-3xl shadow-md border border-slate-100 flex flex-col gap-6">
         <div className="flex justify-between items-center border-b pb-4">
           <div>
             <h2 className="text-2xl font-bold text-slate-800">自訂圖表</h2>
           </div>
           <div className="flex gap-2">
             <button onClick={handleExportCustomExcel} className="text-xs bg-green-500 text-white px-3 py-1 rounded shadow hover:bg-green-600">輸出 Excel</button>
-            <button onClick={() => exportToPNG(customChartRef, `自訂圖表輸出`)} className="text-xs bg-blue-500 text-white px-3 py-1 rounded shadow hover:bg-blue-600">輸出 PNG</button>
+            <button onClick={() => exportToPNG(customChartRef, `自訂圖表分析`)} className="text-xs bg-blue-500 text-white px-3 py-1 rounded shadow hover:bg-blue-600">輸出 PNG</button>
           </div>
         </div>
         
@@ -937,33 +955,37 @@ export default function App() {
           </div>
         </div>
 
-        <div className="bg-slate-50 p-5 rounded-2xl border mt-2">
-          <div className="h-[400px]">
-            {customChartData.length > 0 && activeMetrics.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={customChartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                  <XAxis dataKey="name" tickLine={false} tick={{fill:'#475569', fontSize:12, fontWeight:'bold'}} />
-                  
-                  {activeMetrics.some(m => m.axis === 'left') && (
-                    <YAxis yAxisId="left" orientation="left" tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
-                  )}
-                  {activeMetrics.some(m => m.axis === 'right') && (
-                    <YAxis yAxisId="right" orientation="right" tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
-                  )}
-                  
-                  <Tooltip contentStyle={{borderRadius:'12px', border:'none', boxShadow:'0 10px 15px -3px rgba(0,0,0,0.1)'}} />
-                  <Legend wrapperStyle={{fontSize:'13px', paddingTop:'15px', fontWeight:'bold'}} />
+        <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border mt-2">
+          {/* 🚀 Ref 綁定在內層純白區塊 */}
+          <div ref={customChartRef} className="bg-white p-2 md:p-4 rounded-xl">
+            <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">自訂圖表分析</h3>
+            <div className="h-[400px]">
+              {customChartData.length > 0 && activeMetrics.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={customChartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                    <XAxis dataKey="name" tickLine={false} tick={{fill:'#475569', fontSize:12, fontWeight:'bold'}} />
+                    
+                    {activeMetrics.some(m => m.axis === 'left') && (
+                      <YAxis yAxisId="left" orientation="left" tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
+                    )}
+                    {activeMetrics.some(m => m.axis === 'right') && (
+                      <YAxis yAxisId="right" orientation="right" tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
+                    )}
+                    
+                    <Tooltip contentStyle={{borderRadius:'12px', border:'none', boxShadow:'0 10px 15px -3px rgba(0,0,0,0.1)'}} />
+                    <Legend wrapperStyle={{fontSize:'13px', paddingTop:'15px', fontWeight:'bold'}} />
 
-                  {activeMetrics.map(m => {
-                    if (m.chartType === 'line') {
-                      return <Line isAnimationActive={false} key={m.id} yAxisId={m.axis} type="monotone" dataKey={m.id} name={m.name} stroke={m.color} strokeWidth={3} dot={{r:4}} activeDot={{r:6}} />;
-                    }
-                    return <Bar isAnimationActive={false} key={m.id} yAxisId={m.axis} dataKey={m.id} name={m.name} fill={m.color} radius={[4,4,0,0]} barSize={40} />;
-                  })}
-                </ComposedChart>
-              </ResponsiveContainer>
-            ) : (<div className="w-full h-full flex items-center justify-center text-slate-400 font-bold">請至少選擇一個地區、年份與指標加入圖表</div>)}
+                    {activeMetrics.map(m => {
+                      if (m.chartType === 'line') {
+                        return <Line isAnimationActive={false} key={m.id} yAxisId={m.axis} type="monotone" dataKey={m.id} name={m.name} stroke={m.color} strokeWidth={3} dot={{r:4}} activeDot={{r:6}} />;
+                      }
+                      return <Bar isAnimationActive={false} key={m.id} yAxisId={m.axis} dataKey={m.id} name={m.name} fill={m.color} radius={[4,4,0,0]} barSize={40} />;
+                    })}
+                  </ComposedChart>
+                </ResponsiveContainer>
+              ) : (<div className="w-full h-full flex items-center justify-center text-slate-400 font-bold">請至少選擇一個地區、年份與指標加入圖表</div>)}
+            </div>
           </div>
         </div>
       </div>
