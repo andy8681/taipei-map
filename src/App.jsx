@@ -4,7 +4,8 @@ import {
   LineChart, Line, BarChart, Bar, ComposedChart, XAxis, YAxis, CartesianGrid, 
   Tooltip, Legend, ResponsiveContainer, ReferenceLine 
 } from 'recharts';
-import html2canvas from 'html2canvas';
+// 🚀 替換為支援現代 CSS 的 html-to-image
+import { toPng } from 'html-to-image';
 import * as XLSX from 'xlsx';
 
 import supplyDemandData from './data/臺北市各行政區幼兒園供給與招生概況.json'; 
@@ -49,14 +50,12 @@ const SURVEY_QUESTIONS = [
   { id: "17", text: "17.教師友善且關心幼兒", short: "17.教師友善" }
 ];
 
-// 產生下拉選單：大類別
 const CATEGORY_OPTIONS = [
   { value: 'basic', label: '📊 基本資訊' },
   { value: 'inst', label: '🏫 機構數與公共化' },
   { value: 'survey', label: '⭐ 滿意度分析' }
 ];
 
-// 基本資訊次選單
 const BASIC_SUB_OPTIONS = [
   { id: 'appEnroll', name: '核定招收', axis: 'left' },
   { id: 'stuAmount', name: '實際在園', axis: 'left' },
@@ -64,7 +63,6 @@ const BASIC_SUB_OPTIONS = [
   { id: 'popTotal', name: '學齡前設籍', axis: 'left' }
 ];
 
-// 機構數與公共化次選單
 const INST_SUB_OPTIONS = [
   { id: 'public', name: '公立', axis: 'left' },
   { id: 'nonProfit', name: '非營利', axis: 'left' },
@@ -75,7 +73,6 @@ const INST_SUB_OPTIONS = [
   { id: 'publicRatio', name: '公共化佔比(%)', axis: 'right' }
 ];
 
-// 滿意度標的(構面/題目)選單
 const SURVEY_TARGET_OPTIONS = [
   { value: 'dim_教保基礎條件', label: '⭐ 構面：教保基礎條件', short: '基礎條件' },
   { value: 'dim_教保作為', label: '⭐ 構面：教保作為', short: '教保作為' },
@@ -84,7 +81,6 @@ const SURVEY_TARGET_OPTIONS = [
   ...SURVEY_QUESTIONS.map(q => ({ value: `q_${q.id}`, label: `📝 逐題：${q.text}`, short: q.short }))
 ];
 
-// 滿意度指標次選單
 const SURVEY_SUB_OPTIONS = [
   { id: 'req', name: '需求程度', axis: 'right' },
   { id: 'perf', name: '滿意程度', axis: 'right' },
@@ -94,11 +90,9 @@ const SURVEY_SUB_OPTIONS = [
 const COLORS_PALETTE = ['#818cf8', '#34d399', '#fbbf24', '#fb7185', '#c084fc', '#2dd4bf', '#f472b6', '#a78bfa', '#f87171', '#60a5fa'];
 
 const barRadius = 4;
-// 限定資料範圍 112~114 年
 const yearsList = ['112年', '113年', '114年'];
 const rawYears = ['112', '113', '114'];
 
-// 正規化字串，解決 台/臺 不一致導致抓不到資料的問題
 const norm = (str) => String(str || '').replace(/臺/g, '台').trim();
 
 const safeParse = (val) => {
@@ -116,17 +110,38 @@ const exportToExcel = (data, filename) => {
   XLSX.writeFile(wb, `${filename}.xlsx`);
 };
 
+// 🚀 更新截圖邏輯，徹底解決 ResponsiveContainer 與 oklch 報錯
 const exportToPNG = async (elementRef, filename) => {
   if (elementRef.current) {
-    const canvas = await html2canvas(elementRef.current, { 
-      backgroundColor: '#ffffff',
-      scale: 2,
-      useCORS: true
-    });
-    const link = document.createElement('a');
-    link.download = `${filename}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    const el = elementRef.current;
+    
+    // 1. 先抓取當前實際的像素寬高，強制鎖死，避免 ResponsiveContainer 變成 -1 崩塌
+    const rect = el.getBoundingClientRect();
+    const originalWidth = el.style.width;
+    const originalHeight = el.style.height;
+    
+    el.style.width = `${rect.width}px`;
+    el.style.height = `${rect.height}px`;
+
+    try {
+      // 2. 使用 html-to-image 進行渲染
+      const dataUrl = await toPng(el, { 
+        backgroundColor: '#ffffff',
+        pixelRatio: 2 // 保持高解析度
+      });
+      
+      const link = document.createElement('a');
+      link.download = `${filename}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("圖片匯出失敗：", err);
+      alert("圖片匯出時發生錯誤，請檢查開發者工具(Console)。");
+    } finally {
+      // 3. 不管成功或失敗，都把寬高恢復原狀，不影響畫面互動
+      el.style.width = originalWidth;
+      el.style.height = originalHeight;
+    }
   }
 };
 
@@ -142,12 +157,10 @@ export default function App() {
   const [selectedQuestion, setSelectedQuestion] = useState('01');
   const [selectedFactorYear, setSelectedFactorYear] = useState('');
 
-  // 自訂圖表預設值
   const [customSelectedYears, setCustomSelectedYears] = useState(['112年', '113年', '114年']);
   const [customSelectedRegions, setCustomSelectedRegions] = useState(['臺北市']);
   
-  // 自訂圖表：三層連動下拉選單狀態
-  const [activeCategory, setActiveCategory] = useState('basic'); // 'basic', 'inst', 'survey'
+  const [activeCategory, setActiveCategory] = useState('basic'); 
   const [activeSubItem, setActiveSubItem] = useState(BASIC_SUB_OPTIONS[0].id);
   const [activeSurveyMetric, setActiveSurveyMetric] = useState(SURVEY_SUB_OPTIONS[0].id);
 
@@ -205,7 +218,6 @@ export default function App() {
     setState(prev => prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]);
   };
 
-  // 處理自訂圖表第一層類別切換
   const handleCategoryChange = (e) => {
     const cat = e.target.value;
     setActiveCategory(cat);
@@ -214,7 +226,6 @@ export default function App() {
     else if (cat === 'survey') setActiveSubItem(SURVEY_TARGET_OPTIONS[0].value);
   };
 
-  // 自訂圖表：加入動態指標
   const handleAddMetric = () => {
     let metricId = '';
     let newName = '';
@@ -238,7 +249,6 @@ export default function App() {
       axis = metricOpt.axis;
     }
 
-    // 避免重複加入
     if (activeMetrics.find(m => m.id === metricId)) return;
 
     setActiveMetrics(prev => [...prev, {
@@ -246,16 +256,14 @@ export default function App() {
       name: newName,
       axis: axis,
       color: COLORS_PALETTE[prev.length % COLORS_PALETTE.length],
-      chartType: 'bar' // 預設為柱狀圖
+      chartType: 'bar' 
     }]);
   };
 
-  // 自訂圖表：切換圖表型態 (柱狀/曲線)
   const updateMetricChartType = (id, newType) => {
     setActiveMetrics(prev => prev.map(m => m.id === id ? { ...m, chartType: newType } : m));
   };
 
-  // 1. 供給資料
   const currentSupplyData = useMemo(() => {
     if (!enrollmentData || !populationData) return [];
     let popDataArray = selectedDistrict.id === '台北市' ? populationData.taipei_city_total || [] : populationData.districts?.[selectedDistrict.name] || [];
@@ -299,7 +307,6 @@ export default function App() {
     }).filter(d => d.appEnroll > 0 || d.stuAmount > 0 || d.childPopulation !== '-'); 
   }, [selectedDistrict, validDistrictNames]);
 
-  // 2. 機構資料
   const institutionData = useMemo(() => {
     if (!institutionCountData || !selectedDistrict) return [];
     const distKey = Object.keys(institutionCountData).find(k => norm(k) === norm(selectedDistrict.id === '台北市' ? '台北市' : selectedDistrict.name));
@@ -311,7 +318,6 @@ export default function App() {
     }));
   }, [selectedDistrict]);
 
-  // 3. 次分區資料
   const currentSubDistrictsForYear = useMemo(() => {
     if (!rawSubDistricts || rawSubDistricts.length === 0) return [];
     let result = [];
@@ -329,7 +335,6 @@ export default function App() {
     return result;
   }, [rawSubDistricts, selectedSubYears, selectedSubDistricts]);
 
-  // 4. 人口資料
   const cityPopulationData = useMemo(() => {
     if (!populationData || !selectedDistrict) return [];
     let popDataArray = selectedDistrict.id === '台北市' ? populationData.taipei_city_total || [] : populationData.districts?.[selectedDistrict.name] || [];
@@ -342,7 +347,6 @@ export default function App() {
       }));
   }, [selectedDistrict]);
 
-  // 5. 滿意度
   const surveyStats = useMemo(() => {
     if (!surveyData || !selectedDistrict) return [];
     const targetName = selectedDistrict.id === '台北市' ? '台北市整體' : selectedDistrict.name;
@@ -356,7 +360,6 @@ export default function App() {
         gapBase: calcGap(d.構面['教保基礎條件']?.滿意度, d.構面['教保基礎條件']?.需求度) ?? d.構面['教保基礎條件']?.Gap ?? null,
         gapAction: calcGap(d.構面['教保作為']?.滿意度, d.構面['教保作為']?.需求度) ?? d.構面['教保作為']?.Gap ?? null, 
         gapExtend: calcGap(d.構面['延長收托安置']?.滿意度, d.構面['延長收托安置']?.需求度) ?? d.構面['延長收托安置']?.Gap ?? null,
-        // 補上 其他(Gap) 供圖表與表格使用
         gapOther: calcGap(d.構面['其他']?.滿意度, d.構面['其他']?.需求度) ?? d.構面['其他']?.Gap ?? null,
         raw: d 
       };
@@ -372,7 +375,6 @@ export default function App() {
     });
   }, [surveyStats, selectedQuestion]);
 
-  // 自訂圖表：所有下拉區域
   const allAvailableRegions = useMemo(() => {
     let regions = ['臺北市', ...districtsMapping.filter(d => d.id !== '台北市').map(d => d.name)];
     if (supplyDemandData) {
@@ -383,7 +385,6 @@ export default function App() {
     return [...new Set(regions)]; 
   }, []);
 
-  // 自訂圖表：產生動態資料
   const customChartData = useMemo(() => {
     let result = [];
     customSelectedYears.forEach(year => {
@@ -394,7 +395,6 @@ export default function App() {
         const isTaipei = norm(regionName) === '台北市';
         const isDistrict = districtsMapping.some(d => norm(d.name) === norm(regionName));
 
-        // 預先取得該區、該年的原始資料
         let eData = enrollmentData.filter(d => String(d.學年度).replace('年','') === yearStr);
         if (isTaipei) eData = eData.filter(d => validDistrictNames.includes(norm(d.行政區)));
         else if (isDistrict) eData = eData.filter(d => norm(d.行政區) === norm(regionName));
@@ -416,7 +416,6 @@ export default function App() {
           }
         }
 
-        // 填入 activeMetrics 中指定的數據
         activeMetrics.forEach(metric => {
           const parts = metric.id.split('___');
           const cat = parts[0];
@@ -449,10 +448,10 @@ export default function App() {
               if (detail === 'total') entry[metric.id] = safeParse(iData?.合計);
               if (detail === 'publicRatio') entry[metric.id] = iData && iData.公共化占比 ? parseFloat(String(iData.公共化占比).replace('%', '')) : 0;
             } else {
-              entry[metric.id] = 0; // 次分區無機構詳細數據
+              entry[metric.id] = 0; 
             }
           } else if (cat === 'survey') {
-            const surveyMetric = parts[2]; // req, perf, gap
+            const surveyMetric = parts[2]; 
             let req = 0, perf = 0;
             if (sData) {
               if (detail.startsWith('dim_')) {
@@ -477,7 +476,6 @@ export default function App() {
     return result;
   }, [customSelectedYears, customSelectedRegions, validDistrictNames, activeMetrics]);
 
-  // 為導出 Excel 客製化欄位名稱
   const handleExportCustomExcel = () => {
     const formattedData = customChartData.map(row => {
       let newRow = { '地區與年份': row.name, '年份': row.year, '行政區': row.region };
