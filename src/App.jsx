@@ -299,6 +299,18 @@ export default function App() {
     setActiveMetrics(prev => prev.map(m => m.id === id ? { ...m, chartType: newType } : m));
   };
 
+  const handleLegendClick = (e) => {
+    const metricId = e.dataKey;
+    setActiveMetrics(prev => prev.map(m => {
+      if (m.id === metricId) {
+        const currentColorIndex = COLORS_PALETTE.indexOf(m.color);
+        const nextColorIndex = (currentColorIndex + 1) % COLORS_PALETTE.length;
+        return { ...m, color: COLORS_PALETTE[nextColorIndex] };
+      }
+      return m;
+    }));
+  };
+
   const currentSupplyData = useMemo(() => {
     if (!enrollmentData || !populationData) return [];
     let popDataArray = selectedDistrict.id === '台北市' ? populationData.taipei_city_total || [] : populationData.districts?.[selectedDistrict.name] || [];
@@ -477,7 +489,6 @@ export default function App() {
     exportToExcel(formattedData, '自訂圖表資料');
   };
 
-  // ✅ 動態計算當前存在的 Y 軸並固定順序
   const activeAxisIds = [...new Set(activeMetrics.map(m => m.axisId))];
   const sortedActiveAxisIds = activeAxisIds.sort((a, b) => {
     const order = { people: 1, inst: 2, percent: 3, score: 4 };
@@ -491,7 +502,6 @@ export default function App() {
     score: { name: '滿意度 (分)', color: '#10b981' }
   };
 
-  // ✅ 奇數配平：多出來的一個放左邊
   const getOrientation = (id) => {
     const index = sortedActiveAxisIds.indexOf(id);
     const total = sortedActiveAxisIds.length;
@@ -907,8 +917,16 @@ export default function App() {
         </div>
 
         <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border mt-2">
-          <div ref={customChartRef} className="bg-white p-2 md:p-4 rounded-xl">
-            <div className="h-[400px]">
+          {/* ✅ 下修了 maxWidth 限制，讓只有 1 個區域時可縮至 350px 左右 */}
+          <div ref={customChartRef} className="bg-white p-2 md:p-4 rounded-xl flex justify-center">
+            <div 
+              className="h-[400px] w-full transition-all duration-500"
+              style={{ 
+                maxWidth: customChartData.length > 0 && customChartData.length <= 4 
+                  ? `${Math.max(350, customChartData.length * 200 + 150)}px` 
+                  : '100%' 
+              }}
+            >
               {customChartData.length > 0 && activeMetrics.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart 
@@ -919,7 +937,6 @@ export default function App() {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                     <XAxis dataKey="name" tickLine={false} tick={{fill:'#475569', fontSize:12, fontWeight:'bold'}} />
                     
-                    {/* ✅ Y 軸防重疊：放寬 width 並利用 offset 將文字往內側壓緊 */}
                     {sortedActiveAxisIds.map((axisId) => {
                       const orientation = getOrientation(axisId);
                       return (
@@ -931,20 +948,27 @@ export default function App() {
                           tickLine={false} 
                           axisLine={{ stroke: axisSettings[axisId].color, strokeWidth: 2 }}
                           tick={{ fill: axisSettings[axisId].color, fontSize: 11, fontWeight: 'bold' }}
+                          tickFormatter={(value) => typeof value === 'number' && !Number.isInteger(value) ? Number(value.toFixed(2)) : value}
                           label={{
                             value: axisSettings[axisId].name,
                             angle: -90,
                             position: orientation === 'left' ? 'insideLeft' : 'insideRight',
-                            offset: 15, // 靠緊邊緣並與外側保持安全距離
+                            offset: 15,
                             fill: axisSettings[axisId].color,
                             fontSize: 11,
                             fontWeight: 'bold'
                           }}
                           domain={
-                            axisId === 'percent' ? [0, 100] : 
-                            axisId === 'score' ? ['auto', 'auto'] : 
-                            [dataMin => dataMin === 0 ? 0 : Number((dataMin * 0.95).toFixed(0)), dataMax => Number((dataMax * 1.05).toFixed(0))]
-                          }
+  axisId === 'percent' ? [
+    dataMin => Math.max(0, Math.floor(dataMin - 5)), 
+    dataMax => Math.min(100, Math.ceil(dataMax + 5))
+  ] : 
+  axisId === 'score' ? [
+    dataMin => Math.max(3.5, dataMin - 1), // 下限：最小值減 1，但最低不得低於 3.5
+    dataMax => Math.min(5, dataMax + 1)    // 上限：最大值加 1，但最高不得超過 5
+  ] : 
+  [dataMin => dataMin === 0 ? 0 : Number((dataMin * 0.95).toFixed(0)), dataMax => Number((dataMax * 1.05).toFixed(0))]
+}
                         />
                       );
                     })}
@@ -952,9 +976,10 @@ export default function App() {
                     <Tooltip content={<CustomTooltip />} cursor={{fill: '#f1f5f9'}} />
                     
                     <Legend 
-                      wrapperStyle={{fontSize:'13px', paddingTop:'15px', fontWeight:'bold'}} 
+                      wrapperStyle={{fontSize:'13px', paddingTop:'15px', fontWeight:'bold', cursor: 'pointer'}} 
                       onMouseEnter={(e) => setHoveredMetricId(e.dataKey)}
                       onMouseLeave={() => setHoveredMetricId(null)}
+                      onClick={handleLegendClick}
                     />
 
                     {activeMetrics.map(m => {
