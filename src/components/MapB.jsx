@@ -133,7 +133,6 @@ const exportToPNG = async (elementRef, filename) => {
       link.click();
     } catch (err) {
       console.error("圖片匯出失敗：", err);
-      // alert("圖片匯出時發生錯誤，請檢查開發者工具(Console)。"); // 移除 alert
     } finally {
       el.style.width = originalWidth;
       el.style.height = originalHeight;
@@ -161,8 +160,6 @@ export default function App() {
   const [activeSurveyMetric, setActiveSurveyMetric] = useState(SURVEY_SUB_OPTIONS[0].id);
 
   const [hoveredMetricId, setHoveredMetricId] = useState(null);
-  
-  // 新增狀態來處理錯誤提示
   const [customChartError, setCustomChartError] = useState('');
 
   const [activeMetrics, setActiveMetrics] = useState([
@@ -243,9 +240,8 @@ export default function App() {
   };
 
   const handleAddMetric = () => {
-    setCustomChartError(''); // 重置錯誤訊息
+    setCustomChartError(''); 
 
-    // 檢查類別是否互斥 (需求2)
     if (activeMetrics.length > 0) {
       const currentCategory = activeMetrics[0].category;
       if (currentCategory !== activeCategory) {
@@ -259,22 +255,26 @@ export default function App() {
       const metricsToAdd = ['req', 'perf', 'gap'];
       const newMetrics = [];
       
-      // 檢查 Y 軸數量限制 (需求1)
       const currentAxisIds = new Set(activeMetrics.map(m => m.axisId));
-      if (!currentAxisIds.has('score') && currentAxisIds.size >= 2) {
-          setCustomChartError("最多只能同時比較兩個不同的單位軸(Y軸)。");
+      const futureAxisIds = new Set(currentAxisIds);
+      futureAxisIds.add('score');
+      futureAxisIds.add('gap');
+      
+      if (futureAxisIds.size > 2) {
+          setCustomChartError("最多只能同時比較兩個不同的單位軸(Y軸)。加入全部滿意度指標會新增兩個Y軸，請先清除現有其他指標。");
           return;
       }
 
       metricsToAdd.forEach((metricId) => {
         const mId = `survey___${activeSubItem}___${metricId}`;
         const mOpt = SURVEY_SUB_OPTIONS.find(o => o.id === metricId);
+        const assignedAxis = metricId === 'gap' ? 'gap' : 'score'; 
         
         if (!activeMetrics.find(m => m.id === mId)) {
           newMetrics.push({
             id: mId,
             name: `${shortName}: ${mOpt.name}`,
-            axisId: 'score', 
+            axisId: assignedAxis, 
             color: COLORS_PALETTE[(activeMetrics.length + newMetrics.length) % COLORS_PALETTE.length],
             chartType: 'line',
             category: activeCategory
@@ -307,12 +307,11 @@ export default function App() {
       const shortName = getSurveyShortName(activeSubItem);
       const metricOpt = SURVEY_SUB_OPTIONS.find(o => o.id === activeSurveyMetric);
       newName = `${shortName}: ${metricOpt.name}`;
-      axisId = 'score';
+      axisId = activeSurveyMetric === 'gap' ? 'gap' : 'score';
     }
 
     if (activeMetrics.find(m => m.id === metricId)) return;
 
-    // 檢查 Y 軸數量限制 (需求1)
     const currentAxisIds = new Set(activeMetrics.map(m => m.axisId));
     if (!currentAxisIds.has(axisId) && currentAxisIds.size >= 2) {
         setCustomChartError("最多只能同時比較兩個不同的單位軸(Y軸)。");
@@ -525,7 +524,7 @@ export default function App() {
 
   const activeAxisIds = [...new Set(activeMetrics.map(m => m.axisId))];
   const sortedActiveAxisIds = activeAxisIds.sort((a, b) => {
-    const order = { people: 1, inst: 2, percent: 3, score: 4 };
+    const order = { people: 1, inst: 2, percent: 3, score: 4, gap: 5 };
     return order[a] - order[b];
   });
   
@@ -533,13 +532,12 @@ export default function App() {
     people: { name: '人數 (人)', color: '#3b82f6' },
     inst: { name: '單位數 (間)', color: '#8b5cf6' },
     percent: { name: '百分比 (%)', color: '#f43f5e' },
-    score: { name: '滿意度 (分)', color: '#10b981' }
+    score: { name: '滿意度 (分)', color: '#10b981' },
+    gap: { name: '品質落差', color: '#f59e0b' }
   };
 
   const getOrientation = (id) => {
     const index = sortedActiveAxisIds.indexOf(id);
-    const total = sortedActiveAxisIds.length;
-    // 已經限制最多2個Y軸，這裡簡化邏輯
     return index === 0 ? 'left' : 'right'; 
   };
 
@@ -796,7 +794,6 @@ export default function App() {
           </div>
         </div>
         
-        {/* 新增錯誤訊息顯示區塊 */}
         {customChartError && (
           <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg" role="alert">
             <p className="font-bold">無法加入指標</p>
@@ -947,7 +944,7 @@ export default function App() {
                     <span className="text-xs font-bold" style={{color: m.color}}>{m.name}</span>
                     <button onClick={() => {
                         setActiveMetrics(prev => prev.filter(item => item.id !== m.id));
-                        setCustomChartError(''); // 移除指標時清空錯誤，讓使用者可以重新操作
+                        setCustomChartError(''); 
                       }} 
                       className="text-slate-400 hover:text-red-500 text-xs font-bold bg-slate-50 px-1.5 py-0.5 rounded transition-colors"
                     >✖</button>
@@ -962,7 +959,6 @@ export default function App() {
         </div>
 
         <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border mt-2">
-          {/* ✅ 下修了 maxWidth 限制，讓只有 1 個區域時可縮至 350px 左右 */}
           <div ref={customChartRef} className="bg-white p-2 md:p-4 rounded-xl flex justify-center">
             <div 
               className="h-[400px] w-full transition-all duration-500"
@@ -1004,16 +1000,20 @@ export default function App() {
                             fontWeight: 'bold'
                           }}
                           domain={
-  axisId === 'percent' ? [
-    dataMin => Math.max(0, Math.floor(dataMin - 5)), 
-    dataMax => Math.min(100, Math.ceil(dataMax + 5))
-  ] : 
-  axisId === 'score' ? [
-    dataMin => Math.max(3.5, dataMin - 1), // 下限：最小值減 1，但最低不得低於 3.5
-    dataMax => Math.min(5, dataMax + 1)    // 上限：最大值加 1，但最高不得超過 5
-  ] : 
-  [dataMin => dataMin === 0 ? 0 : Number((dataMin * 0.95).toFixed(0)), dataMax => Number((dataMax * 1.05).toFixed(0))]
-}
+                            axisId === 'percent' ? [
+                              dataMin => Math.max(0, Math.floor(dataMin - 5)), 
+                              dataMax => Math.min(100, Math.ceil(dataMax + 5))
+                            ] : 
+                            axisId === 'score' ? [
+                              dataMin => Math.max(3.5, dataMin - 1), 
+                              dataMax => Math.min(5, dataMax + 1)    
+                            ] : 
+                            axisId === 'gap' ? [
+                              dataMin => Number((dataMin - 0.2).toFixed(2)),
+                              dataMax => Number((dataMax + 0.2).toFixed(2))
+                            ] : 
+                            [dataMin => dataMin === 0 ? 0 : Number((dataMin * 0.95).toFixed(0)), dataMax => Number((dataMax * 1.05).toFixed(0))]
+                          }
                         />
                       );
                     })}
