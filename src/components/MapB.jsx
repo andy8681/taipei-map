@@ -438,12 +438,14 @@ export default function App() {
     }));
   }, [selectedDistrict]);
 
+  // 修改：字串統一過濾掉「年」，避免原本帶有年的字串去比對原始數字時造成 undefined
   const currentSubDistrictsForYear = useMemo(() => {
     if (!rawSubDistricts || rawSubDistricts.length === 0) return [];
     let result = [];
     rawSubDistricts.filter(sub => selectedSubDistricts.includes(sub.name)).forEach(sub => {
         selectedSubYears.forEach(year => {
-           const yearStat = sub.yearly_stats?.find(y => y.year === year);
+           const cleanYear = year.replace('年', ''); // 去除年字，確保比對精準
+           const yearStat = sub.yearly_stats?.find(y => String(y.year).replace('年', '') === cleanYear);
            if (yearStat) result.push({ name: `${sub.name} (${year})`, subName: sub.name, year: year, appEnroll: safeParse(yearStat.appEnroll), stuAmount: safeParse(yearStat.stuAmount), occupancyRate: yearStat.occupancyRate || 0 });
         });
       });
@@ -600,7 +602,8 @@ export default function App() {
                   if (detail === 'appEnroll') entry[metric.id] = app;
                   if (detail === 'stuAmount') entry[metric.id] = stu;
                   if (detail === 'occupancyRate') entry[metric.id] = app > 0 ? Number(((stu / app) * 100).toFixed(2)) : 0;
-                } else if (subStat) {
+                } else if (subStat && instType === '全部') {
+                  // 防錯：若非全部機構，則次分區因缺乏拆分資料而補 0，避免誤導
                   if (detail === 'appEnroll') entry[metric.id] = safeParse(subStat.appEnroll);
                   if (detail === 'stuAmount') entry[metric.id] = safeParse(subStat.stuAmount);
                   if (detail === 'occupancyRate') entry[metric.id] = subStat.occupancyRate || 0;
@@ -910,12 +913,36 @@ export default function App() {
 
           {activeTab === 'subdistrict' && selectedDistrict.id !== '台北市' && (
             <div className="flex flex-col gap-6 bg-white p-2">
-              <div className="flex justify-between">
-                <div className="flex gap-2 items-center flex-wrap">
-                  <span className="text-xs font-bold">選擇年份(可多選)：</span>
-                  {yearsList.map(y => <button key={y} onClick={() => toggleSubYear(y)} className={`px-2 py-1 rounded text-xs transition-all ${selectedSubYears.includes(y) ? 'bg-purple-600 text-white shadow' : 'bg-slate-200 hover:bg-purple-100'}`}>{y}</button>)}
+              <div className="flex justify-between flex-col md:flex-row gap-4">
+                <div className="flex flex-col gap-2">
+                  <div className="flex gap-2 items-center flex-wrap">
+                    <span className="text-xs font-bold">選擇年份(可多選)：</span>
+                    {yearsList.map(y => <button key={y} onClick={() => toggleSubYear(y)} className={`px-2 py-1 rounded text-xs transition-all ${selectedSubYears.includes(y) ? 'bg-purple-600 text-white shadow' : 'bg-slate-200 hover:bg-purple-100'}`}>{y}</button>)}
+                  </div>
+                  {/* 新增了次分區選擇器，可自由勾選要顯示的次分區 */}
+                  <div className="flex gap-2 items-center flex-wrap">
+                    <span className="text-xs font-bold">選擇次分區(多選)：</span>
+                    <button 
+                      onClick={() => {
+                        if (selectedSubDistricts.length === rawSubDistricts.length) setSelectedSubDistricts([]);
+                        else setSelectedSubDistricts(rawSubDistricts.map(s => s.name));
+                      }}
+                      className="px-2 py-1 rounded text-xs transition-all bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold"
+                    >
+                      {selectedSubDistricts.length === rawSubDistricts.length ? '全取消' : '全選'}
+                    </button>
+                    {rawSubDistricts.map(sub => (
+                      <button 
+                        key={sub.name} 
+                        onClick={() => toggleSubDistrict(sub.name)} 
+                        className={`px-2 py-1 rounded text-xs transition-all ${selectedSubDistricts.includes(sub.name) ? 'bg-indigo-600 text-white shadow' : 'bg-white border border-slate-300 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'}`}
+                      >
+                        {sub.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 h-fit">
                   <button onClick={() => exportToExcel(currentSubDistrictsForYear, `次分區_${selectedSubYears.join('_')}`)} className="text-xs bg-green-500 text-white px-3 py-1 rounded shadow hover:bg-green-600">輸出 Excel</button>
                   <button onClick={() => exportToPNG(subDistrictChartRef, `次分區_${selectedSubYears.join('_')}`)} className="text-xs bg-blue-500 text-white px-3 py-1 rounded shadow hover:bg-blue-600">輸出 PNG</button>
                 </div>
@@ -1346,7 +1373,7 @@ export default function App() {
                       <option value={districtsMapping.find(d => d.id === customSelectedMainDistrict)?.name}>
                         {districtsMapping.find(d => d.id === customSelectedMainDistrict)?.name} (全區)
                       </option>
-                      {supplyDemandData.find(d => d.id === customSelectedMainDistrict)?.sub_districts.map(sub => (
+                      {supplyDemandData.find(d => d.id === customSelectedMainDistrict)?.sub_districts?.map(sub => (
                         <option key={sub.name} value={sub.name}>{sub.name}</option>
                       ))}
                     </>
