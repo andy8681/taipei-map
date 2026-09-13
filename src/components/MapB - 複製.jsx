@@ -1,5 +1,8 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import TaipeiMap from './components/TaipeiMap';
+
+// 1. 同層級的檔案，直接用 ./
+import TaipeiMap from './TaipeiMap'; 
+
 import { 
   LineChart, Line, BarChart, Bar, ComposedChart, XAxis, YAxis, CartesianGrid, 
   Tooltip, Legend, ResponsiveContainer, ReferenceLine 
@@ -7,11 +10,12 @@ import {
 import { toPng } from 'html-to-image';
 import * as XLSX from 'xlsx';
 
-import supplyDemandData from './data/臺北市各行政區幼兒園供給與招生概況.json'; 
-import enrollmentData from './data/1141219-子計畫一 各類型教保服務機構入園人數統計表.json'; 
-import institutionCountData from './data/1141219-子計畫一各類型教保服務機構數量統計表.json'; 
-import populationData from './data/1141219-子計畫學齡前設籍人數與增減趨勢.json'; 
-import surveyData from './data/統計結果_前端專用.json'; 
+// 2. 往上一層回到 src，再進入 data 資料夾，使用 ../
+import supplyDemandData from '../data/臺北市各行政區幼兒園供給與招生概況.json'; 
+import enrollmentData from '../data/1141219-子計畫一 各類型教保服務機構入園人數統計表.json'; 
+import institutionCountData from '../data/1141219-子計畫一各類型教保服務機構數量統計表.json'; 
+import populationData from '../data/1141219-子計畫學齡前設籍人數與增減趨勢.json'; 
+import surveyData from '../data/統計結果_前端專用.json';
 
 const districtsMapping = [
   { id: "台北市", name: "臺北市" },
@@ -129,7 +133,6 @@ const exportToPNG = async (elementRef, filename) => {
       link.click();
     } catch (err) {
       console.error("圖片匯出失敗：", err);
-      alert("圖片匯出時發生錯誤，請檢查開發者工具(Console)。");
     } finally {
       el.style.width = originalWidth;
       el.style.height = originalHeight;
@@ -139,6 +142,7 @@ const exportToPNG = async (elementRef, filename) => {
 
 export default function App() {
   const [selectedDistrict, setSelectedDistrict] = useState(districtsMapping[0]); 
+  const [showDistrictList, setShowDistrictList] = useState(false); // 新增：控制行政區清單展開
   const [activeTab, setActiveTab] = useState('supply'); 
   const [searchQuery, setSearchQuery] = useState(''); 
   
@@ -157,11 +161,12 @@ export default function App() {
   const [activeSurveyMetric, setActiveSurveyMetric] = useState(SURVEY_SUB_OPTIONS[0].id);
 
   const [hoveredMetricId, setHoveredMetricId] = useState(null);
+  const [customChartError, setCustomChartError] = useState('');
 
   const [activeMetrics, setActiveMetrics] = useState([
-    { id: 'basic___appEnroll', name: '基本: 核定招收', axisId: 'people', color: '#818cf8', chartType: 'line' },
-    { id: 'basic___stuAmount', name: '基本: 實際在園', axisId: 'people', color: '#34d399', chartType: 'line' },
-    { id: 'basic___occupancyRate', name: '基本: 入園率(%)', axisId: 'percent', color: '#fb7185', chartType: 'line' }
+    { id: 'basic___appEnroll', name: '基本: 核定招收', axisId: 'people', color: '#818cf8', chartType: 'line', category: 'basic' },
+    { id: 'basic___stuAmount', name: '基本: 實際在園', axisId: 'people', color: '#34d399', chartType: 'line', category: 'basic' },
+    { id: 'basic___occupancyRate', name: '基本: 入園率(%)', axisId: 'percent', color: '#fb7185', chartType: 'line', category: 'basic' }
   ]);
 
   const supplyChartRef = useRef(null);
@@ -236,22 +241,44 @@ export default function App() {
   };
 
   const handleAddMetric = () => {
+    setCustomChartError(''); 
+
+    if (activeMetrics.length > 0) {
+      const currentCategory = activeMetrics[0].category;
+      if (currentCategory !== activeCategory) {
+        setCustomChartError(`不同向度的資料不可混合比較。目前圖表已有「${CATEGORY_OPTIONS.find(c => c.value === currentCategory)?.label}」的指標，無法加入「${CATEGORY_OPTIONS.find(c => c.value === activeCategory)?.label}」的指標。請先清空現有指標。`);
+        return;
+      }
+    }
+
     if (activeCategory === 'survey' && activeSurveyMetric === 'all') {
       const shortName = getSurveyShortName(activeSubItem);
       const metricsToAdd = ['req', 'perf', 'gap'];
       const newMetrics = [];
       
+      const currentAxisIds = new Set(activeMetrics.map(m => m.axisId));
+      const futureAxisIds = new Set(currentAxisIds);
+      futureAxisIds.add('score');
+      futureAxisIds.add('gap');
+      
+      if (futureAxisIds.size > 2) {
+          setCustomChartError("最多只能同時比較兩個不同的單位軸(Y軸)。加入全部滿意度指標會新增兩個Y軸，請先清除現有其他指標。");
+          return;
+      }
+
       metricsToAdd.forEach((metricId) => {
         const mId = `survey___${activeSubItem}___${metricId}`;
         const mOpt = SURVEY_SUB_OPTIONS.find(o => o.id === metricId);
+        const assignedAxis = metricId === 'gap' ? 'gap' : 'score'; 
         
         if (!activeMetrics.find(m => m.id === mId)) {
           newMetrics.push({
             id: mId,
             name: `${shortName}: ${mOpt.name}`,
-            axisId: 'score', 
+            axisId: assignedAxis, 
             color: COLORS_PALETTE[(activeMetrics.length + newMetrics.length) % COLORS_PALETTE.length],
-            chartType: 'line'
+            chartType: 'line',
+            category: activeCategory
           });
         }
       });
@@ -281,17 +308,24 @@ export default function App() {
       const shortName = getSurveyShortName(activeSubItem);
       const metricOpt = SURVEY_SUB_OPTIONS.find(o => o.id === activeSurveyMetric);
       newName = `${shortName}: ${metricOpt.name}`;
-      axisId = 'score';
+      axisId = activeSurveyMetric === 'gap' ? 'gap' : 'score';
     }
 
     if (activeMetrics.find(m => m.id === metricId)) return;
+
+    const currentAxisIds = new Set(activeMetrics.map(m => m.axisId));
+    if (!currentAxisIds.has(axisId) && currentAxisIds.size >= 2) {
+        setCustomChartError("最多只能同時比較兩個不同的單位軸(Y軸)。");
+        return;
+    }
 
     setActiveMetrics(prev => [...prev, {
       id: metricId,
       name: newName,
       axisId: axisId,
       color: COLORS_PALETTE[prev.length % COLORS_PALETTE.length],
-      chartType: 'line' 
+      chartType: 'line',
+      category: activeCategory 
     }]);
   };
 
@@ -491,7 +525,7 @@ export default function App() {
 
   const activeAxisIds = [...new Set(activeMetrics.map(m => m.axisId))];
   const sortedActiveAxisIds = activeAxisIds.sort((a, b) => {
-    const order = { people: 1, inst: 2, percent: 3, score: 4 };
+    const order = { people: 1, inst: 2, percent: 3, score: 4, gap: 5 };
     return order[a] - order[b];
   });
   
@@ -499,16 +533,13 @@ export default function App() {
     people: { name: '人數 (人)', color: '#3b82f6' },
     inst: { name: '單位數 (間)', color: '#8b5cf6' },
     percent: { name: '百分比 (%)', color: '#f43f5e' },
-    score: { name: '滿意度 (分)', color: '#10b981' }
+    score: { name: '滿意度 (分)', color: '#10b981' },
+    gap: { name: '品質落差', color: '#f59e0b' }
   };
 
   const getOrientation = (id) => {
     const index = sortedActiveAxisIds.indexOf(id);
-    const total = sortedActiveAxisIds.length;
-    if (total === 1) return 'left';
-    if (total === 2) return index === 0 ? 'left' : 'right';
-    if (total === 3) return index < 2 ? 'left' : 'right';
-    return index < 2 ? 'left' : 'right';
+    return index === 0 ? 'left' : 'right'; 
   };
 
   return (
@@ -526,16 +557,58 @@ export default function App() {
               <label className="text-xs font-extrabold text-slate-600 uppercase tracking-wider">選擇行政區</label>
               <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-100">對應：{selectedDistrict.name}</span>
             </div>
-            <div className="relative">
-              <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="搜尋區名..." className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50" />
-            </div>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-52 overflow-y-auto">
-              {filteredDistricts.map(item => (
-                <button key={item.id} onClick={() => handleSelectDistrict(item.id)} className={`py-2 px-2.5 rounded-xl text-xs font-bold transition-all duration-200 border text-center ${selectedDistrict?.id === item.id ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600'}`}>{item.name}</button>
-              ))}
-            </div>
+
+            {/* 新增：獨立的台北市按鈕 */}
+            <button 
+              onClick={() => {
+                if (selectedDistrict?.id !== '台北市') {
+                  handleSelectDistrict('台北市');
+                  setShowDistrictList(true); // 切換到台北市時自動展開清單
+                } else {
+                  setShowDistrictList(!showDistrictList); // 已經是台北市則切換展開狀態
+                }
+              }}
+              className={`w-full py-3 flex items-center justify-center gap-2 rounded-xl text-sm font-bold transition-all border text-center shadow-sm ${selectedDistrict?.id === '台北市' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600'}`}
+            >
+              臺北市 (全區)
+              <span className={`transform transition-transform text-xs ${showDistrictList ? 'rotate-180' : ''}`}>▼</span>
+            </button>
+
+            {/* 新增：按下台北之後可以拉起來選行政區 (展開選單) */}
+            {showDistrictList && (
+              <div className="flex flex-col gap-2 mt-1 animate-fade-in">
+                <div className="relative">
+                  <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="搜尋區名..." className="w-full pl-3 pr-4 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50" />
+                </div>
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-52 overflow-y-auto">
+                  {filteredDistricts.filter(d => d.id !== '台北市').map(item => (
+                    <button 
+                      key={item.id} 
+                      onClick={() => { handleSelectDistrict(item.id); setShowDistrictList(false); }} 
+                      className={`py-2 px-2.5 rounded-xl text-xs font-bold transition-all duration-200 border text-center ${selectedDistrict?.id === item.id ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600'}`}
+                    >
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-          <div className="bg-white p-4 rounded-3xl shadow-md border border-slate-100 flex-grow flex items-center justify-center min-h-[360px]">
+          
+          {/* 新增：透過 CSS 覆寫，當選擇台北市時地圖全部亮起來 */}
+          <div className={`bg-white p-4 rounded-3xl shadow-md border border-slate-100 flex-grow flex items-center justify-center min-h-[360px] taipei-map-container ${selectedDistrict?.id === '台北市' ? 'highlight-all' : ''}`}>
+            {selectedDistrict?.id === '台北市' && (
+              <style>{`
+                .taipei-map-container.highlight-all svg path {
+                  fill: #93c5fd !important;
+                  stroke: #ffffff !important;
+                  transition: all 0.3s ease;
+                }
+                .taipei-map-container.highlight-all svg path:hover {
+                  fill: #3b82f6 !important;
+                }
+              `}</style>
+            )}
             <TaipeiMap selectedId={selectedDistrict?.id} selectedName={selectedDistrict?.name} activeId={selectedDistrict?.id} selectedDistrict={selectedDistrict} onSelect={handleSelectDistrict} />
           </div>
         </div>
@@ -764,6 +837,13 @@ export default function App() {
           </div>
         </div>
         
+        {customChartError && (
+          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg" role="alert">
+            <p className="font-bold">無法加入指標</p>
+            <p>{customChartError}</p>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
           <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col gap-5">
@@ -905,7 +985,12 @@ export default function App() {
                 <div key={m.id} className="flex flex-col border-2 rounded-xl p-2 bg-white shadow-sm" style={{borderColor: m.color}}>
                   <div className="flex justify-between items-center mb-2 gap-3">
                     <span className="text-xs font-bold" style={{color: m.color}}>{m.name}</span>
-                    <button onClick={() => setActiveMetrics(prev => prev.filter(item => item.id !== m.id))} className="text-slate-400 hover:text-red-500 text-xs font-bold bg-slate-50 px-1.5 py-0.5 rounded transition-colors">✖</button>
+                    <button onClick={() => {
+                        setActiveMetrics(prev => prev.filter(item => item.id !== m.id));
+                        setCustomChartError(''); 
+                      }} 
+                      className="text-slate-400 hover:text-red-500 text-xs font-bold bg-slate-50 px-1.5 py-0.5 rounded transition-colors"
+                    >✖</button>
                   </div>
                   <div className="flex gap-1 bg-slate-100 p-1 rounded-lg">
                     <button onClick={() => updateMetricChartType(m.id, 'bar')} className={`flex-1 text-[10px] font-bold px-2 py-1 rounded transition-all ${m.chartType==='bar'?'bg-slate-700 text-white shadow':'text-slate-500 hover:bg-slate-200'}`}>柱狀圖</button>
@@ -917,7 +1002,6 @@ export default function App() {
         </div>
 
         <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border mt-2">
-          {/* ✅ 下修了 maxWidth 限制，讓只有 1 個區域時可縮至 350px 左右 */}
           <div ref={customChartRef} className="bg-white p-2 md:p-4 rounded-xl flex justify-center">
             <div 
               className="h-[400px] w-full transition-all duration-500"
@@ -959,16 +1043,20 @@ export default function App() {
                             fontWeight: 'bold'
                           }}
                           domain={
-  axisId === 'percent' ? [
-    dataMin => Math.max(0, Math.floor(dataMin - 5)), 
-    dataMax => Math.min(100, Math.ceil(dataMax + 5))
-  ] : 
-  axisId === 'score' ? [
-    dataMin => Math.max(3.5, dataMin - 1), // 下限：最小值減 1，但最低不得低於 3.5
-    dataMax => Math.min(5, dataMax + 1)    // 上限：最大值加 1，但最高不得超過 5
-  ] : 
-  [dataMin => dataMin === 0 ? 0 : Number((dataMin * 0.95).toFixed(0)), dataMax => Number((dataMax * 1.05).toFixed(0))]
-}
+                            axisId === 'percent' ? [
+                              dataMin => Math.max(0, Math.floor(dataMin - 5)), 
+                              dataMax => Math.min(100, Math.ceil(dataMax + 5))
+                            ] : 
+                            axisId === 'score' ? [
+                              dataMin => Math.max(3.5, dataMin - 1), 
+                              dataMax => Math.min(5, dataMax + 1)    
+                            ] : 
+                            axisId === 'gap' ? [
+                              dataMin => Number((dataMin - 0.2).toFixed(2)),
+                              dataMax => Number((dataMax + 0.2).toFixed(2))
+                            ] : 
+                            [dataMin => dataMin === 0 ? 0 : Number((dataMin * 0.95).toFixed(0)), dataMax => Number((dataMax * 1.05).toFixed(0))]
+                          }
                         />
                       );
                     })}
