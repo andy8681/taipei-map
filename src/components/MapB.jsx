@@ -68,15 +68,15 @@ const CATEGORY_OPTIONS = [
 const BASIC_SUB_OPTIONS = [
   { id: 'appEnroll', name: '核定招收' },
   { id: 'stuAmount', name: '實際在園' },
-  { id: 'occupancyRate', name: '入園率(%)' },
-  { id: 'popTotal', name: '學齡前設籍' }
+  { id: 'occupancyRate', name: '招生率(%)' },
+  { id: 'popTotal', name: '學齡前設籍人口增減率（%）' }
 ];
 
 const INST_SUB_OPTIONS = [
   { id: 'public', name: '公立' },
   { id: 'nonProfit', name: '非營利' },
   { id: 'quasiPublic', name: '準公共' },
-  { id: 'educare', name: '教保中心' },
+  { id: 'educare', name: '職場互助教保服務中心' },
   { id: 'private', name: '私立' },
   { id: 'total', name: '總計' },
   { id: 'publicRatio', name: '公共化佔比(%)' }
@@ -113,12 +113,12 @@ const SURVEY_SUB_OPTIONS = [
 ];
 
 const COLORS_PALETTE = ['#818cf8', '#34d399', '#fbbf24', '#fb7185', '#c084fc', '#2dd4bf', '#f472b6', '#a78bfa', '#f87171', '#60a5fa'];
-const INST_COLORS = { '全部': '#64748b', '公立': '#3b82f6', '非營利': '#10b981', '準公共': '#f59e0b', '私立': '#ec4899', '教保中心': '#8b5cf6' };
+const INST_COLORS = { '全部': '#64748b', '公立': '#3b82f6', '非營利': '#10b981', '準公共': '#f59e0b', '私立': '#ec4899', '職場互助教保服務中心': '#8b5cf6' };
 
 const barRadius = 4;
 const yearsList = ['112年', '113年', '114年'];
 const rawYears = ['112', '113', '114'];
-const instTypesList = ['全部', '公立', '非營利', '準公共', '私立', '教保中心'];
+const instTypesList = ['全部', '公立', '非營利', '準公共', '私立', '職場互助教保服務中心'];
 const norm = (str) => String(str || '').replace(/臺/g, '台').trim();
 const safeParse = (val) => {
   if (val === null || val === undefined || val === '') return 0;
@@ -193,7 +193,7 @@ export default function App() {
   const [activeMetrics, setActiveMetrics] = useState([
     { id: 'basic___appEnroll', name: '基本: 核定招收', axisId: 'people', color: '#818cf8', chartType: 'line', category: 'basic' },
     { id: 'basic___stuAmount', name: '基本: 實際在園', axisId: 'people', color: '#34d399', chartType: 'line', category: 'basic' },
-    { id: 'basic___occupancyRate', name: '基本: 入園率(%)', axisId: 'percent', color: '#fb7185', chartType: 'line', category: 'basic' }
+    { id: 'basic___occupancyRate', name: '基本: 招生率(%)', axisId: 'percent', color: '#fb7185', chartType: 'line', category: 'basic' }
   ]);
 
   const supplyChartRef = useRef(null);
@@ -414,7 +414,7 @@ export default function App() {
       const inst = mainSelectedInstType;
       let app = 0, stu = 0;
       yearData.forEach(d => {
-        if (inst === '全部' || norm(d.設立別) === norm(inst)) {
+        if (inst === '全部' || norm(d.教保服務機構類型) === norm(inst)) {
           app += safeParse(d.核定招生人數);
           stu += safeParse(d.入園人數);
         }
@@ -434,7 +434,7 @@ export default function App() {
     const distKey = Object.keys(institutionCountData).find(k => norm(k) === norm(selectedDistrict.id === '台北市' ? '台北市' : selectedDistrict.name));
     const data = institutionCountData[distKey] || [];
     return data.filter(d => rawYears.includes(String(d.學年度).replace('年',''))).map(d => ({
-      year: `${d.學年度}年`, publicCount: safeParse(d.公立), nonProfitCount: safeParse(d.非營利), quasiPublicCount: safeParse(d.準公共), educareCount: safeParse(d.教保中心), privateCount: safeParse(d.私立), totalCount: safeParse(d.合計), publicRatio: d.公共化占比 ? parseFloat(String(d.公共化占比).replace('%', '')) : null, rawRatio: d.公共化占比 || '-'
+      year: `${d.學年度}年`, publicCount: safeParse(d.公立), nonProfitCount: safeParse(d.非營利), quasiPublicCount: safeParse(d.準公共), educareCount: safeParse(d.職場互助教保服務中心), privateCount: safeParse(d.私立), totalCount: safeParse(d.合計), publicRatio: d.公共化占比 ? parseFloat(String(d.公共化占比).replace('%', '')) : null, rawRatio: d.公共化占比 || '-'
     }));
   }, [selectedDistrict]);
 
@@ -567,7 +567,7 @@ export default function App() {
 
           let eData = enrollmentData.filter(d => String(d.學年度).replace('年','') === yearStr);
           if (instType !== '全部') {
-            eData = eData.filter(d => norm(d.設立別) === norm(instType));
+            eData = eData.filter(d => norm(d.教保服務機構類型) === norm(instType));
           }
           if (isTaipei) eData = eData.filter(d => validDistrictNames.includes(norm(d.行政區)));
           else if (isDistrict) eData = eData.filter(d => norm(d.行政區) === norm(regionName));
@@ -615,7 +615,7 @@ export default function App() {
                 if (detail === 'public') entry[metric.id] = safeParse(iData?.公立);
                 if (detail === 'nonProfit') entry[metric.id] = safeParse(iData?.非營利);
                 if (detail === 'quasiPublic') entry[metric.id] = safeParse(iData?.準公共);
-                if (detail === 'educare') entry[metric.id] = safeParse(iData?.教保中心);
+                if (detail === 'educare') entry[metric.id] = safeParse(iData?.職場互助教保服務中心);
                 if (detail === 'private') entry[metric.id] = safeParse(iData?.私立);
                 if (detail === 'total') entry[metric.id] = safeParse(iData?.合計);
                 if (detail === 'publicRatio') entry[metric.id] = iData && iData.公共化占比 ? parseFloat(String(iData.公共化占比).replace('%', '')) : 0;
@@ -687,7 +687,8 @@ export default function App() {
       
       <header className="text-center mb-8 w-full max-w-7xl">
         <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800 mb-2">臺北市幼兒教育資源與人口供需整合儀表板</h1>
-        <p className="text-slate-500 text-sm md:text-base">資料年份限定: 112年 ~ 114年 - 整合機構數量與次分區入園概況</p>
+        <p className="text-slate-500 text-sm md:text-base mb-2">資料年份限定: 112年 ~ 114年 - 整合機構數量與次分區招生概況</p>
+        <p className="text-rose-600 text-sm md:text-base font-bold">特別註明：公共化占比是「機構數量占比」，不是公共化幼兒園招生名額占比，也不是幼兒就讀公共化機構的人數占比。</p>
       </header>
 
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
@@ -813,7 +814,7 @@ export default function App() {
                             <th className="px-4 py-3 border-r border-slate-100">機構類型</th>
                             <th className="px-4 py-3 border-r border-slate-100">核定招收人數</th>
                             <th className="px-4 py-3 border-r border-slate-100">實際在園人數</th>
-                            <th className="px-4 py-3">入園率(%)</th>
+                            <th className="px-4 py-3">招生率(%)</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -865,7 +866,7 @@ export default function App() {
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="publicCount" stackId="a" name="公立" fill="#3b82f6" />
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="nonProfitCount" stackId="a" name="非營利" fill="#10b981" />
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="quasiPublicCount" stackId="a" name="準公共" fill="#f59e0b" />
-                          <Bar isAnimationActive={false} yAxisId="left" dataKey="educareCount" stackId="a" name="教保中心" fill="#8b5cf6" />
+                          <Bar isAnimationActive={false} yAxisId="left" dataKey="educareCount" stackId="a" name="職場互助教保服務中心" fill="#8b5cf6" />
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="privateCount" stackId="a" name="私立" fill="#ec4899" radius={[4, 4, 0, 0]} />
                           <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="publicRatio" name="公共化佔比 (%)" stroke="#ef4444" strokeWidth={4} />
                         </ComposedChart>
@@ -882,7 +883,7 @@ export default function App() {
                             <th className="px-3 py-3 border-r border-slate-100">公立</th>
                             <th className="px-3 py-3 border-r border-slate-100">非營利</th>
                             <th className="px-3 py-3 border-r border-slate-100">準公共</th>
-                            <th className="px-3 py-3 border-r border-slate-100">教保中心</th>
+                            <th className="px-3 py-3 border-r border-slate-100">職場互助教保服務中心</th>
                             <th className="px-3 py-3 border-r border-slate-100">私立</th>
                             <th className="px-3 py-3 border-r border-slate-100">合計</th>
                             <th className="px-3 py-3">公共化佔比</th>
@@ -949,7 +950,7 @@ export default function App() {
               </div>
               <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border">
                 <div ref={subDistrictChartRef} className="bg-white p-2 md:p-4 rounded-xl">
-                  <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 次分區招收概況</h3>
+                  <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 次分區招生概況</h3>
                   <div className="h-56">
                     {currentSubDistrictsForYear.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
@@ -974,7 +975,7 @@ export default function App() {
                             <th className="px-4 py-3 text-left border-r border-slate-100">次分區(年份)</th>
                             <th className="px-4 py-3 border-r border-slate-100">核定招收人數</th>
                             <th className="px-4 py-3 border-r border-slate-100">實際在園人數</th>
-                            <th className="px-4 py-3">入園率(%)</th>
+                            <th className="px-4 py-3">招生率(%)</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1004,7 +1005,7 @@ export default function App() {
               </div>
               <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border">
                 <div ref={populationChartRef} className="bg-white p-2 md:p-4 rounded-xl">
-                  <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 學齡前設籍人數與增減趨勢</h3>
+                  <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 學齡前設籍人口增減率（%）與增減趨勢</h3>
                   <div className="h-56">
                     {cityPopulationData.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
@@ -1015,7 +1016,7 @@ export default function App() {
                           <YAxis yAxisId="right" orientation="right" tickLine={false} unit="%" />
                           <Tooltip />
                           <Legend />
-                          <Line isAnimationActive={false} yAxisId="left" type="monotone" dataKey="total" name="總設籍人數" stroke="#3b82f6" strokeWidth={3} />
+                          <Line isAnimationActive={false} yAxisId="left" type="monotone" dataKey="total" name="學齡前設籍人口增減率（%）" stroke="#3b82f6" strokeWidth={3} />
                           <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="changeRatio" name="增減率 (%)" stroke="#ef4444" strokeWidth={2} connectNulls />
                         </LineChart>
                       </ResponsiveContainer>
@@ -1028,7 +1029,7 @@ export default function App() {
                         <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 whitespace-nowrap">
                           <tr>
                             <th className="px-4 py-3 text-left border-r border-slate-100">年份</th>
-                            <th className="px-4 py-3 border-r border-slate-100">總設籍人數</th>
+                            <th className="px-4 py-3 border-r border-slate-100">學齡前設籍人口增減率（%）</th>
                             <th className="px-4 py-3">增減率(%)</th>
                           </tr>
                         </thead>
@@ -1072,23 +1073,9 @@ export default function App() {
                 <div className="bg-blue-50/50 border border-blue-100 p-4 rounded-xl flex items-start gap-3">
                   <span className="text-xl">💡</span>
                   <div className="text-sm text-slate-700 w-full">
-                    <p className="font-bold text-slate-800 mb-1.5 flex justify-between items-center">
+                    <p className="font-bold text-slate-800 flex justify-between items-center">
                       <span>Gap 品質落差公式：滿意度 － 需求度</span>
                     </p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2">
-                      <div className="bg-white px-3 py-2 rounded-lg border border-slate-100 shadow-sm flex flex-col">
-                        <span className="text-emerald-600 font-extrabold text-xs mb-1">正值 (&gt; 0)</span>
-                        <span className="text-xs font-medium text-slate-600">表現超出預期，優於家長原先需求。</span>
-                      </div>
-                      <div className="bg-white px-3 py-2 rounded-lg border border-slate-100 shadow-sm flex flex-col">
-                        <span className="text-slate-600 font-extrabold text-xs mb-1">零 ( = 0 )</span>
-                        <span className="text-xs font-medium text-slate-600">服務品質剛好符合家長的期待需求。</span>
-                      </div>
-                      <div className="bg-white px-3 py-2 rounded-lg border border-slate-100 shadow-sm flex flex-col">
-                        <span className="text-rose-500 font-extrabold text-xs mb-1">負值 (&lt; 0)</span>
-                        <span className="text-xs font-medium text-slate-600">表現未達期望，代表存在改善空間。</span>
-                      </div>
-                    </div>
                   </div>
                 </div>
               )}
