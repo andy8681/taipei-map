@@ -5,7 +5,7 @@ import TaipeiMap from './TaipeiMap';
 
 import { 
   LineChart, Line, BarChart, Bar, ComposedChart, XAxis, YAxis, CartesianGrid, 
-  Tooltip, Legend, ResponsiveContainer, ReferenceLine 
+  Tooltip, Legend, ResponsiveContainer, ReferenceLine, Cell 
 } from 'recharts';
 import { toPng } from 'html-to-image';
 import * as XLSX from 'xlsx';
@@ -129,7 +129,53 @@ const safeParse = (val) => {
   return isNaN(num) ? 0 : num;
 };
 
-// 將前端新名稱對應回 JSON 內的舊鍵值
+// 計算 GAP 顏色：小於0為紅，等於0為黃，大於0為綠
+const getGapColor = (val) => {
+  if (val === null || val === undefined || val === '-') return 'inherit';
+  const num = Number(val);
+  if (isNaN(num)) return 'inherit';
+  if (num < 0) return '#ef4444'; // 紅色 (負的落差)
+  if (num === 0) return '#f59e0b'; // 黃色 (零落差)
+  return '#10b981'; // 綠色 (正向落差)
+};
+
+// 繪製自訂點狀標記 (支援傳入 true 動態抓顏色，或是傳入指定色碼統一顏色)
+const renderShapeDot = (props, shape, customColor = null) => {
+  const { cx, cy, value, stroke, key } = props;
+  
+  let finalColor = null;
+  if (customColor === true) {
+    finalColor = getGapColor(value);
+  } else if (typeof customColor === 'string') {
+    finalColor = customColor;
+  }
+
+  const fill = finalColor ? finalColor : '#ffffff';
+  const borderStroke = finalColor ? finalColor : stroke;
+
+  if (shape === 'diamond') {
+    return <polygon key={key} points={`${cx},${cy-6} ${cx+6},${cy} ${cx},${cy+6} ${cx-6},${cy}`} fill={fill} stroke={borderStroke} strokeWidth={2} />;
+  }
+  if (shape === 'circle') {
+    return <circle key={key} cx={cx} cy={cy} r={5} fill={fill} stroke={borderStroke} strokeWidth={2} />;
+  }
+  if (shape === 'square') {
+    return <rect key={key} x={cx-5} y={cy-5} width={10} height={10} fill={fill} stroke={borderStroke} strokeWidth={2} />;
+  }
+  if (shape === 'triangle') {
+    return <polygon key={key} points={`${cx},${cy-6} ${cx+6},${cy+6} ${cx-6},${cy+6}`} fill={fill} stroke={borderStroke} strokeWidth={2} />;
+  }
+  return <circle key={key} cx={cx} cy={cy} r={5} fill={fill} stroke={borderStroke} strokeWidth={2} />;
+};
+
+// 自訂線條樣式組合
+const LINE_STYLES = [
+  { shape: 'diamond', dash: '' },        // 第一筆：菱形配實線
+  { shape: 'circle', dash: '5 5' },      // 第二筆：圓形配虛線
+  { shape: 'square', dash: '3 3' },      // 第三筆：方形配點線
+  { shape: 'triangle', dash: '10 5' },   // 第四筆：三角形配長虛線
+];
+
 const toJSONInst = (val) => val === '職場互助教保服務中心' ? '教保中心' : val;
 
 const exportToExcel = (data, filename) => {
@@ -170,12 +216,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('supply'); 
   const [searchQuery, setSearchQuery] = useState(''); 
   
-  // 右上角一般機構選擇 (單選)
   const [mainSelectedInstType, setMainSelectedInstType] = useState('全部'); 
-  
-  // 下方自訂表格機構選擇 (多選)
   const [customSelectedInstTypes, setCustomSelectedInstTypes] = useState(['全部']); 
-  
   const [selectedSubYears, setSelectedSubYears] = useState(['113年']); 
   const [selectedSubDistricts, setSelectedSubDistricts] = useState([]);
   
@@ -671,6 +713,24 @@ export default function App() {
     return result;
   }, [customSelectedYears, customSelectedRegions, validDistrictNames, activeMetrics, customSelectedInstTypes]);
 
+  // 動態尋找自訂指標「最新數據」的專用函數，決定顏色
+  const getMetricColor = (metric) => {
+    if (metric.axisId !== 'gap') return metric.color;
+    
+    // 找出擁有該指標資料的列
+    const validRows = customChartData.filter(row => row[metric.id] !== undefined && row[metric.id] !== null);
+    if (validRows.length === 0) return metric.color;
+    
+    // 根據年份遞減排序，抓出最新一筆數值
+    const latestRow = [...validRows].sort((a, b) => {
+      const yearA = parseInt(String(a.year).replace(/\D/g, ''), 10) || 0;
+      const yearB = parseInt(String(b.year).replace(/\D/g, ''), 10) || 0;
+      return yearB - yearA; 
+    })[0];
+    
+    return getGapColor(latestRow[metric.id]);
+  };
+
   const handleExportCustomExcel = () => {
     const formattedData = customChartData.map(row => {
       let newRow = { '地區與年份': row.name, '年份': row.year, '行政區': row.region, '機構': row.inst };
@@ -1130,10 +1190,11 @@ export default function App() {
                               <Tooltip />
                               <Legend />
                               <ReferenceLine y={0} stroke="#94a3b8" strokeDasharray="3 3" />
-                              <Line isAnimationActive={false} type="monotone" dataKey={`gapBase_${mainSelectedInstType}`} name={`基礎條件Gap`} stroke="#3b82f6" strokeWidth={3} />
-                              <Line isAnimationActive={false} type="monotone" dataKey={`gapAction_${mainSelectedInstType}`} name={`教保作為Gap`} stroke="#ec4899" strokeWidth={3} />
-                              <Line isAnimationActive={false} type="monotone" dataKey={`gapExtend_${mainSelectedInstType}`} name={`延長收托Gap`} stroke="#f59e0b" strokeWidth={3} />
-                              <Line isAnimationActive={false} type="monotone" dataKey={`gapOther_${mainSelectedInstType}`} name={`其他Gap`} stroke="#8b5cf6" strokeWidth={3} />
+                              {/* 舊版的構面區塊：維持原本保留獨立逐點上色 (傳入 true) */}
+                              <Line isAnimationActive={false} type="monotone" dataKey={`gapBase_${mainSelectedInstType}`} name={`基礎條件Gap`} stroke="#3b82f6" strokeWidth={3} strokeDasharray="" dot={(props) => renderShapeDot(props, 'diamond', true)} />
+                              <Line isAnimationActive={false} type="monotone" dataKey={`gapAction_${mainSelectedInstType}`} name={`教保作為Gap`} stroke="#ec4899" strokeWidth={3} strokeDasharray="5 5" dot={(props) => renderShapeDot(props, 'circle', true)} />
+                              <Line isAnimationActive={false} type="monotone" dataKey={`gapExtend_${mainSelectedInstType}`} name={`延長收托Gap`} stroke="#f59e0b" strokeWidth={3} strokeDasharray="3 3" dot={(props) => renderShapeDot(props, 'square', true)} />
+                              <Line isAnimationActive={false} type="monotone" dataKey={`gapOther_${mainSelectedInstType}`} name={`其他Gap`} stroke="#8b5cf6" strokeWidth={3} strokeDasharray="10 5" dot={(props) => renderShapeDot(props, 'triangle', true)} />
                             </LineChart>
                           </ResponsiveContainer>
                         ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域或所選機構尚無滿意度問卷資料</div>)}
@@ -1162,10 +1223,10 @@ export default function App() {
                                         <td className="px-4 py-3 font-semibold text-left border-r border-slate-100">{row.year}</td>
                                         <td className="px-4 py-3 font-bold border-r border-slate-100" style={{color: INST_COLORS[inst]}}>{inst}</td>
                                         <td className="px-4 py-3 border-r border-slate-100">{row[`sampleSize_${inst}`]}</td>
-                                        <td className="px-4 py-3 border-r border-slate-100">{row[`gapBase_${inst}`] !== null ? row[`gapBase_${inst}`] : '-'}</td>
-                                        <td className="px-4 py-3 border-r border-slate-100">{row[`gapAction_${inst}`] !== null ? row[`gapAction_${inst}`] : '-'}</td>
-                                        <td className="px-4 py-3 border-r border-slate-100">{row[`gapExtend_${inst}`] !== null ? row[`gapExtend_${inst}`] : '-'}</td>
-                                        <td className="px-4 py-3">{row[`gapOther_${inst}`] !== null ? row[`gapOther_${inst}`] : '-'}</td>
+                                        <td className="px-4 py-3 border-r border-slate-100 font-bold" style={{ color: row[`gapBase_${inst}`] !== null ? getGapColor(row[`gapBase_${inst}`]) : 'inherit' }}>{row[`gapBase_${inst}`] !== null ? row[`gapBase_${inst}`] : '-'}</td>
+                                        <td className="px-4 py-3 border-r border-slate-100 font-bold" style={{ color: row[`gapAction_${inst}`] !== null ? getGapColor(row[`gapAction_${inst}`]) : 'inherit' }}>{row[`gapAction_${inst}`] !== null ? row[`gapAction_${inst}`] : '-'}</td>
+                                        <td className="px-4 py-3 border-r border-slate-100 font-bold" style={{ color: row[`gapExtend_${inst}`] !== null ? getGapColor(row[`gapExtend_${inst}`]) : 'inherit' }}>{row[`gapExtend_${inst}`] !== null ? row[`gapExtend_${inst}`] : '-'}</td>
+                                        <td className="px-4 py-3 font-bold" style={{ color: row[`gapOther_${inst}`] !== null ? getGapColor(row[`gapOther_${inst}`]) : 'inherit' }}>{row[`gapOther_${inst}`] !== null ? row[`gapOther_${inst}`] : '-'}</td>
                                       </tr>
                                     );
                                   }
@@ -1201,7 +1262,11 @@ export default function App() {
                               <Legend />
                               <Bar isAnimationActive={false} dataKey={`req_${mainSelectedInstType}`} name={`需求(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#ec4899'} fillOpacity={0.4} radius={[4,4,0,0]} />
                               <Bar isAnimationActive={false} dataKey={`perf_${mainSelectedInstType}`} name={`滿意(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#3b82f6'} fillOpacity={0.8} radius={[4,4,0,0]} />
-                              <Bar isAnimationActive={false} dataKey={`gap_${mainSelectedInstType}`} name={`落差(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#f59e0b'} radius={[4,4,0,0]} />
+                              <Bar isAnimationActive={false} dataKey={`gap_${mainSelectedInstType}`} name={`落差(${mainSelectedInstType})`} radius={[4,4,0,0]}>
+                                {questionStats.map((entry, index) => (
+                                  <Cell key={`cell-${index}`} fill={getGapColor(entry[`gap_${mainSelectedInstType}`])} />
+                                ))}
+                              </Bar>
                             </BarChart>
                           </ResponsiveContainer>
                         ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域或所選機構尚無此題問卷資料</div>)}
@@ -1229,7 +1294,7 @@ export default function App() {
                                         <td className="px-4 py-3 font-bold border-r border-slate-100" style={{color: INST_COLORS[inst]}}>{inst}</td>
                                         <td className="px-4 py-3 border-r border-slate-100 font-medium" style={{color: INST_COLORS[inst], opacity: 0.7}}>{row[`req_${inst}`]}</td>
                                         <td className="px-4 py-3 border-r border-slate-100 font-medium" style={{color: INST_COLORS[inst]}}>{row[`perf_${inst}`]}</td>
-                                        <td className="px-4 py-3 font-bold" style={{color: INST_COLORS[inst]}}>{row[`gap_${inst}`]}</td>
+                                        <td className="px-4 py-3 font-bold" style={{color: getGapColor(row[`gap_${inst}`])}}>{row[`gap_${inst}`]}</td>
                                       </tr>
                                     );
                                   }
@@ -1489,23 +1554,25 @@ export default function App() {
           <span className="text-sm font-bold text-slate-700 mb-3 block">4. 已選擇之對比指標 (可個別自訂圖表類型)：</span>
           <div className="flex gap-3 flex-wrap">
             {activeMetrics.length === 0 ? <span className="text-sm text-slate-400 bg-white px-3 py-1 rounded">尚未加入任何指標</span> : 
-              activeMetrics.map(m => (
-                <div key={m.id} className="flex flex-col border-2 rounded-xl p-2 bg-white shadow-sm" style={{borderColor: m.color}}>
-                  <div className="flex justify-between items-center mb-2 gap-3">
-                    <span className="text-xs font-bold" style={{color: m.color}}>{m.name}</span>
-                    <button onClick={() => {
-                        setActiveMetrics(prev => prev.filter(item => item.id !== m.id));
-                        setCustomChartError(''); 
-                      }} 
-                      className="text-slate-400 hover:text-red-500 text-xs font-bold bg-slate-50 px-1.5 py-0.5 rounded transition-colors"
-                    >✖</button>
+              activeMetrics.map(m => {
+                const mColor = getMetricColor(m);
+                return (
+                  <div key={m.id} className="flex flex-col border-2 rounded-xl p-2 bg-white shadow-sm" style={{borderColor: mColor}}>
+                    <div className="flex justify-between items-center mb-2 gap-3">
+                      <span className="text-xs font-bold" style={{color: mColor}}>{m.name}</span>
+                      <button onClick={() => {
+                          setActiveMetrics(prev => prev.filter(item => item.id !== m.id));
+                          setCustomChartError(''); 
+                        }} 
+                        className="text-slate-400 hover:text-red-500 text-xs font-bold bg-slate-50 px-1.5 py-0.5 rounded transition-colors"
+                      >✖</button>
+                    </div>
+                    <div className="flex gap-1 bg-slate-100 p-1 rounded-lg">
+                      <button onClick={() => updateMetricChartType(m.id, 'bar')} className={`flex-1 text-[10px] font-bold px-2 py-1 rounded transition-all ${m.chartType==='bar'?'bg-slate-700 text-white shadow':'text-slate-500 hover:bg-slate-200'}`}>柱狀圖</button>
+                      <button onClick={() => updateMetricChartType(m.id, 'line')} className={`flex-1 text-[10px] font-bold px-2 py-1 rounded transition-all ${m.chartType==='line'?'bg-slate-700 text-white shadow':'text-slate-500 hover:bg-slate-200'}`}>曲線圖</button>
+                    </div>
                   </div>
-                  <div className="flex gap-1 bg-slate-100 p-1 rounded-lg">
-                    <button onClick={() => updateMetricChartType(m.id, 'bar')} className={`flex-1 text-[10px] font-bold px-2 py-1 rounded transition-all ${m.chartType==='bar'?'bg-slate-700 text-white shadow':'text-slate-500 hover:bg-slate-200'}`}>柱狀圖</button>
-                    <button onClick={() => updateMetricChartType(m.id, 'line')} className={`flex-1 text-[10px] font-bold px-2 py-1 rounded transition-all ${m.chartType==='line'?'bg-slate-700 text-white shadow':'text-slate-500 hover:bg-slate-200'}`}>曲線圖</button>
-                  </div>
-                </div>
-            ))}
+              )})}
           </div>
         </div>
 
@@ -1583,9 +1650,13 @@ export default function App() {
                       onClick={handleLegendClick}
                     />
 
-                    {activeMetrics.map(m => {
+                    {activeMetrics.map((m, idx) => {
                       const isHovered = hoveredMetricId === m.id;
+                      const isGapMetric = m.axisId === 'gap';
+                      const mColor = getMetricColor(m);
+
                       if (m.chartType === 'line') {
+                        const style = LINE_STYLES[idx % LINE_STYLES.length];
                         return (
                           <Line 
                             isAnimationActive={false} 
@@ -1594,10 +1665,11 @@ export default function App() {
                             type="monotone" 
                             dataKey={m.id} 
                             name={m.name} 
-                            stroke={m.color} 
+                            stroke={mColor} 
+                            strokeDasharray={style.dash}
                             strokeWidth={isHovered ? 5 : 2} 
                             opacity={hoveredMetricId && !isHovered ? 0.2 : 1} 
-                            dot={{r:4}} 
+                            dot={(props) => renderShapeDot(props, style.shape, isGapMetric ? mColor : null)}
                             activeDot={{r:6}} 
                             onMouseEnter={() => setHoveredMetricId(m.id)}
                           />
@@ -1610,7 +1682,7 @@ export default function App() {
                           yAxisId={m.axisId} 
                           dataKey={m.id} 
                           name={m.name} 
-                          fill={m.color} 
+                          fill={mColor} 
                           radius={[4,4,0,0]} 
                           barSize={40} 
                           opacity={hoveredMetricId && !isHovered ? 0.2 : 1} 
@@ -1632,7 +1704,7 @@ export default function App() {
                 <tr>
                   <th className="px-4 py-3 border-r border-slate-100 whitespace-nowrap">地區與年份</th>
                   {activeMetrics.map(m => (
-                    <th key={m.id} className="px-4 py-3 whitespace-nowrap text-center border-r border-slate-100" style={{color: m.color}}>
+                    <th key={m.id} className="px-4 py-3 whitespace-nowrap text-center border-r border-slate-100" style={{color: getMetricColor(m)}}>
                       {m.name}
                     </th>
                   ))}
