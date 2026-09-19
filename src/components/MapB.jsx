@@ -60,7 +60,8 @@ const SURVEY_G4 = ['13', '17'];
 
 const CATEGORY_OPTIONS = [
   { value: 'basic', label: '📊 基本資訊' },
-  { value: 'inst', label: '🏫 機構數與公共化' },
+  { value: 'inst', label: '🏫 機構數' },
+  { value: 'ratio', label: '📈 公共化占比' },
   { value: 'survey', label: '⭐ 滿意度分析' },
   { value: 'priority', label: '🎯 最在意因素' }
 ];
@@ -78,7 +79,10 @@ const INST_SUB_OPTIONS = [
   { id: 'quasiPublic', name: '準公共' },
   { id: 'educare', name: '職場互助教保服務中心' },
   { id: 'private', name: '私立' },
-  { id: 'total', name: '總計' },
+  { id: 'total', name: '總計' }
+];
+
+const RATIO_SUB_OPTIONS = [
   { id: 'publicRatio', name: '公共化佔比(%)' }
 ];
 
@@ -119,6 +123,7 @@ const barRadius = 4;
 const yearsList = ['112年', '113年', '114年'];
 const rawYears = ['112', '113', '114'];
 const instTypesList = ['全部', '公立', '非營利', '準公共', '私立', '職場互助教保服務中心'];
+
 const norm = (str) => String(str || '').replace(/臺/g, '台').trim();
 const safeParse = (val) => {
   if (val === null || val === undefined || val === '') return 0;
@@ -127,6 +132,9 @@ const safeParse = (val) => {
   const num = Number(clean);
   return isNaN(num) ? 0 : num;
 };
+
+// 【重要修正】將前端新名稱對應回 JSON 內的舊鍵值，讓讀取資料不報錯
+const toJSONInst = (val) => val === '職場互助教保服務中心' ? '教保中心' : val;
 
 const exportToExcel = (data, filename) => {
   const ws = XLSX.utils.json_to_sheet(data);
@@ -279,6 +287,7 @@ export default function App() {
     setActiveCategory(cat);
     if (cat === 'basic') setActiveSubItem(BASIC_SUB_OPTIONS[0].id);
     else if (cat === 'inst') setActiveSubItem(INST_SUB_OPTIONS[0].id);
+    else if (cat === 'ratio') setActiveSubItem(RATIO_SUB_OPTIONS[0].id);
     else if (cat === 'survey') setActiveSubItem('dim_教保基礎條件'); 
     else if (cat === 'priority') setActiveSubItem(PRIORITY_OPTIONS[0].id);
   };
@@ -344,8 +353,12 @@ export default function App() {
       metricId = `inst___${activeSubItem}`;
       const opt = INST_SUB_OPTIONS.find(o => o.id === activeSubItem);
       newName = `機構: ${opt.name}`;
-      if (activeSubItem === 'publicRatio') axisId = 'percent';
-      else axisId = 'inst';
+      axisId = 'inst';
+    } else if (activeCategory === 'ratio') {
+      metricId = `ratio___${activeSubItem}`;
+      const opt = RATIO_SUB_OPTIONS.find(o => o.id === activeSubItem);
+      newName = `占比: ${opt.name}`;
+      axisId = 'percent';
     } else if (activeCategory === 'survey') {
       metricId = `survey___${activeSubItem}___${activeSurveyMetric}`;
       const shortName = getSurveyShortName(activeSubItem);
@@ -412,9 +425,12 @@ export default function App() {
       let hasData = false;
 
       const inst = mainSelectedInstType;
+      const jsonInst = toJSONInst(inst); // 【修正】將介面名轉回 JSON Key
+      
       let app = 0, stu = 0;
       yearData.forEach(d => {
-        if (inst === '全部' || norm(d.教保服務機構類型) === norm(inst)) {
+        // 【修正】JSON內依舊是「設立別」，所以不能用教保服務機構類型去篩選
+        if (inst === '全部' || norm(d.設立別) === norm(jsonInst)) {
           app += safeParse(d.核定招生人數);
           stu += safeParse(d.入園人數);
         }
@@ -434,17 +450,24 @@ export default function App() {
     const distKey = Object.keys(institutionCountData).find(k => norm(k) === norm(selectedDistrict.id === '台北市' ? '台北市' : selectedDistrict.name));
     const data = institutionCountData[distKey] || [];
     return data.filter(d => rawYears.includes(String(d.學年度).replace('年',''))).map(d => ({
-      year: `${d.學年度}年`, publicCount: safeParse(d.公立), nonProfitCount: safeParse(d.非營利), quasiPublicCount: safeParse(d.準公共), educareCount: safeParse(d.職場互助教保服務中心), privateCount: safeParse(d.私立), totalCount: safeParse(d.合計), publicRatio: d.公共化占比 ? parseFloat(String(d.公共化占比).replace('%', '')) : null, rawRatio: d.公共化占比 || '-'
+      year: `${d.學年度}年`, 
+      publicCount: safeParse(d.公立), 
+      nonProfitCount: safeParse(d.非營利), 
+      quasiPublicCount: safeParse(d.準公共), 
+      educareCount: safeParse(d.教保中心), // 【修正】還原抓取 d.教保中心
+      privateCount: safeParse(d.私立), 
+      totalCount: safeParse(d.合計), 
+      publicRatio: d.公共化占比 ? parseFloat(String(d.公共化占比).replace('%', '')) : null, 
+      rawRatio: d.公共化占比 || '-'
     }));
   }, [selectedDistrict]);
 
-  // 修改：字串統一過濾掉「年」，避免原本帶有年的字串去比對原始數字時造成 undefined
   const currentSubDistrictsForYear = useMemo(() => {
     if (!rawSubDistricts || rawSubDistricts.length === 0) return [];
     let result = [];
     rawSubDistricts.filter(sub => selectedSubDistricts.includes(sub.name)).forEach(sub => {
         selectedSubYears.forEach(year => {
-           const cleanYear = year.replace('年', ''); // 去除年字，確保比對精準
+           const cleanYear = year.replace('年', ''); 
            const yearStat = sub.yearly_stats?.find(y => String(y.year).replace('年', '') === cleanYear);
            if (yearStat) result.push({ name: `${sub.name} (${year})`, subName: sub.name, year: year, appEnroll: safeParse(yearStat.appEnroll), stuAmount: safeParse(yearStat.stuAmount), occupancyRate: yearStat.occupancyRate || 0 });
         });
@@ -474,7 +497,9 @@ export default function App() {
       let totalSample = 0;
       
       const inst = mainSelectedInstType;
-      const source = inst === '全部' ? yearData : yearData?.機構別?.[inst];
+      const jsonInst = toJSONInst(inst); // 【修正】
+      const source = inst === '全部' ? yearData : yearData?.機構別?.[jsonInst];
+      
       const sample = source?.資料筆數 || 0;
       totalSample += sample;
       entry[`sampleSize_${inst}`] = sample;
@@ -501,7 +526,9 @@ export default function App() {
       let hasData = false;
       
       const inst = mainSelectedInstType;
-      const source = inst === '全部' ? yearData : yearData?.機構別?.[inst];
+      const jsonInst = toJSONInst(inst); // 【修正】
+      const source = inst === '全部' ? yearData : yearData?.機構別?.[jsonInst];
+      
       const req = source?.逐題?.[selectedQuestion]?.需求度 ?? 0;
       const perf = source?.逐題?.[selectedQuestion]?.滿意度 ?? 0;
       const gap = (perf !== 0 && req !== 0) ? Number((perf - req).toFixed(2)) : 0;
@@ -534,7 +561,8 @@ export default function App() {
         r[yearStr] = 0;
         const d = filtered.find(x => `${x.年份}年` === yearStr);
         if (d) {
-          const source = mainSelectedInstType === '全部' ? d : d.機構別?.[mainSelectedInstType];
+          const jsonInst = toJSONInst(mainSelectedInstType); // 【修正】
+          const source = mainSelectedInstType === '全部' ? d : d.機構別?.[jsonInst];
           r[yearStr] = source?.優先關注因素?.[r.originalKey] || 0;
         }
       });
@@ -566,8 +594,10 @@ export default function App() {
           const isDistrict = districtsMapping.some(d => norm(d.name) === norm(regionName));
 
           let eData = enrollmentData.filter(d => String(d.學年度).replace('年','') === yearStr);
+          const jsonInst = toJSONInst(instType); // 【修正】
+          
           if (instType !== '全部') {
-            eData = eData.filter(d => norm(d.教保服務機構類型) === norm(instType));
+            eData = eData.filter(d => norm(d.設立別) === norm(jsonInst)); // 【修正】還原用「設立別」做篩選
           }
           if (isTaipei) eData = eData.filter(d => validDistrictNames.includes(norm(d.行政區)));
           else if (isDistrict) eData = eData.filter(d => norm(d.行政區) === norm(regionName));
@@ -580,7 +610,7 @@ export default function App() {
 
           const sName = isTaipei ? '台北市整體' : regionName; 
           const sDataRaw = surveyData.find(d => norm(d.分區) === norm(sName) && String(d.年份).replace('年','') === yearStr);
-          const sourceData = sDataRaw ? (instType === '全部' ? sDataRaw : (sDataRaw.機構別?.[instType] || null)) : null;
+          const sourceData = sDataRaw ? (instType === '全部' ? sDataRaw : (sDataRaw.機構別?.[jsonInst] || null)) : null;
 
           let subStat = null;
           if (!isTaipei && !isDistrict) {
@@ -603,7 +633,6 @@ export default function App() {
                   if (detail === 'stuAmount') entry[metric.id] = stu;
                   if (detail === 'occupancyRate') entry[metric.id] = app > 0 ? Number(((stu / app) * 100).toFixed(2)) : 0;
                 } else if (subStat && instType === '全部') {
-                  // 防錯：若非全部機構，則次分區因缺乏拆分資料而補 0，避免誤導
                   if (detail === 'appEnroll') entry[metric.id] = safeParse(subStat.appEnroll);
                   if (detail === 'stuAmount') entry[metric.id] = safeParse(subStat.stuAmount);
                   if (detail === 'occupancyRate') entry[metric.id] = subStat.occupancyRate || 0;
@@ -615,12 +644,17 @@ export default function App() {
                 if (detail === 'public') entry[metric.id] = safeParse(iData?.公立);
                 if (detail === 'nonProfit') entry[metric.id] = safeParse(iData?.非營利);
                 if (detail === 'quasiPublic') entry[metric.id] = safeParse(iData?.準公共);
-                if (detail === 'educare') entry[metric.id] = safeParse(iData?.職場互助教保服務中心);
+                if (detail === 'educare') entry[metric.id] = safeParse(iData?.教保中心); 
                 if (detail === 'private') entry[metric.id] = safeParse(iData?.私立);
                 if (detail === 'total') entry[metric.id] = safeParse(iData?.合計);
-                if (detail === 'publicRatio') entry[metric.id] = iData && iData.公共化占比 ? parseFloat(String(iData.公共化占比).replace('%', '')) : 0;
               } else {
                 entry[metric.id] = 0; 
+              }
+            } else if (cat === 'ratio') {
+              if (isTaipei || isDistrict) {
+                if (detail === 'publicRatio') entry[metric.id] = iData && iData.公共化占比 ? parseFloat(String(iData.公共化占比).replace('%', '')) : 0;
+              } else {
+                entry[metric.id] = 0;
               }
             } else if (cat === 'survey') {
               const surveyMetric = parts[2]; 
@@ -682,13 +716,14 @@ export default function App() {
     return index === 0 ? 'left' : 'right'; 
   };
 
+  const showCustomRatioNote = activeMetrics.some(m => m.id.includes('publicRatio'));
+
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 flex flex-col items-center font-sans">
       
       <header className="text-center mb-8 w-full max-w-7xl">
         <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800 mb-2">臺北市幼兒教育資源與人口供需整合儀表板</h1>
         <p className="text-slate-500 text-sm md:text-base mb-2">資料年份限定: 112年 ~ 114年 - 整合機構數量與次分區招生概況</p>
-        <p className="text-rose-600 text-sm md:text-base font-bold">特別註明：公共化占比是「機構數量占比」，不是公共化幼兒園招生名額占比，也不是幼兒就讀公共化機構的人數占比。</p>
       </header>
 
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
@@ -852,7 +887,8 @@ export default function App() {
               </div>
               <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border">
                 <div ref={institutionChartRef} className="bg-white p-2 md:p-4 rounded-xl">
-                  <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 歷年機構數量與公共化佔比</h3>
+                  <h3 className="text-sm font-bold text-slate-700 mb-1 text-center md:text-left">{selectedDistrict.name} 歷年機構數量與公共化佔比</h3>
+                  <p className="text-rose-600 text-xs font-bold mb-3 text-center md:text-left">特別註明：公共化占比是「機構數量占比」，不是公共化幼兒園招生名額占比，也不是幼兒就讀公共化機構的人數占比。</p>
                   <div className="h-72">
                     {institutionData.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
@@ -868,7 +904,7 @@ export default function App() {
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="quasiPublicCount" stackId="a" name="準公共" fill="#f59e0b" />
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="educareCount" stackId="a" name="職場互助教保服務中心" fill="#8b5cf6" />
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="privateCount" stackId="a" name="私立" fill="#ec4899" radius={[4, 4, 0, 0]} />
-                          <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="publicRatio" name="公共化佔比 (%)" stroke="#ef4444" strokeWidth={4} />
+                          <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="publicRatio" name="公共化佔比 (%)" stroke="#64748b" strokeWidth={4} />
                         </ComposedChart>
                       </ResponsiveContainer>
                     ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無符合年份之資料</div>)}
@@ -1300,7 +1336,12 @@ export default function App() {
       <div className="w-full max-w-7xl bg-white p-6 md:p-8 rounded-3xl shadow-md border border-slate-200 flex flex-col gap-6">
         
         <div className="flex justify-between items-center border-b pb-4">
-          <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">🛠️ 自訂圖表比較分析</h2>
+          <div>
+            <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">🛠️ 自訂圖表比較分析</h2>
+            {showCustomRatioNote && (
+              <p className="text-rose-600 text-xs font-bold mt-2">特別註明：公共化占比是「機構數量占比」，不是公共化幼兒園招生名額占比，也不是幼兒就讀公共化機構的人數占比。</p>
+            )}
+          </div>
           <div className="flex gap-2">
             <button onClick={handleExportCustomExcel} className="text-xs bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600 transition-colors font-bold">輸出 Excel</button>
             <button onClick={() => exportToPNG(customChartRef, `自訂圖表分析`)} className="text-xs bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors font-bold">輸出 PNG</button>
@@ -1399,6 +1440,9 @@ export default function App() {
                     <option key={subOpt.id} value={subOpt.id}>{subOpt.name}</option>
                   ))}
                   {activeCategory === 'inst' && INST_SUB_OPTIONS.map(subOpt => (
+                    <option key={subOpt.id} value={subOpt.id}>{subOpt.name}</option>
+                  ))}
+                  {activeCategory === 'ratio' && RATIO_SUB_OPTIONS.map(subOpt => (
                     <option key={subOpt.id} value={subOpt.id}>{subOpt.name}</option>
                   ))}
                   
