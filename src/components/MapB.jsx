@@ -204,7 +204,6 @@ const exportToPNG = async (elementRef, filename) => {
 
 export default function App() {
   const [selectedDistrict, setSelectedDistrict] = useState(districtsMapping[0]); 
-  const [showDistrictList, setShowDistrictList] = useState(false); 
   const [activeTab, setActiveTab] = useState('supply'); 
   const [searchQuery, setSearchQuery] = useState(''); 
   
@@ -803,38 +802,28 @@ export default function App() {
             </div>
 
             <button 
-              onClick={() => {
-                if (selectedDistrict?.id !== '台北市') {
-                  handleSelectDistrict('台北市');
-                  setShowDistrictList(true); 
-                } else {
-                  setShowDistrictList(!showDistrictList); 
-                }
-              }}
+              onClick={() => handleSelectDistrict('台北市')}
               className={`w-full py-3 flex items-center justify-center gap-2 rounded-xl text-sm font-bold transition-all border text-center shadow-sm ${selectedDistrict?.id === '台北市' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600'}`}
             >
               臺北市 (全區)
-              <span className={`transform transition-transform text-xs ${showDistrictList ? 'rotate-180' : ''}`}>▼</span>
             </button>
 
-            {showDistrictList && (
-              <div className="flex flex-col gap-2 mt-1 animate-fade-in">
-                <div className="relative">
-                  <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="搜尋區名..." className="w-full pl-3 pr-4 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50" />
-                </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-52 overflow-y-auto">
-                  {filteredDistricts.filter(d => d.id !== '台北市').map(item => (
-                    <button 
-                      key={item.id} 
-                      onClick={() => { handleSelectDistrict(item.id); setShowDistrictList(false); }} 
-                      className={`py-2 px-2.5 rounded-xl text-xs font-bold transition-all duration-200 border text-center ${selectedDistrict?.id === item.id ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600'}`}
-                    >
-                      {item.name}
-                    </button>
-                  ))}
-                </div>
+            <div className="flex flex-col gap-2 mt-2">
+              <div className="relative">
+                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="搜尋區名..." className="w-full pl-3 pr-4 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50" />
               </div>
-            )}
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-52 overflow-y-auto">
+                {filteredDistricts.filter(d => d.id !== '台北市').map(item => (
+                  <button 
+                    key={item.id} 
+                    onClick={() => handleSelectDistrict(item.id)} 
+                    className={`py-2 px-2.5 rounded-xl text-xs font-bold transition-all duration-200 border text-center ${selectedDistrict?.id === item.id ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600'}`}
+                  >
+                    {item.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
           
           <div className={`bg-white p-4 rounded-3xl shadow-md border border-slate-100 flex-grow flex items-center justify-center min-h-[360px] taipei-map-container ${selectedDistrict?.id === '台北市' ? 'highlight-all' : ''}`}>
