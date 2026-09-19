@@ -733,6 +733,59 @@ export default function App() {
     return index === 0 ? 'left' : 'right'; 
   };
 
+  // 渲染自訂圖例，以精確比對「自訂點狀標記(實心/空心、幾何形狀)」
+  const renderCustomChartLegend = (props) => {
+    const { payload } = props;
+    return (
+      <div className="flex flex-wrap justify-center gap-4 text-[13px] font-bold pt-[15px] cursor-pointer">
+        {payload.map((entry, index) => {
+          const metricId = entry.dataKey;
+          const metricName = entry.value;
+          const baseColor = entry.color;
+          const metric = activeMetrics.find(m => m.id === metricId);
+          if (!metric) return null;
+          
+          const isHovered = hoveredMetricId === metricId;
+          const metricIndex = activeMetrics.indexOf(metric);
+          
+          const isGap = metric.axisId === 'gap';
+          const isLine = metric.chartType === 'line';
+          let shape = 'circle';
+          if (isLine) {
+             shape = LINE_STYLES[metricIndex % LINE_STYLES.length].shape;
+          }
+
+          const sStroke = baseColor;
+          // 一般指標(不是Gap)套用白色填滿(空心)，Gap套用有顏色填滿(實心)
+          const sFill = isGap ? baseColor : '#ffffff';
+
+          return (
+            <div
+              key={`legend-${index}`}
+              className="flex items-center"
+              onMouseEnter={() => setHoveredMetricId(metricId)}
+              onMouseLeave={() => setHoveredMetricId(null)}
+              onClick={() => handleLegendClick({ dataKey: metricId })}
+              style={{ opacity: hoveredMetricId && !isHovered ? 0.2 : 1 }}
+            >
+              {!isLine ? (
+                 <div style={{width: 14, height: 14, backgroundColor: baseColor, borderRadius: 2, marginRight: 6}}></div>
+              ) : (
+                 <svg width="14" height="14" viewBox="0 0 14 14" className="mr-1.5" style={{ overflow: 'visible' }}>
+                   {shape === 'diamond' && <polygon points="7,1 13,7 7,13 1,7" fill={sFill} stroke={sStroke} strokeWidth={2} />}
+                   {shape === 'circle' && <circle cx="7" cy="7" r="5.5" fill={sFill} stroke={sStroke} strokeWidth={2} />}
+                   {shape === 'square' && <rect x="1.5" y="1.5" width="11" height="11" fill={sFill} stroke={sStroke} strokeWidth={2} />}
+                   {shape === 'triangle' && <polygon points="7,1.5 13.5,12 0.5,12" fill={sFill} stroke={sStroke} strokeWidth={2} />}
+                 </svg>
+              )}
+              <span style={{ color: baseColor }}>{metricName}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 flex flex-col items-center font-sans">
       
@@ -1614,12 +1667,8 @@ export default function App() {
                     
                     <Tooltip content={<CustomTooltip />} cursor={{fill: '#f1f5f9'}} />
                     
-                    <Legend 
-                      wrapperStyle={{fontSize:'13px', paddingTop:'15px', fontWeight:'bold', cursor: 'pointer'}} 
-                      onMouseEnter={(e) => setHoveredMetricId(e.dataKey)}
-                      onMouseLeave={() => setHoveredMetricId(null)}
-                      onClick={handleLegendClick}
-                    />
+                    {/* 👇 改用自訂的 Legend Content 來渲染精確的圖例形狀 */}
+                    <Legend content={renderCustomChartLegend} />
 
                     {activeMetrics.map((m, idx) => {
                       const isHovered = hoveredMetricId === m.id;
