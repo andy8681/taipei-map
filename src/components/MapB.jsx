@@ -240,6 +240,42 @@ export default function App() {
   const surveyChartRef = useRef(null);
   const customChartRef = useRef(null);
 
+  // --- 👇 加入絕對鎖定順序的 Custom Legend 元件 👇 ---
+  const CustomSupplyLegend = () => (
+    <div className="flex justify-center gap-6 mt-4 text-sm text-slate-600 font-bold">
+      <div className="flex items-center gap-2">
+        <div className="w-3.5 h-3.5 bg-[#f59e0b] rounded-sm"></div>
+        <span>核定招收({mainSelectedInstType})</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <div className="w-3.5 h-3.5 bg-[#3b82f6] rounded-sm"></div>
+        <span>實際在園({mainSelectedInstType})</span>
+      </div>
+    </div>
+  );
+
+  const CustomDimensionLegend = () => (
+    <div className="flex justify-center gap-5 mt-4 text-sm font-bold flex-wrap">
+      <div className="flex items-center gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><polygon points="7,1 13,7 7,13 1,7" fill="#ffffff" stroke="#3b82f6" strokeWidth={2} /></svg>
+        <span style={{color: '#3b82f6'}}>基礎條件</span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><circle cx="7" cy="7" r="5.5" fill="#ffffff" stroke="#ec4899" strokeWidth={2} /></svg>
+        <span style={{color: '#ec4899'}}>教保作為Gap</span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><rect x="1.5" y="1.5" width="11" height="11" fill="#ffffff" stroke="#f59e0b" strokeWidth={2} /></svg>
+        <span style={{color: '#f59e0b'}}>延長收托Gap</span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><polygon points="7,1.5 13.5,12 0.5,12" fill="#ffffff" stroke="#8b5cf6" strokeWidth={2} /></svg>
+        <span style={{color: '#8b5cf6'}}>其他Gap</span>
+      </div>
+    </div>
+  );
+  // --- 👆 加入絕對鎖定順序的 Custom Legend 元件 👆 ---
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       const itemsToDisplay = hoveredMetricId 
@@ -249,11 +285,19 @@ export default function App() {
       return (
         <div className="bg-white p-3 border rounded-xl shadow-lg text-sm z-50 relative">
           <p className="font-bold text-slate-700 mb-2">{label}</p>
-          {itemsToDisplay.map((entry, index) => (
-            <div key={index} className="font-bold" style={{ color: entry.color }}>
-              {entry.name}: {entry.value}
-            </div>
-          ))}
+          {itemsToDisplay.map((entry, index) => {
+            let unit = '';
+            if (entry.name.includes('人數') || entry.name.includes('核定') || entry.name.includes('實際') || entry.name.includes('在意因素')) unit = ' 人';
+            else if (entry.name.includes('機構數')) unit = ' 間';
+            else if (entry.name.includes('%') || entry.name.includes('佔比') || entry.name.includes('率')) unit = ' %';
+            else if (entry.name.includes('Gap') || entry.name.includes('滿意') || entry.name.includes('需求')) unit = ' 分';
+            
+            return (
+              <div key={index} className="font-bold" style={{ color: entry.color }}>
+                {entry.name}: {entry.value}{unit}
+              </div>
+            );
+          })}
         </div>
       );
     }
@@ -888,10 +932,13 @@ export default function App() {
                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                           <XAxis dataKey="year" tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
                           <YAxis tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
-                          <Tooltip />
-                          <Legend />
-                          <Bar isAnimationActive={false} dataKey={`appEnroll_${mainSelectedInstType}`} name={`核定招收(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#93c5fd'} fillOpacity={0.6} radius={[4,4,0,0]} />
-                          <Bar isAnimationActive={false} dataKey={`stuAmount_${mainSelectedInstType}`} name={`實際在園(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#3b82f6'} radius={[4,4,0,0]} />
+                          <Tooltip formatter={(value, name) => [`${value} 人`, name]} />
+                          
+                          {/* 📌 使用強制覆寫的自訂圖例元件 */}
+                          <Legend content={<CustomSupplyLegend />} />
+
+                          <Bar isAnimationActive={false} dataKey={`appEnroll_${mainSelectedInstType}`} name={`核定招收(${mainSelectedInstType})`} fill="#f59e0b" radius={[4,4,0,0]} />
+                          <Bar isAnimationActive={false} dataKey={`stuAmount_${mainSelectedInstType}`} name={`實際在園(${mainSelectedInstType})`} fill="#3b82f6" radius={[4,4,0,0]} />
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域或所選機構尚無符合年份之資料</div>)}
@@ -906,7 +953,7 @@ export default function App() {
                             <th className="px-4 py-3 border-r border-slate-100">機構類型</th>
                             <th className="px-4 py-3 border-r border-slate-100">核定招收人數</th>
                             <th className="px-4 py-3 border-r border-slate-100">實際在園人數</th>
-                            <th className="px-4 py-3">招生率(%)</th>
+                            <th className="px-4 py-3">招生率(%)<div className="text-[10px] font-normal text-slate-500 mt-0.5">招生率＝實際招收÷核定招收</div></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -956,7 +1003,7 @@ export default function App() {
                           <XAxis dataKey="year" tickLine={false} />
                           <YAxis yAxisId="left" tickLine={false} />
                           <YAxis yAxisId="right" orientation="right" tickLine={false} unit="%" />
-                          <Tooltip />
+                          <Tooltip formatter={(value, name) => name.includes('佔比') ? [`${value}%`, name] : [`${value} 間`, name]} />
                           <Legend />
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="publicCount" stackId="a" name="公立" fill="#3b82f6" />
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="nonProfitCount" stackId="a" name="非營利" fill="#10b981" />
@@ -1053,7 +1100,7 @@ export default function App() {
                           <CartesianGrid strokeDasharray="3 3" vertical={false} />
                           <XAxis dataKey="name" tickLine={false} tick={{fontSize: 11}} />
                           <YAxis tickLine={false} />
-                          <Tooltip />
+                          <Tooltip formatter={(value, name) => name.includes('率') ? [`${value}%`, name] : [`${value} 人`, name]} />
                           <Legend />
                           <Bar isAnimationActive={false} dataKey="appEnroll" name="核定招收人數" fill="#c084fc" radius={barRadius} />
                           <Bar isAnimationActive={false} dataKey="stuAmount" name="實際在園人數" fill="#a855f7" radius={barRadius} />
@@ -1070,7 +1117,7 @@ export default function App() {
                             <th className="px-4 py-3 text-left border-r border-slate-100">次分區(年份)</th>
                             <th className="px-4 py-3 border-r border-slate-100">核定招收人數</th>
                             <th className="px-4 py-3 border-r border-slate-100">實際在園人數</th>
-                            <th className="px-4 py-3">招生率(%)</th>
+                            <th className="px-4 py-3">招生率(%)<div className="text-[10px] font-normal text-slate-500 mt-0.5">招生率＝實際招收÷核定招收</div></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1109,7 +1156,7 @@ export default function App() {
                           <XAxis dataKey="year" tickLine={false} />
                           <YAxis yAxisId="left" tickLine={false} />
                           <YAxis yAxisId="right" orientation="right" tickLine={false} unit="%" />
-                          <Tooltip />
+                          <Tooltip formatter={(value, name) => name.includes('率') ? [`${value}%`, name] : [`${value} 人`, name]} />
                           <Legend />
                           <Line isAnimationActive={false} yAxisId="left" type="monotone" dataKey="total" name="學齡前設籍人數" stroke="#3b82f6" strokeWidth={3} />
                           <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="changeRatio" name="學齡前設籍人口增減率（%）" stroke="#ef4444" strokeWidth={2} connectNulls />
@@ -1203,10 +1250,13 @@ export default function App() {
                               <CartesianGrid strokeDasharray="3 3" vertical={false} />
                               <XAxis dataKey="year" tickLine={false} />
                               <YAxis tickLine={false} />
-                              <Tooltip />
-                              <Legend />
+                              <Tooltip formatter={(value, name) => [`${value} 分`, name]} />
+                              
+                              {/* 📌 使用強制覆寫的自訂圖例元件 */}
+                              <Legend content={<CustomDimensionLegend />} />
+
                               <ReferenceLine y={0} stroke="#94a3b8" strokeDasharray="3 3" />
-                              <Line isAnimationActive={false} type="monotone" dataKey={`gapBase_${mainSelectedInstType}`} name={`基礎條件Gap`} stroke="#3b82f6" strokeWidth={3} strokeDasharray="" dot={(props) => renderShapeDot(props, 'diamond', true)} legendType="diamond" />
+                              <Line isAnimationActive={false} type="monotone" dataKey={`gapBase_${mainSelectedInstType}`} name={`基礎條件`} stroke="#3b82f6" strokeWidth={3} strokeDasharray="" dot={(props) => renderShapeDot(props, 'diamond', true)} legendType="diamond" />
                               <Line isAnimationActive={false} type="monotone" dataKey={`gapAction_${mainSelectedInstType}`} name={`教保作為Gap`} stroke="#ec4899" strokeWidth={3} strokeDasharray="5 5" dot={(props) => renderShapeDot(props, 'circle', true)} legendType="circle" />
                               <Line isAnimationActive={false} type="monotone" dataKey={`gapExtend_${mainSelectedInstType}`} name={`延長收托Gap`} stroke="#f59e0b" strokeWidth={3} strokeDasharray="3 3" dot={(props) => renderShapeDot(props, 'square', true)} legendType="square" />
                               <Line isAnimationActive={false} type="monotone" dataKey={`gapOther_${mainSelectedInstType}`} name={`其他Gap`} stroke="#8b5cf6" strokeWidth={3} strokeDasharray="10 5" dot={(props) => renderShapeDot(props, 'triangle', true)} legendType="triangle" />
@@ -1223,10 +1273,10 @@ export default function App() {
                                 <th className="px-4 py-3 text-left border-r border-slate-100">年份</th>
                                 <th className="px-4 py-3 border-r border-slate-100">機構類型</th>
                                 <th className="px-4 py-3 border-r border-slate-100">有效樣本數</th>
-                                <th className="px-4 py-3 border-r border-slate-100">教保基礎條件 Gap</th>
-                                <th className="px-4 py-3 border-r border-slate-100">教保作為 Gap</th>
-                                <th className="px-4 py-3 border-r border-slate-100">延長收托安置 Gap</th>
-                                <th className="px-4 py-3">其他 Gap</th>
+                                <th className="px-4 py-3 border-r border-slate-100">基礎條件</th>
+                                <th className="px-4 py-3 border-r border-slate-100">教保作為Gap</th>
+                                <th className="px-4 py-3 border-r border-slate-100">延長收托Gap</th>
+                                <th className="px-4 py-3">其他Gap</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -1273,7 +1323,7 @@ export default function App() {
                               <CartesianGrid strokeDasharray="3 3" vertical={false} />
                               <XAxis dataKey="year" tickLine={false} />
                               <YAxis tickLine={false} />
-                              <Tooltip />
+                              <Tooltip formatter={(value, name) => [`${value} 分`, name]} />
                               <Legend />
                               <Bar isAnimationActive={false} dataKey={`req_${mainSelectedInstType}`} name={`需求(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#ec4899'} fillOpacity={0.4} radius={[4,4,0,0]} />
                               <Bar isAnimationActive={false} dataKey={`perf_${mainSelectedInstType}`} name={`滿意(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#3b82f6'} fillOpacity={0.8} radius={[4,4,0,0]} />
@@ -1351,7 +1401,7 @@ export default function App() {
                               <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
                               <XAxis type="number" tickLine={false} />
                               <YAxis type="category" dataKey="name" tickLine={false} tick={{fontSize: 11, fontWeight: 'bold', fill: '#475569'}} width={80} />
-                              <Tooltip cursor={{fill: '#f1f5f9'}} />
+                              <Tooltip cursor={{fill: '#f1f5f9'}} formatter={(value, name) => [`${value} 人`, name]} />
                               <Legend wrapperStyle={{paddingTop: '10px'}} />
                               {selectedPriorityYears.map((year, i) => (
                                 <Bar key={year} stackId="a" isAnimationActive={false} dataKey={year} name={year} fill={COLORS_PALETTE[i % COLORS_PALETTE.length]} />
@@ -1714,6 +1764,10 @@ export default function App() {
                   {activeMetrics.map(m => (
                     <th key={m.id} className="px-4 py-3 whitespace-nowrap text-center border-r border-slate-100" style={{color: m.color}}>
                       {m.name}
+                      {/* 📌 在自訂圖表區域，若為招生率則標示公式 */}
+                      {m.id.includes('occupancyRate') && (
+                        <div className="text-[10px] font-normal text-slate-500 mt-0.5">招生率＝實際招收÷核定招收</div>
+                      )}
                     </th>
                   ))}
                 </tr>
