@@ -5,7 +5,7 @@ import TaipeiMap from './TaipeiMap';
 
 import { 
   LineChart, Line, BarChart, Bar, ComposedChart, XAxis, YAxis, CartesianGrid, 
-  Tooltip, Legend, ResponsiveContainer, ReferenceLine 
+  Tooltip, Legend, ResponsiveContainer, ReferenceLine, Cell 
 } from 'recharts';
 import { toPng } from 'html-to-image';
 import * as XLSX from 'xlsx';
@@ -60,7 +60,7 @@ const SURVEY_G4 = ['13', '17'];
 
 const CATEGORY_OPTIONS = [
   { value: 'basic', label: '📊 基本資訊' },
-  { value: 'inst', label: '🏫 機構數與公共化' },
+  { value: 'inst_count', label: '🏫 機構數量與佔比' },
   { value: 'survey', label: '⭐ 滿意度分析' },
   { value: 'priority', label: '🎯 最在意因素' }
 ];
@@ -68,15 +68,15 @@ const CATEGORY_OPTIONS = [
 const BASIC_SUB_OPTIONS = [
   { id: 'appEnroll', name: '核定招收' },
   { id: 'stuAmount', name: '實際在園' },
-  { id: 'occupancyRate', name: '入園率(%)' },
-  { id: 'popTotal', name: '學齡前設籍' }
+  { id: 'occupancyRate', name: '招生率(%)' },
+  { id: 'popTotal', name: '學齡前設籍人數' }
 ];
 
-const INST_SUB_OPTIONS = [
+const INST_COUNT_SUB_OPTIONS = [
   { id: 'public', name: '公立' },
   { id: 'nonProfit', name: '非營利' },
   { id: 'quasiPublic', name: '準公共' },
-  { id: 'educare', name: '教保中心' },
+  { id: 'educare', name: '職場互助教保服務中心' },
   { id: 'private', name: '私立' },
   { id: 'total', name: '總計' },
   { id: 'publicRatio', name: '公共化佔比(%)' }
@@ -113,12 +113,13 @@ const SURVEY_SUB_OPTIONS = [
 ];
 
 const COLORS_PALETTE = ['#818cf8', '#34d399', '#fbbf24', '#fb7185', '#c084fc', '#2dd4bf', '#f472b6', '#a78bfa', '#f87171', '#60a5fa'];
-const INST_COLORS = { '全部': '#64748b', '公立': '#3b82f6', '非營利': '#10b981', '準公共': '#f59e0b', '私立': '#ec4899', '教保中心': '#8b5cf6' };
+const INST_COLORS = { '全部': '#64748b', '公立': '#3b82f6', '非營利': '#10b981', '準公共': '#f59e0b', '私立': '#ec4899', '職場互助教保服務中心': '#8b5cf6' };
 
 const barRadius = 4;
 const yearsList = ['112年', '113年', '114年'];
 const rawYears = ['112', '113', '114'];
-const instTypesList = ['全部', '公立', '非營利', '準公共', '私立', '教保中心'];
+const instTypesList = ['全部', '公立', '非營利', '準公共', '私立', '職場互助教保服務中心'];
+
 const norm = (str) => String(str || '').replace(/臺/g, '台').trim();
 const safeParse = (val) => {
   if (val === null || val === undefined || val === '') return 0;
@@ -127,6 +128,47 @@ const safeParse = (val) => {
   const num = Number(clean);
   return isNaN(num) ? 0 : num;
 };
+
+// 計算 GAP 顏色：小於0為紅，等於0為黃，大於0為綠
+const getGapColor = (val) => {
+  if (val === null || val === undefined || val === '-') return 'inherit';
+  const num = Number(val);
+  if (isNaN(num)) return 'inherit';
+  if (num < 0) return '#ef4444'; // 紅色 (負的落差)
+  if (num === 0) return '#f59e0b'; // 黃色 (零落差)
+  return '#10b981'; // 綠色 (正向落差)
+};
+
+// 繪製自訂點狀標記(菱形、圓形、方形、三角形)
+const renderShapeDot = (props, shape, isGapLine = false) => {
+  const { cx, cy, value, stroke, key } = props;
+  const fill = isGapLine ? getGapColor(value) : '#ffffff';
+  const borderStroke = isGapLine ? getGapColor(value) : stroke;
+
+  if (shape === 'diamond') {
+    return <polygon key={key} points={`${cx},${cy-6} ${cx+6},${cy} ${cx},${cy+6} ${cx-6},${cy}`} fill={fill} stroke={borderStroke} strokeWidth={2} />;
+  }
+  if (shape === 'circle') {
+    return <circle key={key} cx={cx} cy={cy} r={5} fill={fill} stroke={borderStroke} strokeWidth={2} />;
+  }
+  if (shape === 'square') {
+    return <rect key={key} x={cx-5} y={cy-5} width={10} height={10} fill={fill} stroke={borderStroke} strokeWidth={2} />;
+  }
+  if (shape === 'triangle') {
+    return <polygon key={key} points={`${cx},${cy-6} ${cx+6},${cy+6} ${cx-6},${cy+6}`} fill={fill} stroke={borderStroke} strokeWidth={2} />;
+  }
+  return <circle key={key} cx={cx} cy={cy} r={5} fill={fill} stroke={borderStroke} strokeWidth={2} />;
+};
+
+// 自訂線條樣式組合
+const LINE_STYLES = [
+  { shape: 'diamond', dash: '' },        // 第一筆：菱形配實線
+  { shape: 'circle', dash: '5 5' },      // 第二筆：圓形配虛線
+  { shape: 'square', dash: '3 3' },      // 第三筆：方形配點線
+  { shape: 'triangle', dash: '10 5' },   // 第四筆：三角形配長虛線
+];
+
+const toJSONInst = (val) => val === '職場互助教保服務中心' ? '教保中心' : val;
 
 const exportToExcel = (data, filename) => {
   const ws = XLSX.utils.json_to_sheet(data);
@@ -162,16 +204,11 @@ const exportToPNG = async (elementRef, filename) => {
 
 export default function App() {
   const [selectedDistrict, setSelectedDistrict] = useState(districtsMapping[0]); 
-  const [showDistrictList, setShowDistrictList] = useState(false); 
   const [activeTab, setActiveTab] = useState('supply'); 
   const [searchQuery, setSearchQuery] = useState(''); 
   
-  // 右上角一般機構選擇 (單選)
   const [mainSelectedInstType, setMainSelectedInstType] = useState('全部'); 
-  
-  // 下方自訂表格機構選擇 (多選)
   const [customSelectedInstTypes, setCustomSelectedInstTypes] = useState(['全部']); 
-  
   const [selectedSubYears, setSelectedSubYears] = useState(['113年']); 
   const [selectedSubDistricts, setSelectedSubDistricts] = useState([]);
   
@@ -193,7 +230,7 @@ export default function App() {
   const [activeMetrics, setActiveMetrics] = useState([
     { id: 'basic___appEnroll', name: '基本: 核定招收', axisId: 'people', color: '#818cf8', chartType: 'line', category: 'basic' },
     { id: 'basic___stuAmount', name: '基本: 實際在園', axisId: 'people', color: '#34d399', chartType: 'line', category: 'basic' },
-    { id: 'basic___occupancyRate', name: '基本: 入園率(%)', axisId: 'percent', color: '#fb7185', chartType: 'line', category: 'basic' }
+    { id: 'basic___occupancyRate', name: '基本: 招生率(%)', axisId: 'percent', color: '#fb7185', chartType: 'line', category: 'basic' }
   ]);
 
   const supplyChartRef = useRef(null);
@@ -202,6 +239,42 @@ export default function App() {
   const populationChartRef = useRef(null);
   const surveyChartRef = useRef(null);
   const customChartRef = useRef(null);
+
+  // --- 👇 加入絕對鎖定順序的 Custom Legend 元件 👇 ---
+  const CustomSupplyLegend = () => (
+    <div className="flex justify-center gap-6 mt-4 text-sm text-slate-600 font-bold">
+      <div className="flex items-center gap-2">
+        <div className="w-3.5 h-3.5 bg-[#f59e0b] rounded-sm"></div>
+        <span>核定招收({mainSelectedInstType})</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <div className="w-3.5 h-3.5 bg-[#3b82f6] rounded-sm"></div>
+        <span>實際在園({mainSelectedInstType})</span>
+      </div>
+    </div>
+  );
+
+  const CustomDimensionLegend = () => (
+    <div className="flex justify-center gap-5 mt-4 text-sm font-bold flex-wrap">
+      <div className="flex items-center gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><polygon points="7,1 13,7 7,13 1,7" fill="#ffffff" stroke="#3b82f6" strokeWidth={2} /></svg>
+        <span style={{color: '#3b82f6'}}>基礎條件</span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><circle cx="7" cy="7" r="5.5" fill="#ffffff" stroke="#ec4899" strokeWidth={2} /></svg>
+        <span style={{color: '#ec4899'}}>教保作為Gap</span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><rect x="1.5" y="1.5" width="11" height="11" fill="#ffffff" stroke="#f59e0b" strokeWidth={2} /></svg>
+        <span style={{color: '#f59e0b'}}>延長收托Gap</span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><polygon points="7,1.5 13.5,12 0.5,12" fill="#ffffff" stroke="#8b5cf6" strokeWidth={2} /></svg>
+        <span style={{color: '#8b5cf6'}}>其他Gap</span>
+      </div>
+    </div>
+  );
+  // --- 👆 加入絕對鎖定順序的 Custom Legend 元件 👆 ---
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -212,11 +285,19 @@ export default function App() {
       return (
         <div className="bg-white p-3 border rounded-xl shadow-lg text-sm z-50 relative">
           <p className="font-bold text-slate-700 mb-2">{label}</p>
-          {itemsToDisplay.map((entry, index) => (
-            <div key={index} className="font-bold" style={{ color: entry.color }}>
-              {entry.name}: {entry.value}
-            </div>
-          ))}
+          {itemsToDisplay.map((entry, index) => {
+            let unit = '';
+            if (entry.name.includes('人數') || entry.name.includes('核定') || entry.name.includes('實際') || entry.name.includes('在意因素')) unit = ' 人';
+            else if (entry.name.includes('機構數')) unit = ' 間';
+            else if (entry.name.includes('%') || entry.name.includes('佔比') || entry.name.includes('率')) unit = ' %';
+            else if (entry.name.includes('Gap') || entry.name.includes('滿意') || entry.name.includes('需求')) unit = ' 分';
+            
+            return (
+              <div key={index} className="font-bold" style={{ color: entry.color }}>
+                {entry.name}: {entry.value}{unit}
+              </div>
+            );
+          })}
         </div>
       );
     }
@@ -262,7 +343,6 @@ export default function App() {
     setState(prev => prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]);
   };
 
-  // 底部自訂圖表用的多選
   const toggleCustomInstType = (type) => {
     setCustomSelectedInstTypes(prev => {
       if (prev.includes(type)) {
@@ -278,7 +358,7 @@ export default function App() {
     const cat = e.target.value;
     setActiveCategory(cat);
     if (cat === 'basic') setActiveSubItem(BASIC_SUB_OPTIONS[0].id);
-    else if (cat === 'inst') setActiveSubItem(INST_SUB_OPTIONS[0].id);
+    else if (cat === 'inst_count') setActiveSubItem(INST_COUNT_SUB_OPTIONS[0].id);
     else if (cat === 'survey') setActiveSubItem('dim_教保基礎條件'); 
     else if (cat === 'priority') setActiveSubItem(PRIORITY_OPTIONS[0].id);
   };
@@ -340,12 +420,11 @@ export default function App() {
       newName = `基本: ${opt.name}`;
       if (activeSubItem === 'occupancyRate') axisId = 'percent';
       else axisId = 'people';
-    } else if (activeCategory === 'inst') {
-      metricId = `inst___${activeSubItem}`;
-      const opt = INST_SUB_OPTIONS.find(o => o.id === activeSubItem);
-      newName = `機構: ${opt.name}`;
-      if (activeSubItem === 'publicRatio') axisId = 'percent';
-      else axisId = 'inst';
+    } else if (activeCategory === 'inst_count') {
+      metricId = `inst_count___${activeSubItem}`;
+      const opt = INST_COUNT_SUB_OPTIONS.find(o => o.id === activeSubItem);
+      newName = activeSubItem === 'publicRatio' ? `佔比: ${opt.name}` : `機構數: ${opt.name}`;
+      axisId = activeSubItem === 'publicRatio' ? 'percent' : 'inst';
     } else if (activeCategory === 'survey') {
       metricId = `survey___${activeSubItem}___${activeSurveyMetric}`;
       const shortName = getSurveyShortName(activeSubItem);
@@ -412,9 +491,11 @@ export default function App() {
       let hasData = false;
 
       const inst = mainSelectedInstType;
+      const jsonInst = toJSONInst(inst); 
+      
       let app = 0, stu = 0;
       yearData.forEach(d => {
-        if (inst === '全部' || norm(d.設立別) === norm(inst)) {
+        if (inst === '全部' || norm(d.設立別) === norm(jsonInst)) {
           app += safeParse(d.核定招生人數);
           stu += safeParse(d.入園人數);
         }
@@ -434,17 +515,24 @@ export default function App() {
     const distKey = Object.keys(institutionCountData).find(k => norm(k) === norm(selectedDistrict.id === '台北市' ? '台北市' : selectedDistrict.name));
     const data = institutionCountData[distKey] || [];
     return data.filter(d => rawYears.includes(String(d.學年度).replace('年',''))).map(d => ({
-      year: `${d.學年度}年`, publicCount: safeParse(d.公立), nonProfitCount: safeParse(d.非營利), quasiPublicCount: safeParse(d.準公共), educareCount: safeParse(d.教保中心), privateCount: safeParse(d.私立), totalCount: safeParse(d.合計), publicRatio: d.公共化占比 ? parseFloat(String(d.公共化占比).replace('%', '')) : null, rawRatio: d.公共化占比 || '-'
+      year: `${d.學年度}年`, 
+      publicCount: safeParse(d.公立), 
+      nonProfitCount: safeParse(d.非營利), 
+      quasiPublicCount: safeParse(d.準公共), 
+      educareCount: safeParse(d.教保中心), 
+      privateCount: safeParse(d.私立), 
+      totalCount: safeParse(d.合計), 
+      publicRatio: d.公共化占比 ? parseFloat(String(d.公共化占比).replace('%', '')) : null, 
+      rawRatio: d.公共化占比 || '-'
     }));
   }, [selectedDistrict]);
 
-  // 修改：字串統一過濾掉「年」，避免原本帶有年的字串去比對原始數字時造成 undefined
   const currentSubDistrictsForYear = useMemo(() => {
     if (!rawSubDistricts || rawSubDistricts.length === 0) return [];
     let result = [];
     rawSubDistricts.filter(sub => selectedSubDistricts.includes(sub.name)).forEach(sub => {
         selectedSubYears.forEach(year => {
-           const cleanYear = year.replace('年', ''); // 去除年字，確保比對精準
+           const cleanYear = year.replace('年', ''); 
            const yearStat = sub.yearly_stats?.find(y => String(y.year).replace('年', '') === cleanYear);
            if (yearStat) result.push({ name: `${sub.name} (${year})`, subName: sub.name, year: year, appEnroll: safeParse(yearStat.appEnroll), stuAmount: safeParse(yearStat.stuAmount), occupancyRate: yearStat.occupancyRate || 0 });
         });
@@ -474,7 +562,9 @@ export default function App() {
       let totalSample = 0;
       
       const inst = mainSelectedInstType;
-      const source = inst === '全部' ? yearData : yearData?.機構別?.[inst];
+      const jsonInst = toJSONInst(inst); 
+      const source = inst === '全部' ? yearData : yearData?.機構別?.[jsonInst];
+      
       const sample = source?.資料筆數 || 0;
       totalSample += sample;
       entry[`sampleSize_${inst}`] = sample;
@@ -501,7 +591,9 @@ export default function App() {
       let hasData = false;
       
       const inst = mainSelectedInstType;
-      const source = inst === '全部' ? yearData : yearData?.機構別?.[inst];
+      const jsonInst = toJSONInst(inst); 
+      const source = inst === '全部' ? yearData : yearData?.機構別?.[jsonInst];
+      
       const req = source?.逐題?.[selectedQuestion]?.需求度 ?? 0;
       const perf = source?.逐題?.[selectedQuestion]?.滿意度 ?? 0;
       const gap = (perf !== 0 && req !== 0) ? Number((perf - req).toFixed(2)) : 0;
@@ -534,7 +626,8 @@ export default function App() {
         r[yearStr] = 0;
         const d = filtered.find(x => `${x.年份}年` === yearStr);
         if (d) {
-          const source = mainSelectedInstType === '全部' ? d : d.機構別?.[mainSelectedInstType];
+          const jsonInst = toJSONInst(mainSelectedInstType); 
+          const source = mainSelectedInstType === '全部' ? d : d.機構別?.[jsonInst];
           r[yearStr] = source?.優先關注因素?.[r.originalKey] || 0;
         }
       });
@@ -566,8 +659,10 @@ export default function App() {
           const isDistrict = districtsMapping.some(d => norm(d.name) === norm(regionName));
 
           let eData = enrollmentData.filter(d => String(d.學年度).replace('年','') === yearStr);
+          const jsonInst = toJSONInst(instType); 
+          
           if (instType !== '全部') {
-            eData = eData.filter(d => norm(d.設立別) === norm(instType));
+            eData = eData.filter(d => norm(d.設立別) === norm(jsonInst));
           }
           if (isTaipei) eData = eData.filter(d => validDistrictNames.includes(norm(d.行政區)));
           else if (isDistrict) eData = eData.filter(d => norm(d.行政區) === norm(regionName));
@@ -580,7 +675,7 @@ export default function App() {
 
           const sName = isTaipei ? '台北市整體' : regionName; 
           const sDataRaw = surveyData.find(d => norm(d.分區) === norm(sName) && String(d.年份).replace('年','') === yearStr);
-          const sourceData = sDataRaw ? (instType === '全部' ? sDataRaw : (sDataRaw.機構別?.[instType] || null)) : null;
+          const sourceData = sDataRaw ? (instType === '全部' ? sDataRaw : (sDataRaw.機構別?.[jsonInst] || null)) : null;
 
           let subStat = null;
           if (!isTaipei && !isDistrict) {
@@ -603,19 +698,18 @@ export default function App() {
                   if (detail === 'stuAmount') entry[metric.id] = stu;
                   if (detail === 'occupancyRate') entry[metric.id] = app > 0 ? Number(((stu / app) * 100).toFixed(2)) : 0;
                 } else if (subStat && instType === '全部') {
-                  // 防錯：若非全部機構，則次分區因缺乏拆分資料而補 0，避免誤導
                   if (detail === 'appEnroll') entry[metric.id] = safeParse(subStat.appEnroll);
                   if (detail === 'stuAmount') entry[metric.id] = safeParse(subStat.stuAmount);
                   if (detail === 'occupancyRate') entry[metric.id] = subStat.occupancyRate || 0;
                 } else entry[metric.id] = 0;
               }
               if (detail === 'popTotal') entry[metric.id] = (isTaipei || isDistrict) && pData ? safeParse(pData.total) : 0;
-            } else if (cat === 'inst') {
+            } else if (cat === 'inst_count') {
               if (isTaipei || isDistrict) {
                 if (detail === 'public') entry[metric.id] = safeParse(iData?.公立);
                 if (detail === 'nonProfit') entry[metric.id] = safeParse(iData?.非營利);
                 if (detail === 'quasiPublic') entry[metric.id] = safeParse(iData?.準公共);
-                if (detail === 'educare') entry[metric.id] = safeParse(iData?.教保中心);
+                if (detail === 'educare') entry[metric.id] = safeParse(iData?.教保中心); 
                 if (detail === 'private') entry[metric.id] = safeParse(iData?.私立);
                 if (detail === 'total') entry[metric.id] = safeParse(iData?.合計);
                 if (detail === 'publicRatio') entry[metric.id] = iData && iData.公共化占比 ? parseFloat(String(iData.公共化占比).replace('%', '')) : 0;
@@ -682,12 +776,65 @@ export default function App() {
     return index === 0 ? 'left' : 'right'; 
   };
 
+  // 渲染自訂圖例，以精確比對「自訂點狀標記(實心/空心、幾何形狀)」
+  const renderCustomChartLegend = (props) => {
+    const { payload } = props;
+    return (
+      <div className="flex flex-wrap justify-center gap-4 text-[13px] font-bold pt-[15px] cursor-pointer">
+        {payload.map((entry, index) => {
+          const metricId = entry.dataKey;
+          const metricName = entry.value;
+          const baseColor = entry.color;
+          const metric = activeMetrics.find(m => m.id === metricId);
+          if (!metric) return null;
+          
+          const isHovered = hoveredMetricId === metricId;
+          const metricIndex = activeMetrics.indexOf(metric);
+          
+          const isGap = metric.axisId === 'gap';
+          const isLine = metric.chartType === 'line';
+          let shape = 'circle';
+          if (isLine) {
+             shape = LINE_STYLES[metricIndex % LINE_STYLES.length].shape;
+          }
+
+          const sStroke = baseColor;
+          // 一般指標(不是Gap)套用白色填滿(空心)，Gap套用有顏色填滿(實心)
+          const sFill = isGap ? baseColor : '#ffffff';
+
+          return (
+            <div
+              key={`legend-${index}`}
+              className="flex items-center"
+              onMouseEnter={() => setHoveredMetricId(metricId)}
+              onMouseLeave={() => setHoveredMetricId(null)}
+              onClick={() => handleLegendClick({ dataKey: metricId })}
+              style={{ opacity: hoveredMetricId && !isHovered ? 0.2 : 1 }}
+            >
+              {!isLine ? (
+                 <div style={{width: 14, height: 14, backgroundColor: baseColor, borderRadius: 2, marginRight: 6}}></div>
+              ) : (
+                 <svg width="14" height="14" viewBox="0 0 14 14" className="mr-1.5" style={{ overflow: 'visible' }}>
+                   {shape === 'diamond' && <polygon points="7,1 13,7 7,13 1,7" fill={sFill} stroke={sStroke} strokeWidth={2} />}
+                   {shape === 'circle' && <circle cx="7" cy="7" r="5.5" fill={sFill} stroke={sStroke} strokeWidth={2} />}
+                   {shape === 'square' && <rect x="1.5" y="1.5" width="11" height="11" fill={sFill} stroke={sStroke} strokeWidth={2} />}
+                   {shape === 'triangle' && <polygon points="7,1.5 13.5,12 0.5,12" fill={sFill} stroke={sStroke} strokeWidth={2} />}
+                 </svg>
+              )}
+              <span style={{ color: baseColor }}>{metricName}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 flex flex-col items-center font-sans">
       
       <header className="text-center mb-8 w-full max-w-7xl">
         <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800 mb-2">臺北市幼兒教育資源與人口供需整合儀表板</h1>
-        <p className="text-slate-500 text-sm md:text-base">資料年份限定: 112年 ~ 114年 - 整合機構數量與次分區入園概況</p>
+        <p className="text-slate-500 text-sm md:text-base mb-2">資料年份限定: 112年 ~ 114年 - 整合機構數量與次分區招生概況</p>
       </header>
 
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
@@ -699,38 +846,28 @@ export default function App() {
             </div>
 
             <button 
-              onClick={() => {
-                if (selectedDistrict?.id !== '台北市') {
-                  handleSelectDistrict('台北市');
-                  setShowDistrictList(true); 
-                } else {
-                  setShowDistrictList(!showDistrictList); 
-                }
-              }}
+              onClick={() => handleSelectDistrict('台北市')}
               className={`w-full py-3 flex items-center justify-center gap-2 rounded-xl text-sm font-bold transition-all border text-center shadow-sm ${selectedDistrict?.id === '台北市' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600'}`}
             >
               臺北市 (全區)
-              <span className={`transform transition-transform text-xs ${showDistrictList ? 'rotate-180' : ''}`}>▼</span>
             </button>
 
-            {showDistrictList && (
-              <div className="flex flex-col gap-2 mt-1 animate-fade-in">
-                <div className="relative">
-                  <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="搜尋區名..." className="w-full pl-3 pr-4 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50" />
-                </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-52 overflow-y-auto">
-                  {filteredDistricts.filter(d => d.id !== '台北市').map(item => (
-                    <button 
-                      key={item.id} 
-                      onClick={() => { handleSelectDistrict(item.id); setShowDistrictList(false); }} 
-                      className={`py-2 px-2.5 rounded-xl text-xs font-bold transition-all duration-200 border text-center ${selectedDistrict?.id === item.id ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600'}`}
-                    >
-                      {item.name}
-                    </button>
-                  ))}
-                </div>
+            <div className="flex flex-col gap-2 mt-2">
+              <div className="relative">
+                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="搜尋區名..." className="w-full pl-3 pr-4 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50" />
               </div>
-            )}
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 pt-1 max-h-52 overflow-y-auto">
+                {filteredDistricts.filter(d => d.id !== '台北市').map(item => (
+                  <button 
+                    key={item.id} 
+                    onClick={() => handleSelectDistrict(item.id)} 
+                    className={`py-2 px-2.5 rounded-xl text-xs font-bold transition-all duration-200 border text-center ${selectedDistrict?.id === item.id ? 'bg-blue-600 text-white border-blue-600 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-blue-50 hover:text-blue-600'}`}
+                  >
+                    {item.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
           
           <div className={`bg-white p-4 rounded-3xl shadow-md border border-slate-100 flex-grow flex items-center justify-center min-h-[360px] taipei-map-container ${selectedDistrict?.id === '台北市' ? 'highlight-all' : ''}`}>
@@ -795,10 +932,13 @@ export default function App() {
                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                           <XAxis dataKey="year" tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
                           <YAxis tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
-                          <Tooltip />
-                          <Legend />
-                          <Bar isAnimationActive={false} dataKey={`appEnroll_${mainSelectedInstType}`} name={`核定招收(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#93c5fd'} fillOpacity={0.6} radius={[4,4,0,0]} />
-                          <Bar isAnimationActive={false} dataKey={`stuAmount_${mainSelectedInstType}`} name={`實際在園(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#3b82f6'} radius={[4,4,0,0]} />
+                          <Tooltip formatter={(value, name) => [`${value} 人`, name]} />
+                          
+                          {/* 📌 使用強制覆寫的自訂圖例元件 */}
+                          <Legend content={<CustomSupplyLegend />} />
+
+                          <Bar isAnimationActive={false} dataKey={`appEnroll_${mainSelectedInstType}`} name={`核定招收(${mainSelectedInstType})`} fill="#f59e0b" radius={[4,4,0,0]} />
+                          <Bar isAnimationActive={false} dataKey={`stuAmount_${mainSelectedInstType}`} name={`實際在園(${mainSelectedInstType})`} fill="#3b82f6" radius={[4,4,0,0]} />
                         </BarChart>
                       </ResponsiveContainer>
                     ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域或所選機構尚無符合年份之資料</div>)}
@@ -813,7 +953,7 @@ export default function App() {
                             <th className="px-4 py-3 border-r border-slate-100">機構類型</th>
                             <th className="px-4 py-3 border-r border-slate-100">核定招收人數</th>
                             <th className="px-4 py-3 border-r border-slate-100">實際在園人數</th>
-                            <th className="px-4 py-3">入園率(%)</th>
+                            <th className="px-4 py-3">招生率(%)<div className="text-[10px] font-normal text-slate-500 mt-0.5">招生率＝實際招收÷核定招收</div></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -852,6 +992,9 @@ export default function App() {
               <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border">
                 <div ref={institutionChartRef} className="bg-white p-2 md:p-4 rounded-xl">
                   <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 歷年機構數量與公共化佔比</h3>
+                  <div className="text-rose-600 text-xs md:text-sm font-bold bg-rose-50 p-2.5 rounded-lg mb-4 border border-rose-200">
+                    💡 特別註明：公共化占比是「機構數量占比」，不是公共化幼兒園招生名額占比，也不是幼兒就讀公共化機構的人數占比。
+                  </div>
                   <div className="h-72">
                     {institutionData.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
@@ -860,14 +1003,14 @@ export default function App() {
                           <XAxis dataKey="year" tickLine={false} />
                           <YAxis yAxisId="left" tickLine={false} />
                           <YAxis yAxisId="right" orientation="right" tickLine={false} unit="%" />
-                          <Tooltip />
+                          <Tooltip formatter={(value, name) => name.includes('佔比') ? [`${value}%`, name] : [`${value} 間`, name]} />
                           <Legend />
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="publicCount" stackId="a" name="公立" fill="#3b82f6" />
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="nonProfitCount" stackId="a" name="非營利" fill="#10b981" />
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="quasiPublicCount" stackId="a" name="準公共" fill="#f59e0b" />
-                          <Bar isAnimationActive={false} yAxisId="left" dataKey="educareCount" stackId="a" name="教保中心" fill="#8b5cf6" />
+                          <Bar isAnimationActive={false} yAxisId="left" dataKey="educareCount" stackId="a" name="職場互助教保服務中心" fill="#8b5cf6" />
                           <Bar isAnimationActive={false} yAxisId="left" dataKey="privateCount" stackId="a" name="私立" fill="#ec4899" radius={[4, 4, 0, 0]} />
-                          <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="publicRatio" name="公共化佔比 (%)" stroke="#ef4444" strokeWidth={4} />
+                          <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="publicRatio" name="公共化佔比 (%)" stroke="#64748b" strokeWidth={4} />
                         </ComposedChart>
                       </ResponsiveContainer>
                     ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無符合年份之資料</div>)}
@@ -882,7 +1025,7 @@ export default function App() {
                             <th className="px-3 py-3 border-r border-slate-100">公立</th>
                             <th className="px-3 py-3 border-r border-slate-100">非營利</th>
                             <th className="px-3 py-3 border-r border-slate-100">準公共</th>
-                            <th className="px-3 py-3 border-r border-slate-100">教保中心</th>
+                            <th className="px-3 py-3 border-r border-slate-100">職場互助教保服務中心</th>
                             <th className="px-3 py-3 border-r border-slate-100">私立</th>
                             <th className="px-3 py-3 border-r border-slate-100">合計</th>
                             <th className="px-3 py-3">公共化佔比</th>
@@ -949,7 +1092,7 @@ export default function App() {
               </div>
               <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border">
                 <div ref={subDistrictChartRef} className="bg-white p-2 md:p-4 rounded-xl">
-                  <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 次分區招收概況</h3>
+                  <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 次分區招生概況</h3>
                   <div className="h-56">
                     {currentSubDistrictsForYear.length > 0 ? (
                       <ResponsiveContainer width="100%" height="100%">
@@ -957,7 +1100,7 @@ export default function App() {
                           <CartesianGrid strokeDasharray="3 3" vertical={false} />
                           <XAxis dataKey="name" tickLine={false} tick={{fontSize: 11}} />
                           <YAxis tickLine={false} />
-                          <Tooltip />
+                          <Tooltip formatter={(value, name) => name.includes('率') ? [`${value}%`, name] : [`${value} 人`, name]} />
                           <Legend />
                           <Bar isAnimationActive={false} dataKey="appEnroll" name="核定招收人數" fill="#c084fc" radius={barRadius} />
                           <Bar isAnimationActive={false} dataKey="stuAmount" name="實際在園人數" fill="#a855f7" radius={barRadius} />
@@ -974,7 +1117,7 @@ export default function App() {
                             <th className="px-4 py-3 text-left border-r border-slate-100">次分區(年份)</th>
                             <th className="px-4 py-3 border-r border-slate-100">核定招收人數</th>
                             <th className="px-4 py-3 border-r border-slate-100">實際在園人數</th>
-                            <th className="px-4 py-3">入園率(%)</th>
+                            <th className="px-4 py-3">招生率(%)<div className="text-[10px] font-normal text-slate-500 mt-0.5">招生率＝實際招收÷核定招收</div></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1013,10 +1156,10 @@ export default function App() {
                           <XAxis dataKey="year" tickLine={false} />
                           <YAxis yAxisId="left" tickLine={false} />
                           <YAxis yAxisId="right" orientation="right" tickLine={false} unit="%" />
-                          <Tooltip />
+                          <Tooltip formatter={(value, name) => name.includes('率') ? [`${value}%`, name] : [`${value} 人`, name]} />
                           <Legend />
-                          <Line isAnimationActive={false} yAxisId="left" type="monotone" dataKey="total" name="總設籍人數" stroke="#3b82f6" strokeWidth={3} />
-                          <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="changeRatio" name="增減率 (%)" stroke="#ef4444" strokeWidth={2} connectNulls />
+                          <Line isAnimationActive={false} yAxisId="left" type="monotone" dataKey="total" name="學齡前設籍人數" stroke="#3b82f6" strokeWidth={3} />
+                          <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="changeRatio" name="學齡前設籍人口增減率（%）" stroke="#ef4444" strokeWidth={2} connectNulls />
                         </LineChart>
                       </ResponsiveContainer>
                     ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無符合年份之資料</div>)}
@@ -1028,8 +1171,8 @@ export default function App() {
                         <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 whitespace-nowrap">
                           <tr>
                             <th className="px-4 py-3 text-left border-r border-slate-100">年份</th>
-                            <th className="px-4 py-3 border-r border-slate-100">總設籍人數</th>
-                            <th className="px-4 py-3">增減率(%)</th>
+                            <th className="px-4 py-3 border-r border-slate-100">學齡前設籍人數</th>
+                            <th className="px-4 py-3">學齡前設籍人口增減率（%）</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1072,23 +1215,9 @@ export default function App() {
                 <div className="bg-blue-50/50 border border-blue-100 p-4 rounded-xl flex items-start gap-3">
                   <span className="text-xl">💡</span>
                   <div className="text-sm text-slate-700 w-full">
-                    <p className="font-bold text-slate-800 mb-1.5 flex justify-between items-center">
+                    <p className="font-bold text-slate-800 flex justify-between items-center">
                       <span>Gap 品質落差公式：滿意度 － 需求度</span>
                     </p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2">
-                      <div className="bg-white px-3 py-2 rounded-lg border border-slate-100 shadow-sm flex flex-col">
-                        <span className="text-emerald-600 font-extrabold text-xs mb-1">正值 (&gt; 0)</span>
-                        <span className="text-xs font-medium text-slate-600">表現超出預期，優於家長原先需求。</span>
-                      </div>
-                      <div className="bg-white px-3 py-2 rounded-lg border border-slate-100 shadow-sm flex flex-col">
-                        <span className="text-slate-600 font-extrabold text-xs mb-1">零 ( = 0 )</span>
-                        <span className="text-xs font-medium text-slate-600">服務品質剛好符合家長的期待需求。</span>
-                      </div>
-                      <div className="bg-white px-3 py-2 rounded-lg border border-slate-100 shadow-sm flex flex-col">
-                        <span className="text-rose-500 font-extrabold text-xs mb-1">負值 (&lt; 0)</span>
-                        <span className="text-xs font-medium text-slate-600">表現未達期望，代表存在改善空間。</span>
-                      </div>
-                    </div>
                   </div>
                 </div>
               )}
@@ -1121,13 +1250,16 @@ export default function App() {
                               <CartesianGrid strokeDasharray="3 3" vertical={false} />
                               <XAxis dataKey="year" tickLine={false} />
                               <YAxis tickLine={false} />
-                              <Tooltip />
-                              <Legend />
+                              <Tooltip formatter={(value, name) => [`${value} 分`, name]} />
+                              
+                              {/* 📌 使用強制覆寫的自訂圖例元件 */}
+                              <Legend content={<CustomDimensionLegend />} />
+
                               <ReferenceLine y={0} stroke="#94a3b8" strokeDasharray="3 3" />
-                              <Line isAnimationActive={false} type="monotone" dataKey={`gapBase_${mainSelectedInstType}`} name={`基礎條件Gap`} stroke="#3b82f6" strokeWidth={3} />
-                              <Line isAnimationActive={false} type="monotone" dataKey={`gapAction_${mainSelectedInstType}`} name={`教保作為Gap`} stroke="#ec4899" strokeWidth={3} />
-                              <Line isAnimationActive={false} type="monotone" dataKey={`gapExtend_${mainSelectedInstType}`} name={`延長收托Gap`} stroke="#f59e0b" strokeWidth={3} />
-                              <Line isAnimationActive={false} type="monotone" dataKey={`gapOther_${mainSelectedInstType}`} name={`其他Gap`} stroke="#8b5cf6" strokeWidth={3} />
+                              <Line isAnimationActive={false} type="monotone" dataKey={`gapBase_${mainSelectedInstType}`} name={`基礎條件`} stroke="#3b82f6" strokeWidth={3} strokeDasharray="" dot={(props) => renderShapeDot(props, 'diamond', true)} legendType="diamond" />
+                              <Line isAnimationActive={false} type="monotone" dataKey={`gapAction_${mainSelectedInstType}`} name={`教保作為Gap`} stroke="#ec4899" strokeWidth={3} strokeDasharray="5 5" dot={(props) => renderShapeDot(props, 'circle', true)} legendType="circle" />
+                              <Line isAnimationActive={false} type="monotone" dataKey={`gapExtend_${mainSelectedInstType}`} name={`延長收托Gap`} stroke="#f59e0b" strokeWidth={3} strokeDasharray="3 3" dot={(props) => renderShapeDot(props, 'square', true)} legendType="square" />
+                              <Line isAnimationActive={false} type="monotone" dataKey={`gapOther_${mainSelectedInstType}`} name={`其他Gap`} stroke="#8b5cf6" strokeWidth={3} strokeDasharray="10 5" dot={(props) => renderShapeDot(props, 'triangle', true)} legendType="triangle" />
                             </LineChart>
                           </ResponsiveContainer>
                         ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域或所選機構尚無滿意度問卷資料</div>)}
@@ -1141,10 +1273,10 @@ export default function App() {
                                 <th className="px-4 py-3 text-left border-r border-slate-100">年份</th>
                                 <th className="px-4 py-3 border-r border-slate-100">機構類型</th>
                                 <th className="px-4 py-3 border-r border-slate-100">有效樣本數</th>
-                                <th className="px-4 py-3 border-r border-slate-100">教保基礎條件 Gap</th>
-                                <th className="px-4 py-3 border-r border-slate-100">教保作為 Gap</th>
-                                <th className="px-4 py-3 border-r border-slate-100">延長收托安置 Gap</th>
-                                <th className="px-4 py-3">其他 Gap</th>
+                                <th className="px-4 py-3 border-r border-slate-100">基礎條件</th>
+                                <th className="px-4 py-3 border-r border-slate-100">教保作為Gap</th>
+                                <th className="px-4 py-3 border-r border-slate-100">延長收托Gap</th>
+                                <th className="px-4 py-3">其他Gap</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -1156,10 +1288,10 @@ export default function App() {
                                         <td className="px-4 py-3 font-semibold text-left border-r border-slate-100">{row.year}</td>
                                         <td className="px-4 py-3 font-bold border-r border-slate-100" style={{color: INST_COLORS[inst]}}>{inst}</td>
                                         <td className="px-4 py-3 border-r border-slate-100">{row[`sampleSize_${inst}`]}</td>
-                                        <td className="px-4 py-3 border-r border-slate-100">{row[`gapBase_${inst}`] !== null ? row[`gapBase_${inst}`] : '-'}</td>
-                                        <td className="px-4 py-3 border-r border-slate-100">{row[`gapAction_${inst}`] !== null ? row[`gapAction_${inst}`] : '-'}</td>
-                                        <td className="px-4 py-3 border-r border-slate-100">{row[`gapExtend_${inst}`] !== null ? row[`gapExtend_${inst}`] : '-'}</td>
-                                        <td className="px-4 py-3">{row[`gapOther_${inst}`] !== null ? row[`gapOther_${inst}`] : '-'}</td>
+                                        <td className="px-4 py-3 border-r border-slate-100 font-bold" style={{ color: row[`gapBase_${inst}`] !== null ? getGapColor(row[`gapBase_${inst}`]) : 'inherit' }}>{row[`gapBase_${inst}`] !== null ? row[`gapBase_${inst}`] : '-'}</td>
+                                        <td className="px-4 py-3 border-r border-slate-100 font-bold" style={{ color: row[`gapAction_${inst}`] !== null ? getGapColor(row[`gapAction_${inst}`]) : 'inherit' }}>{row[`gapAction_${inst}`] !== null ? row[`gapAction_${inst}`] : '-'}</td>
+                                        <td className="px-4 py-3 border-r border-slate-100 font-bold" style={{ color: row[`gapExtend_${inst}`] !== null ? getGapColor(row[`gapExtend_${inst}`]) : 'inherit' }}>{row[`gapExtend_${inst}`] !== null ? row[`gapExtend_${inst}`] : '-'}</td>
+                                        <td className="px-4 py-3 font-bold" style={{ color: row[`gapOther_${inst}`] !== null ? getGapColor(row[`gapOther_${inst}`]) : 'inherit' }}>{row[`gapOther_${inst}`] !== null ? row[`gapOther_${inst}`] : '-'}</td>
                                       </tr>
                                     );
                                   }
@@ -1191,11 +1323,15 @@ export default function App() {
                               <CartesianGrid strokeDasharray="3 3" vertical={false} />
                               <XAxis dataKey="year" tickLine={false} />
                               <YAxis tickLine={false} />
-                              <Tooltip />
+                              <Tooltip formatter={(value, name) => [`${value} 分`, name]} />
                               <Legend />
                               <Bar isAnimationActive={false} dataKey={`req_${mainSelectedInstType}`} name={`需求(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#ec4899'} fillOpacity={0.4} radius={[4,4,0,0]} />
                               <Bar isAnimationActive={false} dataKey={`perf_${mainSelectedInstType}`} name={`滿意(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#3b82f6'} fillOpacity={0.8} radius={[4,4,0,0]} />
-                              <Bar isAnimationActive={false} dataKey={`gap_${mainSelectedInstType}`} name={`落差(${mainSelectedInstType})`} fill={INST_COLORS[mainSelectedInstType] || '#f59e0b'} radius={[4,4,0,0]} />
+                              <Bar isAnimationActive={false} dataKey={`gap_${mainSelectedInstType}`} name={`落差(${mainSelectedInstType})`} radius={[4,4,0,0]}>
+                                {questionStats.map((entry, index) => (
+                                  <Cell key={`cell-${index}`} fill={getGapColor(entry[`gap_${mainSelectedInstType}`])} />
+                                ))}
+                              </Bar>
                             </BarChart>
                           </ResponsiveContainer>
                         ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域或所選機構尚無此題問卷資料</div>)}
@@ -1223,7 +1359,7 @@ export default function App() {
                                         <td className="px-4 py-3 font-bold border-r border-slate-100" style={{color: INST_COLORS[inst]}}>{inst}</td>
                                         <td className="px-4 py-3 border-r border-slate-100 font-medium" style={{color: INST_COLORS[inst], opacity: 0.7}}>{row[`req_${inst}`]}</td>
                                         <td className="px-4 py-3 border-r border-slate-100 font-medium" style={{color: INST_COLORS[inst]}}>{row[`perf_${inst}`]}</td>
-                                        <td className="px-4 py-3 font-bold" style={{color: INST_COLORS[inst]}}>{row[`gap_${inst}`]}</td>
+                                        <td className="px-4 py-3 font-bold" style={{color: getGapColor(row[`gap_${inst}`])}}>{row[`gap_${inst}`]}</td>
                                       </tr>
                                     );
                                   }
@@ -1265,7 +1401,7 @@ export default function App() {
                               <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
                               <XAxis type="number" tickLine={false} />
                               <YAxis type="category" dataKey="name" tickLine={false} tick={{fontSize: 11, fontWeight: 'bold', fill: '#475569'}} width={80} />
-                              <Tooltip cursor={{fill: '#f1f5f9'}} />
+                              <Tooltip cursor={{fill: '#f1f5f9'}} formatter={(value, name) => [`${value} 人`, name]} />
                               <Legend wrapperStyle={{paddingTop: '10px'}} />
                               {selectedPriorityYears.map((year, i) => (
                                 <Bar key={year} stackId="a" isAnimationActive={false} dataKey={year} name={year} fill={COLORS_PALETTE[i % COLORS_PALETTE.length]} />
@@ -1411,7 +1547,7 @@ export default function App() {
                   {activeCategory === 'basic' && BASIC_SUB_OPTIONS.map(subOpt => (
                     <option key={subOpt.id} value={subOpt.id}>{subOpt.name}</option>
                   ))}
-                  {activeCategory === 'inst' && INST_SUB_OPTIONS.map(subOpt => (
+                  {activeCategory === 'inst_count' && INST_COUNT_SUB_OPTIONS.map(subOpt => (
                     <option key={subOpt.id} value={subOpt.id}>{subOpt.name}</option>
                   ))}
                   
@@ -1504,6 +1640,11 @@ export default function App() {
         </div>
 
         <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border mt-2">
+          {activeMetrics.some(m => m.id.includes('publicRatio')) && (
+            <div className="text-rose-600 text-xs md:text-sm font-bold bg-rose-50 p-3 rounded-xl mb-4 border border-rose-200 shadow-sm">
+              💡 特別註明：公共化占比是「機構數量占比」，不是公共化幼兒園招生名額占比，也不是幼兒就讀公共化機構的人數占比。
+            </div>
+          )}
           <div ref={customChartRef} className="bg-white p-2 md:p-4 rounded-xl flex justify-center">
             <div 
               className="h-[400px] w-full transition-all duration-500"
@@ -1565,16 +1706,14 @@ export default function App() {
                     
                     <Tooltip content={<CustomTooltip />} cursor={{fill: '#f1f5f9'}} />
                     
-                    <Legend 
-                      wrapperStyle={{fontSize:'13px', paddingTop:'15px', fontWeight:'bold', cursor: 'pointer'}} 
-                      onMouseEnter={(e) => setHoveredMetricId(e.dataKey)}
-                      onMouseLeave={() => setHoveredMetricId(null)}
-                      onClick={handleLegendClick}
-                    />
+                    {/* 👇 改用自訂的 Legend Content 來渲染精確的圖例形狀 */}
+                    <Legend content={renderCustomChartLegend} />
 
-                    {activeMetrics.map(m => {
+                    {activeMetrics.map((m, idx) => {
                       const isHovered = hoveredMetricId === m.id;
                       if (m.chartType === 'line') {
+                        const style = LINE_STYLES[idx % LINE_STYLES.length];
+                        const isGapMetric = m.axisId === 'gap';
                         return (
                           <Line 
                             isAnimationActive={false} 
@@ -1584,11 +1723,13 @@ export default function App() {
                             dataKey={m.id} 
                             name={m.name} 
                             stroke={m.color} 
+                            strokeDasharray={style.dash}
                             strokeWidth={isHovered ? 5 : 2} 
                             opacity={hoveredMetricId && !isHovered ? 0.2 : 1} 
-                            dot={{r:4}} 
+                            dot={(props) => renderShapeDot(props, style.shape, isGapMetric)}
                             activeDot={{r:6}} 
                             onMouseEnter={() => setHoveredMetricId(m.id)}
+                            legendType={style.shape}
                           />
                         );
                       }
@@ -1623,6 +1764,10 @@ export default function App() {
                   {activeMetrics.map(m => (
                     <th key={m.id} className="px-4 py-3 whitespace-nowrap text-center border-r border-slate-100" style={{color: m.color}}>
                       {m.name}
+                      {/* 📌 在自訂圖表區域，若為招生率則標示公式 */}
+                      {m.id.includes('occupancyRate') && (
+                        <div className="text-[10px] font-normal text-slate-500 mt-0.5">招生率＝實際招收÷核定招收</div>
+                      )}
                     </th>
                   ))}
                 </tr>

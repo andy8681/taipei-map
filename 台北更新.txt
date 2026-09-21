@@ -1,0 +1,20 @@
+cd C:\Users\ecdes\Desktop\工作\程式\台北市\taipei-map
+npm run dev
+
+網址更新
+git add .
+git commit -m"0823"
+git push
+
+npm run deploy
+
+
+
+我剛剛更新了 CustomChartB.jsx 的內容（如附檔）。
+請幫我根據這份新程式碼，產生對應的 CustomChartA.jsx。在轉換時，請幫我解除 B 版本的限制：
+
+**1. 元件名稱：**請改回 CustomChartA。
+**2. Y 軸排列方向 (getOrientation)：**A 版本的規則是「左右交替輪流排列」（return index % 2 === 0 ? 'left' : 'right';）。
+**3. 移除防呆限制 (handleAddMetric)：**請把 B 版本中「不可跨向度比較」與「最多只能有兩個 Y 軸」的防呆警告與阻擋邏輯全部刪除，讓 A 版本可以無限制加入指標。
+
+請直接給我完整的 CustomChartA.jsx 程式碼。

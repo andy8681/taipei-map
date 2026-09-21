@@ -1,7 +1,10 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 
-// 1. 同層級的檔案，直接用 ./
+// 1. 引入地圖元件
 import TaipeiMap from './TaipeiMap'; 
+
+// 🎯 新增：引入我們要拆分出去的 A 版本自訂圖表元件
+import CustomChartA from './CustomChartA';
 
 import { 
   LineChart, Line, BarChart, Bar, ComposedChart, XAxis, YAxis, CartesianGrid, 
@@ -10,7 +13,7 @@ import {
 import { toPng } from 'html-to-image';
 import * as XLSX from 'xlsx';
 
-// 2. 往上一層回到 src，再進入 data 資料夾，使用 ../
+// 2. 引入資料
 import supplyDemandData from '../data/臺北市各行政區幼兒園供給與招生概況.json'; 
 import enrollmentData from '../data/1141219-子計畫一 各類型教保服務機構入園人數統計表.json'; 
 import institutionCountData from '../data/1141219-子計畫一各類型教保服務機構數量統計表.json'; 
@@ -53,65 +56,6 @@ const SURVEY_QUESTIONS = [
   { id: "17", text: "17.教師友善關心幼兒", short: "17.教師友善" }
 ];
 
-const SURVEY_G1 = ['01', '06', '07', '08', '09', '14']; 
-const SURVEY_G2 = ['02', '05', '10', '11', '12', '15', '16']; 
-const SURVEY_G3 = ['03', '04']; 
-const SURVEY_G4 = ['13', '17']; 
-
-const CATEGORY_OPTIONS = [
-  { value: 'basic', label: '📊 基本資訊' },
-  { value: 'inst_count', label: '🏫 機構數量與佔比' },
-  { value: 'survey', label: '⭐ 滿意度分析' },
-  { value: 'priority', label: '🎯 最在意因素' }
-];
-
-const BASIC_SUB_OPTIONS = [
-  { id: 'appEnroll', name: '核定招收' },
-  { id: 'stuAmount', name: '實際在園' },
-  { id: 'occupancyRate', name: '招生率(%)' },
-  { id: 'popTotal', name: '學齡前設籍人數' }
-];
-
-const INST_COUNT_SUB_OPTIONS = [
-  { id: 'public', name: '公立' },
-  { id: 'nonProfit', name: '非營利' },
-  { id: 'quasiPublic', name: '準公共' },
-  { id: 'educare', name: '職場互助教保服務中心' },
-  { id: 'private', name: '私立' },
-  { id: 'total', name: '總計' },
-  { id: 'publicRatio', name: '公共化佔比(%)' }
-];
-
-const PRIORITY_OPTIONS = [
-  { id: "(01)公立或私立", name: "(01)公私立" },
-  { id: "(02)接送方便", name: "(02)接送方便" },
-  { id: "(03)收托時間長短（含寒暑假）", name: "(03)收托時間" },
-  { id: "(04)網路評價", name: "(04)網路評價" },
-  { id: "(05)課後延托費用高低", name: "(05)延托費用" },
-  { id: "(06)班級幼兒數多寡", name: "(06)班級人數" },
-  { id: "(07)幼兒對學校好感度", name: "(07)幼兒好感" },
-  { id: "(08)辦學特色", name: "(08)辦學特色" },
-  { id: "(09)親友推薦", name: "(09)親友推薦" },
-  { id: "(10)學校獲得獎項肯定", name: "(10)獲獎肯定" },
-  { id: "(11)活動空間", name: "(11)活動空間" },
-  { id: "(12)學雜費多寡", name: "(12)學雜費" },
-  { id: "(13)其他", name: "(13)其他" }
-];
-
-const getSurveyShortName = (val) => {
-  if (val.startsWith('dim_')) return val.replace('dim_', '');
-  const qId = val.replace('q_', '');
-  const q = SURVEY_QUESTIONS.find(x => x.id === qId);
-  return q ? q.short : val;
-};
-
-const SURVEY_SUB_OPTIONS = [
-  { id: 'all', name: '全部加入 (需求/滿意/Gap)' },
-  { id: 'req', name: '需求程度' },
-  { id: 'perf', name: '滿意程度' },
-  { id: 'gap', name: '品質落差 (Gap)' }
-];
-
 const COLORS_PALETTE = ['#818cf8', '#34d399', '#fbbf24', '#fb7185', '#c084fc', '#2dd4bf', '#f472b6', '#a78bfa', '#f87171', '#60a5fa'];
 const INST_COLORS = { '全部': '#64748b', '公立': '#3b82f6', '非營利': '#10b981', '準公共': '#f59e0b', '私立': '#ec4899', '職場互助教保服務中心': '#8b5cf6' };
 
@@ -129,7 +73,7 @@ const safeParse = (val) => {
   return isNaN(num) ? 0 : num;
 };
 
-// 計算 GAP 顏色：小於0為紅，等於0為黃，大於0為綠
+// 計算 GAP 顏色
 const getGapColor = (val) => {
   if (val === null || val === undefined || val === '-') return 'inherit';
   const num = Number(val);
@@ -139,7 +83,7 @@ const getGapColor = (val) => {
   return '#10b981'; // 綠色 (正向落差)
 };
 
-// 繪製自訂點狀標記(菱形、圓形、方形、三角形)
+// 繪製自訂點狀標記
 const renderShapeDot = (props, shape, isGapLine = false) => {
   const { cx, cy, value, stroke, key } = props;
   const fill = isGapLine ? getGapColor(value) : '#ffffff';
@@ -159,14 +103,6 @@ const renderShapeDot = (props, shape, isGapLine = false) => {
   }
   return <circle key={key} cx={cx} cy={cy} r={5} fill={fill} stroke={borderStroke} strokeWidth={2} />;
 };
-
-// 自訂線條樣式組合
-const LINE_STYLES = [
-  { shape: 'diamond', dash: '' },        // 第一筆：菱形配實線
-  { shape: 'circle', dash: '5 5' },      // 第二筆：圓形配虛線
-  { shape: 'square', dash: '3 3' },      // 第三筆：方形配點線
-  { shape: 'triangle', dash: '10 5' },   // 第四筆：三角形配長虛線
-];
 
 const toJSONInst = (val) => val === '職場互助教保服務中心' ? '教保中心' : val;
 
@@ -208,7 +144,6 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState(''); 
   
   const [mainSelectedInstType, setMainSelectedInstType] = useState('全部'); 
-  const [customSelectedInstTypes, setCustomSelectedInstTypes] = useState(['全部']); 
   const [selectedSubYears, setSelectedSubYears] = useState(['113年']); 
   const [selectedSubDistricts, setSelectedSubDistricts] = useState([]);
   
@@ -216,29 +151,11 @@ export default function App() {
   const [selectedQuestion, setSelectedQuestion] = useState('01');
   const [selectedPriorityYears, setSelectedPriorityYears] = useState(['112年', '113年', '114年']);
 
-  const [customSelectedYears, setCustomSelectedYears] = useState(['112年', '113年', '114年']);
-  const [customSelectedRegions, setCustomSelectedRegions] = useState(['臺北市']);
-  const [customSelectedMainDistrict, setCustomSelectedMainDistrict] = useState('');
-  
-  const [activeCategory, setActiveCategory] = useState('basic'); 
-  const [activeSubItem, setActiveSubItem] = useState(BASIC_SUB_OPTIONS[0].id);
-  const [activeSurveyMetric, setActiveSurveyMetric] = useState(SURVEY_SUB_OPTIONS[0].id);
-
-  const [hoveredMetricId, setHoveredMetricId] = useState(null);
-  const [customChartError, setCustomChartError] = useState('');
-
-  const [activeMetrics, setActiveMetrics] = useState([
-    { id: 'basic___appEnroll', name: '基本: 核定招收', axisId: 'people', color: '#818cf8', chartType: 'line', category: 'basic' },
-    { id: 'basic___stuAmount', name: '基本: 實際在園', axisId: 'people', color: '#34d399', chartType: 'line', category: 'basic' },
-    { id: 'basic___occupancyRate', name: '基本: 招生率(%)', axisId: 'percent', color: '#fb7185', chartType: 'line', category: 'basic' }
-  ]);
-
   const supplyChartRef = useRef(null);
   const institutionChartRef = useRef(null);
   const subDistrictChartRef = useRef(null);
   const populationChartRef = useRef(null);
   const surveyChartRef = useRef(null);
-  const customChartRef = useRef(null);
 
   // --- 👇 加入絕對鎖定順序的 Custom Legend 元件 👇 ---
   const CustomSupplyLegend = () => (
@@ -276,34 +193,6 @@ export default function App() {
   );
   // --- 👆 加入絕對鎖定順序的 Custom Legend 元件 👆 ---
 
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      const itemsToDisplay = hoveredMetricId 
-        ? payload.filter(p => p.dataKey === hoveredMetricId)
-        : payload;
-
-      return (
-        <div className="bg-white p-3 border rounded-xl shadow-lg text-sm z-50 relative">
-          <p className="font-bold text-slate-700 mb-2">{label}</p>
-          {itemsToDisplay.map((entry, index) => {
-            let unit = '';
-            if (entry.name.includes('人數') || entry.name.includes('核定') || entry.name.includes('實際') || entry.name.includes('在意因素')) unit = ' 人';
-            else if (entry.name.includes('機構數')) unit = ' 間';
-            else if (entry.name.includes('%') || entry.name.includes('佔比') || entry.name.includes('率')) unit = ' %';
-            else if (entry.name.includes('Gap') || entry.name.includes('滿意') || entry.name.includes('需求')) unit = ' 分';
-            
-            return (
-              <div key={index} className="font-bold" style={{ color: entry.color }}>
-                {entry.name}: {entry.value}{unit}
-              </div>
-            );
-          })}
-        </div>
-      );
-    }
-    return null;
-  };
-
   const handleSelectDistrict = (id) => {
     const foundData = districtsMapping.find(item => item.id === id);
     if (foundData) setSelectedDistrict(foundData);
@@ -338,114 +227,6 @@ export default function App() {
   };
   const togglePriorityYear = (year) => {
     setSelectedPriorityYears(prev => prev.includes(year) && prev.length > 1 ? prev.filter(y => y !== year) : (!prev.includes(year) ? [...prev, year].sort() : prev));
-  };
-  const toggleArrayItem = (setState, item) => {
-    setState(prev => prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]);
-  };
-
-  const toggleCustomInstType = (type) => {
-    setCustomSelectedInstTypes(prev => {
-      if (prev.includes(type)) {
-        const toggled = prev.filter(t => t !== type);
-        return toggled.length === 0 ? ['全部'] : toggled;
-      } else {
-        return [...prev, type];
-      }
-    });
-  };
-
-  const handleCategoryChange = (e) => {
-    const cat = e.target.value;
-    setActiveCategory(cat);
-    if (cat === 'basic') setActiveSubItem(BASIC_SUB_OPTIONS[0].id);
-    else if (cat === 'inst_count') setActiveSubItem(INST_COUNT_SUB_OPTIONS[0].id);
-    else if (cat === 'survey') setActiveSubItem('dim_教保基礎條件'); 
-    else if (cat === 'priority') setActiveSubItem(PRIORITY_OPTIONS[0].id);
-  };
-
-  const handleAddMetric = () => {
-    setCustomChartError(''); 
-
-    if (activeCategory === 'survey' && activeSurveyMetric === 'all') {
-      const shortName = getSurveyShortName(activeSubItem);
-      const metricsToAdd = ['req', 'perf', 'gap'];
-      const newMetrics = [];
-      
-      metricsToAdd.forEach((metricId) => {
-        const mId = `survey___${activeSubItem}___${metricId}`;
-        const mOpt = SURVEY_SUB_OPTIONS.find(o => o.id === metricId);
-        const assignedAxis = metricId === 'gap' ? 'gap' : 'score'; 
-        
-        if (!activeMetrics.find(m => m.id === mId)) {
-          newMetrics.push({
-            id: mId,
-            name: `${shortName}: ${mOpt.name}`,
-            axisId: assignedAxis, 
-            color: COLORS_PALETTE[(activeMetrics.length + newMetrics.length) % COLORS_PALETTE.length],
-            chartType: 'line',
-            category: activeCategory
-          });
-        }
-      });
-      
-      if (newMetrics.length > 0) setActiveMetrics(prev => [...prev, ...newMetrics]);
-      return;
-    }
-
-    let metricId = '';
-    let newName = '';
-    let axisId = 'people'; 
-
-    if (activeCategory === 'basic') {
-      metricId = `basic___${activeSubItem}`;
-      const opt = BASIC_SUB_OPTIONS.find(o => o.id === activeSubItem);
-      newName = `基本: ${opt.name}`;
-      if (activeSubItem === 'occupancyRate') axisId = 'percent';
-      else axisId = 'people';
-    } else if (activeCategory === 'inst_count') {
-      metricId = `inst_count___${activeSubItem}`;
-      const opt = INST_COUNT_SUB_OPTIONS.find(o => o.id === activeSubItem);
-      newName = activeSubItem === 'publicRatio' ? `佔比: ${opt.name}` : `機構數: ${opt.name}`;
-      axisId = activeSubItem === 'publicRatio' ? 'percent' : 'inst';
-    } else if (activeCategory === 'survey') {
-      metricId = `survey___${activeSubItem}___${activeSurveyMetric}`;
-      const shortName = getSurveyShortName(activeSubItem);
-      const metricOpt = SURVEY_SUB_OPTIONS.find(o => o.id === activeSurveyMetric);
-      newName = `${shortName}: ${metricOpt.name}`;
-      axisId = activeSurveyMetric === 'gap' ? 'gap' : 'score';
-    } else if (activeCategory === 'priority') {
-      metricId = `priority___${activeSubItem}`;
-      const opt = PRIORITY_OPTIONS.find(o => o.id === activeSubItem);
-      newName = `在意因素: ${opt.name}`;
-      axisId = 'people'; 
-    }
-
-    if (activeMetrics.find(m => m.id === metricId)) return;
-
-    setActiveMetrics(prev => [...prev, {
-      id: metricId,
-      name: newName,
-      axisId: axisId,
-      color: COLORS_PALETTE[prev.length % COLORS_PALETTE.length],
-      chartType: 'line',
-      category: activeCategory 
-    }]);
-  };
-
-  const updateMetricChartType = (id, newType) => {
-    setActiveMetrics(prev => prev.map(m => m.id === id ? { ...m, chartType: newType } : m));
-  };
-
-  const handleLegendClick = (e) => {
-    const metricId = e.dataKey;
-    setActiveMetrics(prev => prev.map(m => {
-      if (m.id === metricId) {
-        const currentColorIndex = COLORS_PALETTE.indexOf(m.color);
-        const nextColorIndex = (currentColorIndex + 1) % COLORS_PALETTE.length;
-        return { ...m, color: COLORS_PALETTE[nextColorIndex] };
-      }
-      return m;
-    }));
   };
 
   const currentSupplyData = useMemo(() => {
@@ -618,192 +399,6 @@ export default function App() {
     return result.filter(r => selectedPriorityYears.some(y => r[y] > 0)); 
   }, [selectedDistrict, mainSelectedInstType, selectedPriorityYears]);
 
-  const customChartData = useMemo(() => {
-    let result = [];
-    customSelectedYears.forEach(year => {
-      const yearStr = year.replace('年', '');
-      customSelectedRegions.forEach(regionName => {
-        customSelectedInstTypes.forEach(instType => {
-          let entry = { 
-            name: customSelectedInstTypes.length > 1 ? `${regionName} (${yearStr}) [${instType}]` : `${regionName} (${yearStr})`, 
-            year, 
-            region: regionName,
-            inst: instType
-          };
-
-          const isTaipei = norm(regionName) === '台北市';
-          const isDistrict = districtsMapping.some(d => norm(d.name) === norm(regionName));
-
-          let eData = enrollmentData.filter(d => String(d.學年度).replace('年','') === yearStr);
-          const jsonInst = toJSONInst(instType); 
-          
-          if (instType !== '全部') {
-            eData = eData.filter(d => norm(d.設立別) === norm(jsonInst));
-          }
-          if (isTaipei) eData = eData.filter(d => validDistrictNames.includes(norm(d.行政區)));
-          else if (isDistrict) eData = eData.filter(d => norm(d.行政區) === norm(regionName));
-
-          const distKey = Object.keys(institutionCountData).find(k => norm(k) === norm(isTaipei ? '台北市' : regionName));
-          const iData = institutionCountData[distKey]?.find(d => String(d.學年度).replace('年','') === yearStr);
-
-          const pArray = isTaipei ? populationData.taipei_city_total : populationData.districts?.[regionName];
-          const pData = pArray?.find(d => String(d.year) === yearStr);
-
-          const sName = isTaipei ? '台北市整體' : regionName; 
-          const sDataRaw = surveyData.find(d => norm(d.分區) === norm(sName) && String(d.年份).replace('年','') === yearStr);
-          const sourceData = sDataRaw ? (instType === '全部' ? sDataRaw : (sDataRaw.機構別?.[jsonInst] || null)) : null;
-
-          let subStat = null;
-          if (!isTaipei && !isDistrict) {
-            for (let dist of supplyDemandData) {
-              subStat = dist.sub_districts?.find(s => norm(s.name) === norm(regionName))?.yearly_stats?.find(y => String(y.year).includes(yearStr));
-              if (subStat) break;
-            }
-          }
-
-          activeMetrics.forEach(metric => {
-            const parts = metric.id.split('___');
-            const cat = parts[0];
-            const detail = parts[1];
-            if (cat === 'basic') {
-              if (detail === 'appEnroll' || detail === 'stuAmount' || detail === 'occupancyRate') {
-                if (isTaipei || isDistrict) {
-                  let app = 0, stu = 0;
-                  eData.forEach(d => { app += safeParse(d.核定招生人數); stu += safeParse(d.入園人數); });
-                  if (detail === 'appEnroll') entry[metric.id] = app;
-                  if (detail === 'stuAmount') entry[metric.id] = stu;
-                  if (detail === 'occupancyRate') entry[metric.id] = app > 0 ? Number(((stu / app) * 100).toFixed(2)) : 0;
-                } else if (subStat && instType === '全部') {
-                  if (detail === 'appEnroll') entry[metric.id] = safeParse(subStat.appEnroll);
-                  if (detail === 'stuAmount') entry[metric.id] = safeParse(subStat.stuAmount);
-                  if (detail === 'occupancyRate') entry[metric.id] = subStat.occupancyRate || 0;
-                } else entry[metric.id] = 0;
-              }
-              if (detail === 'popTotal') entry[metric.id] = (isTaipei || isDistrict) && pData ? safeParse(pData.total) : 0;
-            } else if (cat === 'inst_count') {
-              if (isTaipei || isDistrict) {
-                if (detail === 'public') entry[metric.id] = safeParse(iData?.公立);
-                if (detail === 'nonProfit') entry[metric.id] = safeParse(iData?.非營利);
-                if (detail === 'quasiPublic') entry[metric.id] = safeParse(iData?.準公共);
-                if (detail === 'educare') entry[metric.id] = safeParse(iData?.教保中心); 
-                if (detail === 'private') entry[metric.id] = safeParse(iData?.私立);
-                if (detail === 'total') entry[metric.id] = safeParse(iData?.合計);
-                if (detail === 'publicRatio') entry[metric.id] = iData && iData.公共化占比 ? parseFloat(String(iData.公共化占比).replace('%', '')) : 0;
-              } else {
-                entry[metric.id] = 0; 
-              }
-            } else if (cat === 'survey') {
-              const surveyMetric = parts[2]; 
-              let req = 0, perf = 0;
-              if (sourceData) {
-                if (detail.startsWith('dim_')) {
-                  const dimName = detail.replace('dim_', '');
-                  req = sourceData.構面?.[dimName]?.需求度 ?? 0;
-                  perf = sourceData.構面?.[dimName]?.滿意度 ?? 0;
-                } else if (detail.startsWith('q_')) {
-                  const qId = detail.replace('q_', '');
-                  req = sourceData.逐題?.[qId]?.需求度 ?? 0;
-                  perf = sourceData.逐題?.[qId]?.滿意度 ?? 0;
-                }
-              }
-              if (surveyMetric === 'req') entry[metric.id] = req;
-              if (surveyMetric === 'perf') entry[metric.id] = perf;
-              if (surveyMetric === 'gap') entry[metric.id] = (req !== 0 || perf !== 0) ? Number((perf - req).toFixed(2)) : 0;
-            } else if (cat === 'priority') {
-              if (sourceData && sourceData.優先關注因素) {
-                entry[metric.id] = sourceData.優先關注因素[detail] || 0;
-              } else {
-                entry[metric.id] = 0;
-              }
-            }
-          });
-          result.push(entry);
-        });
-      });
-    });
-    return result;
-  }, [customSelectedYears, customSelectedRegions, validDistrictNames, activeMetrics, customSelectedInstTypes]);
-
-  const handleExportCustomExcel = () => {
-    const formattedData = customChartData.map(row => {
-      let newRow = { '地區與年份': row.name, '年份': row.year, '行政區': row.region, '機構': row.inst };
-      activeMetrics.forEach(m => { newRow[m.name] = row[m.id]; });
-      return newRow;
-    });
-    exportToExcel(formattedData, '自訂圖表資料');
-  };
-
-  const activeAxisIds = [...new Set(activeMetrics.map(m => m.axisId))];
-  const sortedActiveAxisIds = activeAxisIds.sort((a, b) => {
-    const order = { people: 1, inst: 2, percent: 3, score: 4, gap: 5 };
-    return order[a] - order[b];
-  });
-  
-  const axisSettings = {
-    people: { name: '人數/累計次數', color: '#3b82f6' },
-    inst: { name: '單位數 (間)', color: '#8b5cf6' },
-    percent: { name: '百分比 (%)', color: '#f43f5e' },
-    score: { name: '滿意度 (分)', color: '#10b981' },
-    gap: { name: '品質落差', color: '#f59e0b' }
-  };
-
-  const getOrientation = (id) => {
-    const index = sortedActiveAxisIds.indexOf(id);
-    return index % 2 === 0 ? 'left' : 'right'; 
-  };
-
-  // 渲染自訂圖例，以精確比對「自訂點狀標記(實心/空心、幾何形狀)」
-  const renderCustomChartLegend = (props) => {
-    const { payload } = props;
-    return (
-      <div className="flex flex-wrap justify-center gap-4 text-[13px] font-bold pt-[15px] cursor-pointer">
-        {payload.map((entry, index) => {
-          const metricId = entry.dataKey;
-          const metricName = entry.value;
-          const baseColor = entry.color;
-          const metric = activeMetrics.find(m => m.id === metricId);
-          if (!metric) return null;
-          
-          const isHovered = hoveredMetricId === metricId;
-          const metricIndex = activeMetrics.indexOf(metric);
-          
-          const isGap = metric.axisId === 'gap';
-          const isLine = metric.chartType === 'line';
-          let shape = 'circle';
-          if (isLine) {
-             shape = LINE_STYLES[metricIndex % LINE_STYLES.length].shape;
-          }
-
-          const sStroke = baseColor;
-          // 一般指標(不是Gap)套用白色填滿(空心)，Gap套用有顏色填滿(實心)
-          const sFill = isGap ? baseColor : '#ffffff';
-
-          return (
-            <div
-              key={`legend-${index}`}
-              className="flex items-center"
-              onMouseEnter={() => setHoveredMetricId(metricId)}
-              onMouseLeave={() => setHoveredMetricId(null)}
-              onClick={() => handleLegendClick({ dataKey: metricId })}
-              style={{ opacity: hoveredMetricId && !isHovered ? 0.2 : 1 }}
-            >
-              {!isLine ? (
-                 <div style={{width: 14, height: 14, backgroundColor: baseColor, borderRadius: 2, marginRight: 6}}></div>
-              ) : (
-                 <svg width="14" height="14" viewBox="0 0 14 14" className="mr-1.5" style={{ overflow: 'visible' }}>
-                   {shape === 'diamond' && <polygon points="7,1 13,7 7,13 1,7" fill={sFill} stroke={sStroke} strokeWidth={2} />}
-                   {shape === 'circle' && <circle cx="7" cy="7" r="5.5" fill={sFill} stroke={sStroke} strokeWidth={2} />}
-                   {shape === 'square' && <rect x="1.5" y="1.5" width="11" height="11" fill={sFill} stroke={sStroke} strokeWidth={2} />}
-                   {shape === 'triangle' && <polygon points="7,1.5 13.5,12 0.5,12" fill={sFill} stroke={sStroke} strokeWidth={2} />}
-                 </svg>
-              )}
-              <span style={{ color: baseColor }}>{metricName}</span>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 flex flex-col items-center font-sans">
@@ -1421,348 +1016,9 @@ export default function App() {
         </div>
       </div>
 
-      {/* 🚀 自訂圖表 */}
-      <div className="w-full max-w-7xl bg-white p-6 md:p-8 rounded-3xl shadow-md border border-slate-200 flex flex-col gap-6">
-        
-        <div className="flex justify-between items-center border-b pb-4">
-          <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-2">🛠️ 自訂圖表比較分析</h2>
-          <div className="flex gap-2">
-            <button onClick={handleExportCustomExcel} className="text-xs bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600 transition-colors font-bold">輸出 Excel</button>
-            <button onClick={() => exportToPNG(customChartRef, `自訂圖表分析`)} className="text-xs bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors font-bold">輸出 PNG</button>
-          </div>
-        </div>
-        
-        {customChartError && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg" role="alert">
-            <p className="font-bold">無法加入指標</p>
-            <p>{customChartError}</p>
-          </div>
-        )}
+      {/* 🚀 自訂圖表元件已抽離至 CustomChartA.jsx，這裡直接呼叫它 */}
+      <CustomChartA />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
-          <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col gap-5">
-            <h3 className="font-bold text-slate-700 text-sm border-b border-slate-200 pb-2">1. 選擇基礎變數 (時空)</h3>
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-bold text-slate-500">📅 選擇對比年份：</span>
-              <div className="flex gap-2 flex-wrap">
-                {yearsList.map(y => (
-                  <button 
-                    key={y} onClick={() => toggleArrayItem(setCustomSelectedYears, y)}
-                    className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all ${customSelectedYears.includes(y) ? 'bg-indigo-600 text-white border-indigo-700 shadow-sm' : 'bg-white text-slate-600 hover:bg-indigo-50 border-slate-300'}`}
-                  >{y}</button>
-                ))}
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-bold text-slate-500">📍 選擇比較區域：</span>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <select 
-                  className="p-2 border border-slate-300 rounded-lg text-sm bg-white flex-1 font-medium"
-                  value={customSelectedMainDistrict}
-                  onChange={(e) => setCustomSelectedMainDistrict(e.target.value)}
-                >
-                  <option value="">-- ① 先選主分區 --</option>
-                  <option value="臺北市">臺北市 (整體)</option>
-                  {districtsMapping.filter(d => d.id !== '台北市').map(d => (
-                    <option key={d.id} value={d.id}>{d.name}</option>
-                  ))}
-                </select>
-                <select 
-                  className="p-2 border border-slate-300 rounded-lg text-sm bg-white flex-1 font-medium disabled:opacity-50 disabled:bg-slate-100"
-                  disabled={!customSelectedMainDistrict}
-                  value="" 
-                  onChange={(e) => {
-                    if(e.target.value && !customSelectedRegions.includes(e.target.value)) {
-                      setCustomSelectedRegions(prev => [...prev, e.target.value]);
-                    }
-                  }}
-                >
-                  <option value="">-- ② 加入清單 --</option>
-                  {customSelectedMainDistrict === '臺北市' && <option value="臺北市">臺北市 (整體)</option>}
-                  {customSelectedMainDistrict && customSelectedMainDistrict !== '臺北市' && (
-                    <>
-                      <option value={districtsMapping.find(d => d.id === customSelectedMainDistrict)?.name}>
-                        {districtsMapping.find(d => d.id === customSelectedMainDistrict)?.name} (全區)
-                      </option>
-                      {supplyDemandData.find(d => d.id === customSelectedMainDistrict)?.sub_districts?.map(sub => (
-                        <option key={sub.name} value={sub.name}>{sub.name}</option>
-                      ))}
-                    </>
-                  )}
-                </select>
-              </div>
-              <div className="flex gap-2 flex-wrap mt-2">
-                {customSelectedRegions.map(r => (
-                  <span key={r} className="px-2.5 py-1 bg-white text-indigo-700 text-xs font-bold rounded-lg flex items-center gap-1 shadow-sm border border-indigo-200">
-                    {r} <button onClick={() => toggleArrayItem(setCustomSelectedRegions, r)} className="text-slate-400 hover:text-red-500 ml-1">✖</button>
-                  </span>
-                ))}
-                {customSelectedRegions.length === 0 && <span className="text-xs text-slate-400">尚無選擇區域</span>}
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col gap-5">
-            <h3 className="font-bold text-slate-700 text-sm border-b border-slate-200 pb-2">2. 選擇資料指標 (類別)</h3>
-            <div className="flex flex-col gap-3">
-              <select 
-                value={activeCategory}
-                onChange={handleCategoryChange}
-                className="p-2.5 border border-slate-300 rounded-lg text-sm bg-white font-bold text-slate-700 shadow-sm w-full"
-              >
-                {CATEGORY_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-              </select>
-              
-              <div className="flex flex-col gap-3 w-full">
-                <select 
-                  value={activeSubItem}
-                  onChange={(e) => setActiveSubItem(e.target.value)}
-                  className="p-2 border border-slate-300 rounded-lg text-sm bg-white font-semibold text-slate-700 w-full"
-                >
-                  {activeCategory === 'basic' && BASIC_SUB_OPTIONS.map(subOpt => (
-                    <option key={subOpt.id} value={subOpt.id}>{subOpt.name}</option>
-                  ))}
-                  {activeCategory === 'inst_count' && INST_COUNT_SUB_OPTIONS.map(subOpt => (
-                    <option key={subOpt.id} value={subOpt.id}>{subOpt.name}</option>
-                  ))}
-                  
-                  {activeCategory === 'survey' && (
-                    <>
-                      <optgroup label="🌟 教保基礎條件 (01,06,07,08,09,14)">
-                        <option value="dim_教保基礎條件">⭐ 構面整體：教保基礎條件</option>
-                        {SURVEY_QUESTIONS.filter(q => SURVEY_G1.includes(q.id)).map(q => <option key={q.id} value={`q_${q.id}`}>📝 逐題：{q.text}</option>)}
-                      </optgroup>
-                      <optgroup label="🌟 教保作為 (02,05,10,11,12,15,16)">
-                        <option value="dim_教保作為">⭐ 構面整體：教保作為</option>
-                        {SURVEY_QUESTIONS.filter(q => SURVEY_G2.includes(q.id)).map(q => <option key={q.id} value={`q_${q.id}`}>📝 逐題：{q.text}</option>)}
-                      </optgroup>
-                      <optgroup label="🌟 延長收托安置 (03,04)">
-                        <option value="dim_延長收托安置">⭐ 構面整體：延長收托安置</option>
-                        {SURVEY_QUESTIONS.filter(q => SURVEY_G3.includes(q.id)).map(q => <option key={q.id} value={`q_${q.id}`}>📝 逐題：{q.text}</option>)}
-                      </optgroup>
-                      <optgroup label="🌟 其他 (13,17)">
-                        <option value="dim_其他">⭐ 構面整體：其他</option>
-                        {SURVEY_QUESTIONS.filter(q => SURVEY_G4.includes(q.id)).map(q => <option key={q.id} value={`q_${q.id}`}>📝 逐題：{q.text}</option>)}
-                      </optgroup>
-                    </>
-                  )}
-
-                  {activeCategory === 'priority' && PRIORITY_OPTIONS.map(subOpt => (
-                    <option key={subOpt.id} value={subOpt.id}>{subOpt.name}</option>
-                  ))}
-                </select>
-
-                {activeCategory === 'survey' && (
-                  <select 
-                    value={activeSurveyMetric}
-                    onChange={(e) => setActiveSurveyMetric(e.target.value)}
-                    className="p-2 border border-slate-300 rounded-lg text-sm bg-white font-semibold text-slate-700 w-full"
-                  >
-                    {SURVEY_SUB_OPTIONS.map(subOpt => (
-                      <option key={subOpt.id} value={subOpt.id}>{subOpt.name}</option>
-                    ))}
-                  </select>
-                )}
-
-                <button 
-                  onClick={handleAddMetric} 
-                  className="px-4 py-2.5 bg-indigo-600 text-white font-bold text-sm rounded-lg hover:bg-indigo-700 shadow-sm transition-all w-full mt-1"
-                >
-                  ➕ 加入圖表
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col gap-5 lg:col-span-2">
-            <h3 className="font-bold text-slate-700 text-sm border-b border-slate-200 pb-2">3. 選擇篩選機構 (支援多選對比)</h3>
-            <div className="flex items-center gap-2 flex-wrap">
-              {instTypesList.map(type => (
-                <button 
-                  key={type} 
-                  onClick={() => toggleCustomInstType(type)}
-                  className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${customSelectedInstTypes.includes(type) ? 'bg-indigo-600 text-white shadow-md' : 'bg-white border border-slate-300 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'}`}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 mt-2">
-          <span className="text-sm font-bold text-slate-700 mb-3 block">4. 已選擇之對比指標 (可個別自訂圖表類型)：</span>
-          <div className="flex gap-3 flex-wrap">
-            {activeMetrics.length === 0 ? <span className="text-sm text-slate-400 bg-white px-3 py-1 rounded">尚未加入任何指標</span> : 
-              activeMetrics.map(m => (
-                <div key={m.id} className="flex flex-col border-2 rounded-xl p-2 bg-white shadow-sm" style={{borderColor: m.color}}>
-                  <div className="flex justify-between items-center mb-2 gap-3">
-                    <span className="text-xs font-bold" style={{color: m.color}}>{m.name}</span>
-                    <button onClick={() => {
-                        setActiveMetrics(prev => prev.filter(item => item.id !== m.id));
-                        setCustomChartError(''); 
-                      }} 
-                      className="text-slate-400 hover:text-red-500 text-xs font-bold bg-slate-50 px-1.5 py-0.5 rounded transition-colors"
-                    >✖</button>
-                  </div>
-                  <div className="flex gap-1 bg-slate-100 p-1 rounded-lg">
-                    <button onClick={() => updateMetricChartType(m.id, 'bar')} className={`flex-1 text-[10px] font-bold px-2 py-1 rounded transition-all ${m.chartType==='bar'?'bg-slate-700 text-white shadow':'text-slate-500 hover:bg-slate-200'}`}>柱狀圖</button>
-                    <button onClick={() => updateMetricChartType(m.id, 'line')} className={`flex-1 text-[10px] font-bold px-2 py-1 rounded transition-all ${m.chartType==='line'?'bg-slate-700 text-white shadow':'text-slate-500 hover:bg-slate-200'}`}>曲線圖</button>
-                  </div>
-                </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border mt-2">
-          {activeMetrics.some(m => m.id.includes('publicRatio')) && (
-            <div className="text-rose-600 text-xs md:text-sm font-bold bg-rose-50 p-3 rounded-xl mb-4 border border-rose-200 shadow-sm">
-              💡 特別註明：公共化占比是「機構數量占比」，不是公共化幼兒園招生名額占比，也不是幼兒就讀公共化機構的人數占比。
-            </div>
-          )}
-          <div ref={customChartRef} className="bg-white p-2 md:p-4 rounded-xl flex justify-center">
-            <div 
-              className="h-[400px] w-full transition-all duration-500"
-              style={{ 
-                maxWidth: customChartData.length > 0 && customChartData.length <= 4 
-                  ? `${Math.max(350, customChartData.length * 200 + 150)}px` 
-                  : '100%' 
-              }}
-            >
-              {customChartData.length > 0 && activeMetrics.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart 
-                    data={customChartData} 
-                    margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
-                    onMouseLeave={() => setHoveredMetricId(null)}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                    <XAxis dataKey="name" tickLine={false} tick={{fill:'#475569', fontSize:12, fontWeight:'bold'}} />
-                    
-                    {sortedActiveAxisIds.map((axisId) => {
-                      const orientation = getOrientation(axisId);
-                      return (
-                        <YAxis 
-                          key={`yaxis-${axisId}`} 
-                          yAxisId={axisId} 
-                          orientation={orientation} 
-                          width={65} 
-                          tickLine={false} 
-                          axisLine={{ stroke: axisSettings[axisId].color, strokeWidth: 2 }}
-                          tick={{ fill: axisSettings[axisId].color, fontSize: 11, fontWeight: 'bold' }}
-                          tickFormatter={(value) => typeof value === 'number' && !Number.isInteger(value) ? Number(value.toFixed(2)) : value}
-                          label={{
-                            value: axisSettings[axisId].name,
-                            angle: -90,
-                            position: orientation === 'left' ? 'insideLeft' : 'insideRight',
-                            offset: 15,
-                            fill: axisSettings[axisId].color,
-                            fontSize: 11,
-                            fontWeight: 'bold'
-                          }}
-                          domain={
-                            axisId === 'percent' ? [
-                              dataMin => Math.max(0, Math.floor(dataMin - 5)), 
-                              dataMax => Math.min(100, Math.ceil(dataMax + 5))
-                            ] : 
-                            axisId === 'score' ? [
-                              dataMin => Math.max(3.5, dataMin - 1), 
-                              dataMax => Math.min(5, dataMax + 1)    
-                            ] : 
-                            axisId === 'gap' ? [
-                              dataMin => Number((dataMin - 0.2).toFixed(2)),
-                              dataMax => Number((dataMax + 0.2).toFixed(2))
-                            ] : 
-                            [dataMin => dataMin === 0 ? 0 : Number((dataMin * 0.95).toFixed(0)), dataMax => Number((dataMax * 1.05).toFixed(0))]
-                          }
-                        />
-                      );
-                    })}
-                    
-                    <Tooltip content={<CustomTooltip />} cursor={{fill: '#f1f5f9'}} />
-                    
-                    {/* 👇 改用自訂的 Legend Content 來渲染精確的圖例形狀 */}
-                    <Legend content={renderCustomChartLegend} />
-
-                    {activeMetrics.map((m, idx) => {
-                      const isHovered = hoveredMetricId === m.id;
-                      if (m.chartType === 'line') {
-                        const style = LINE_STYLES[idx % LINE_STYLES.length];
-                        const isGapMetric = m.axisId === 'gap';
-                        return (
-                          <Line 
-                            isAnimationActive={false} 
-                            key={m.id} 
-                            yAxisId={m.axisId} 
-                            type="monotone" 
-                            dataKey={m.id} 
-                            name={m.name} 
-                            stroke={m.color} 
-                            strokeDasharray={style.dash}
-                            strokeWidth={isHovered ? 5 : 2} 
-                            opacity={hoveredMetricId && !isHovered ? 0.2 : 1} 
-                            dot={(props) => renderShapeDot(props, style.shape, isGapMetric)}
-                            activeDot={{r:6}} 
-                            onMouseEnter={() => setHoveredMetricId(m.id)}
-                            legendType={style.shape}
-                          />
-                        );
-                      }
-                      return (
-                        <Bar 
-                          isAnimationActive={false} 
-                          key={m.id} 
-                          yAxisId={m.axisId} 
-                          dataKey={m.id} 
-                          name={m.name} 
-                          fill={m.color} 
-                          radius={[4,4,0,0]} 
-                          barSize={40} 
-                          opacity={hoveredMetricId && !isHovered ? 0.2 : 1} 
-                          onMouseEnter={() => setHoveredMetricId(m.id)}
-                        />
-                      );
-                    })}
-                  </ComposedChart>
-                </ResponsiveContainer>
-              ) : (<div className="w-full h-full flex items-center justify-center text-slate-400 font-bold">請至少選擇一個地區、年份與指標加入圖表</div>)}
-            </div>
-          </div>
-        </div>
-
-        {customChartData.length > 0 && activeMetrics.length > 0 && (
-          <div className="overflow-x-auto bg-white border border-slate-200 rounded-xl shadow-sm mt-2">
-            <table className="w-full text-sm text-left text-slate-600">
-              <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
-                <tr>
-                  <th className="px-4 py-3 border-r border-slate-100 whitespace-nowrap">地區與年份</th>
-                  {activeMetrics.map(m => (
-                    <th key={m.id} className="px-4 py-3 whitespace-nowrap text-center border-r border-slate-100" style={{color: m.color}}>
-                      {m.name}
-                      {/* 📌 在自訂圖表區域，若為招生率則標示公式 */}
-                      {m.id.includes('occupancyRate') && (
-                        <div className="text-[10px] font-normal text-slate-500 mt-0.5">招生率＝實際招收÷核定招收</div>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {customChartData.map((row, i) => (
-                  <tr key={i} className="hover:bg-slate-50 border-b border-slate-100 last:border-b-0">
-                    <td className="px-4 py-3 font-semibold whitespace-nowrap bg-white border-r border-slate-100">{row.name}</td>
-                    {activeMetrics.map(m => (
-                      <td key={m.id} className="px-4 py-3 font-medium text-center border-r border-slate-100 last:border-r-0">{row[m.id]}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-      </div>
     </div>
   );
 }
