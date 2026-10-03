@@ -108,6 +108,7 @@ const safeParse = (val) => {
   return isNaN(num) ? 0 : num;
 };
 
+// 保留此方法供其他可能的需求使用
 const getGapColor = (val) => {
   if (val === null || val === undefined || val === '-') return 'inherit';
   const num = Number(val);
@@ -118,9 +119,11 @@ const getGapColor = (val) => {
 };
 
 const renderShapeDot = (props, shape, isGapLine = false, opacity = 1) => {
-  const { cx, cy, value, stroke, key } = props;
-  const fill = isGapLine ? getGapColor(value) : '#ffffff';
-  const borderStroke = isGapLine ? getGapColor(value) : stroke;
+  const { cx, cy, stroke, key } = props;
+  
+  // 🎯 修正：讓圖表上的節點顏色與折線 (stroke) 一致，不再使用 getGapColor 動態覆蓋，以吻合下方圖例
+  const fill = isGapLine ? stroke : '#ffffff';
+  const borderStroke = stroke;
   const dotStyle = { stroke: borderStroke, strokeWidth: 2, fill: fill, opacity: opacity };
 
   if (shape === 'diamond') return <polygon key={key} points={`${cx},${cy-6} ${cx+6},${cy} ${cx},${cy+6} ${cx-6},${cy}`} {...dotStyle} />;
@@ -836,8 +839,8 @@ export default function CustomChartA() {
                           strokeWidth={isHovered ? 5 : 2} 
                           opacity={hoveredMetricId && !isHovered ? 0.2 : 1} 
                           dot={(props) => {
-                            const fill = series.isGapMetric ? getGapColor(props.value) : '#ffffff';
-                            const strokeColor = series.isGapMetric ? getGapColor(props.value) : series.color;
+                            // 🎯 修正：傳入原本的折線顏色 (series.color) 供 renderShapeDot 渲染
+                            const strokeColor = series.color;
                             return renderShapeDot({...props, stroke: strokeColor}, series.shape, series.isGapMetric, 1);
                           }}
                           activeDot={{r:6}} 

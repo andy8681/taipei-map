@@ -73,7 +73,7 @@ const safeParse = (val) => {
   return isNaN(num) ? 0 : num;
 };
 
-// 計算 GAP 顏色 (保留給表格內的數值使用)
+// 計算 GAP 顏色
 const getGapColor = (val) => {
   if (val === null || val === undefined || val === '-') return 'inherit';
   const num = Number(val);
@@ -85,10 +85,9 @@ const getGapColor = (val) => {
 
 // 繪製自訂點狀標記
 const renderShapeDot = (props, shape, isGapLine = false) => {
-  const { cx, cy, stroke, key } = props;
-  // 🎯 修正：讓折線圖上的標記顏色完全對應 stroke，以吻合下方圖例，不再使用 getGapColor 覆蓋圖示
-  const fill = stroke;
-  const borderStroke = stroke;
+  const { cx, cy, value, stroke, key } = props;
+  const fill = isGapLine ? getGapColor(value) : '#ffffff';
+  const borderStroke = isGapLine ? getGapColor(value) : stroke;
 
   if (shape === 'diamond') {
     return <polygon key={key} points={`${cx},${cy-6} ${cx+6},${cy} ${cx},${cy+6} ${cx-6},${cy}`} fill={fill} stroke={borderStroke} strokeWidth={2} />;
@@ -174,21 +173,20 @@ export default function App() {
 
   const CustomDimensionLegend = () => (
     <div className="flex justify-center gap-5 mt-4 text-sm font-bold flex-wrap">
-      {/* 🎯 修正：將下方的圖例填色（fill）與上方圖表一致，避免顏色不吻合 */}
       <div className="flex items-center gap-1.5">
-        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><polygon points="7,1 13,7 7,13 1,7" fill="#3b82f6" stroke="#3b82f6" strokeWidth={2} /></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><polygon points="7,1 13,7 7,13 1,7" fill="#ffffff" stroke="#3b82f6" strokeWidth={2} /></svg>
         <span style={{color: '#3b82f6'}}>基礎條件</span>
       </div>
       <div className="flex items-center gap-1.5">
-        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><circle cx="7" cy="7" r="5.5" fill="#ec4899" stroke="#ec4899" strokeWidth={2} /></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><circle cx="7" cy="7" r="5.5" fill="#ffffff" stroke="#ec4899" strokeWidth={2} /></svg>
         <span style={{color: '#ec4899'}}>教保作為Gap</span>
       </div>
       <div className="flex items-center gap-1.5">
-        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><rect x="1.5" y="1.5" width="11" height="11" fill="#f59e0b" stroke="#f59e0b" strokeWidth={2} /></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><rect x="1.5" y="1.5" width="11" height="11" fill="#ffffff" stroke="#f59e0b" strokeWidth={2} /></svg>
         <span style={{color: '#f59e0b'}}>延長收托Gap</span>
       </div>
       <div className="flex items-center gap-1.5">
-        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><polygon points="7,1.5 13.5,12 0.5,12" fill="#8b5cf6" stroke="#8b5cf6" strokeWidth={2} /></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" style={{ overflow: 'visible' }}><polygon points="7,1.5 13.5,12 0.5,12" fill="#ffffff" stroke="#8b5cf6" strokeWidth={2} /></svg>
         <span style={{color: '#8b5cf6'}}>其他Gap</span>
       </div>
     </div>
