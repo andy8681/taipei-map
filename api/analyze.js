@@ -1,4 +1,3 @@
-// 檔案：api/analyze.js
 import { GoogleGenAI } from '@google/genai';
 
 export default async function handler(req, res) {
@@ -17,9 +16,9 @@ export default async function handler(req, res) {
       請幫我分析這份資料，歸納出 3 個最重要的數據洞察與趨勢，並以繁體中文條列式說明。
     `;
 
-    // 💡 修正為正確的最新版模型名稱：gemini-2.0-flash
+    // 💡 換成錯誤訊息中指定的最新模型
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-3.8-flash',
       contents: prompt,
     });
 
