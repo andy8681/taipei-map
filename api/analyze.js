@@ -1,18 +1,13 @@
-// 檔案路徑：api/analyze.js
 import { GoogleGenAI } from '@google/genai';
 
 export default async function handler(req, res) {
-  // 安全性檢查：只允許 POST 請求
   if (req.method !== 'POST') {
     return res.status(405).json({ error: '只允許 POST 請求' });
   }
 
   try {
-    // 從前端接收 JSON 字串
     const { dataString } = req.body;
 
-    // 初始化 API (這段程式碼會在 Vercel 伺服器上執行，前端絕對看不到金鑰)
-    // 注意：後端讀取環境變數是用 process.env
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
     const prompt = `
@@ -22,16 +17,19 @@ export default async function handler(req, res) {
       請幫我分析這份資料，歸納出 3 個最重要的數據洞察與趨勢，並以繁體中文條列式說明。
     `;
 
+    // 💡 變更點 1：先改用 gemini-1.5-flash 測試，排除 2.5 權限未開通問題
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-1.5-flash',
       contents: prompt,
     });
 
-    // 將 AI 回覆傳回給前端
     res.status(200).json({ result: response.text });
     
   } catch (error) {
-    console.error("後端解析錯誤:", error);
-    res.status(500).json({ error: '資料解析失敗，請稍後再試。' });
+    // 💡 變更點 2：將真實錯誤訊息 (error.message) 一併回傳，讓我們在 Terminal 就能看到
+    res.status(500).json({ 
+      error: '資料解析失敗',
+      details: error.message || error.toString() 
+    });
   }
 }
