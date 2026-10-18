@@ -1,4 +1,5 @@
-cd C:\Users\ecdes\Desktop\工作\程式\台北市\taipei-map
+cd ~/Desktop/工作/code/taipei-map
+
 npm run dev
 
 網址更新
