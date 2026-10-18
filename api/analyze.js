@@ -1,3 +1,4 @@
+// 檔案：api/analyze.js
 import { GoogleGenAI } from '@google/genai';
 
 export default async function handler(req, res) {
@@ -7,7 +8,6 @@ export default async function handler(req, res) {
 
   try {
     const { dataString } = req.body;
-
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
     const prompt = `
@@ -17,16 +17,15 @@ export default async function handler(req, res) {
       請幫我分析這份資料，歸納出 3 個最重要的數據洞察與趨勢，並以繁體中文條列式說明。
     `;
 
-    // 💡 變更點 1：先改用 gemini-1.5-flash 測試，排除 2.5 權限未開通問題
+    // 💡 修正為正確的最新版模型名稱：gemini-2.0-flash
     const response = await ai.models.generateContent({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-2.0-flash',
       contents: prompt,
     });
 
     res.status(200).json({ result: response.text });
     
   } catch (error) {
-    // 💡 變更點 2：將真實錯誤訊息 (error.message) 一併回傳，讓我們在 Terminal 就能看到
     res.status(500).json({ 
       error: '資料解析失敗',
       details: error.message || error.toString() 
