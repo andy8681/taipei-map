@@ -162,7 +162,7 @@ export default function MapC() {
   const [aiAnalysisResult, setAiAnalysisResult] = useState('');
   const [aiAnalysisError, setAiAnalysisError] = useState('');
 
-  // --- 加入絕對鎖定順序的 Custom Legend 元件 ---
+  // --- Custom Legend 元件 ---
   const CustomSupplyLegend = () => (
     <div className="flex justify-center gap-6 mt-4 text-sm text-slate-600 font-bold">
       <div className="flex items-center gap-2">
@@ -196,7 +196,6 @@ export default function MapC() {
       </div>
     </div>
   );
-  // --- 加入絕對鎖定順序的 Custom Legend 元件 ---
 
   const handleSelectDistrict = (id) => {
     const foundData = districtsMapping.find(item => item.id === id);
@@ -407,52 +406,129 @@ export default function MapC() {
   // --- 解析 AI 回傳的 Markdown 粗體語法 ---
   const renderFormattedText = (text) => {
     if (!text) return null;
-    // 利用正規表達式找出 **包起來的文字**
     const parts = text.split(/(\*\*.*?\*\*)/g);
     return parts.map((part, index) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        // 拔掉前後的 **，並套用加粗與顏色樣式
         return (
           <strong key={index} className="font-extrabold text-indigo-900">
             {part.slice(2, -2)}
           </strong>
         );
       }
-      return part; // 一般文字直接回傳
+      return part;
     });
   };
 
-  // --- AI 分析處理函式 ---
+  // 🚀 精簡資料處理，專為 AI 分析過濾出視覺介面表格對應的欄位，提升速度與穩定度
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
     setAiAnalysisResult('');
     setAiAnalysisError('');
 
     let currentData = {};
+    const inst = mainSelectedInstType;
+
     switch (activeTab) {
       case 'supply':
-        currentData = { type: 'supply', district: selectedDistrict.name, instType: mainSelectedInstType, data: currentSupplyData };
+        currentData = {
+          圖表類型: '供給招生概況',
+          行政區: selectedDistrict.name,
+          機構類型: inst,
+          資料列表: currentSupplyData.map(d => ({
+            年份: d.year,
+            核定招收人數: d[`appEnroll_${inst}`],
+            實際在園人數: d[`stuAmount_${inst}`],
+            招生率: `${d[`occupancyRate_${inst}`]}%`
+          }))
+        };
         break;
+
       case 'institutions':
-        currentData = { type: 'institutions', district: selectedDistrict.name, data: institutionData };
+        currentData = {
+          圖表類型: '機構數量與公共化佔比',
+          行政區: selectedDistrict.name,
+          資料列表: institutionData.map(d => ({
+            年份: d.year,
+            公立: d.publicCount,
+            非營利: d.nonProfitCount,
+            準公共: d.quasiPublicCount,
+            職場互助教保服務中心: d.educareCount,
+            私立: d.privateCount,
+            合計: d.totalCount,
+            公共化占比: d.rawRatio
+          }))
+        };
         break;
+
       case 'subdistrict':
-        currentData = { type: 'subdistrict', district: selectedDistrict.name, years: selectedSubYears, data: currentSubDistrictsForYear };
+        currentData = {
+          圖表類型: '次分區招生概況',
+          行政區: selectedDistrict.name,
+          資料列表: currentSubDistrictsForYear.map(d => ({
+            次分區與年份: d.name,
+            核定招收人數: d.appEnroll,
+            實際在園人數: d.stuAmount,
+            招生率: `${d.occupancyRate}%`
+          }))
+        };
         break;
+
       case 'population':
-        currentData = { type: 'population', district: selectedDistrict.name, data: cityPopulationData };
+        currentData = {
+          圖表類型: '學齡前設籍人數與增減趨勢',
+          行政區: selectedDistrict.name,
+          資料列表: cityPopulationData.map(d => ({
+            年份: d.year,
+            學齡前設籍人數: d.total,
+            設籍人口增減率: d.changeRatio !== null ? `${d.changeRatio}%` : '-'
+          }))
+        };
         break;
+
       case 'survey':
         if (surveySubTab === 'dimension') {
-          currentData = { type: 'survey_dimension', district: selectedDistrict.name, instType: mainSelectedInstType, data: surveyStats };
+          currentData = {
+            圖表類型: '滿意度分析-四大構面品質落差(Gap)',
+            行政區: selectedDistrict.name,
+            機構類型: inst,
+            資料列表: surveyStats.map(d => ({
+              年份: d.year,
+              有效樣本數: d[`sampleSize_${inst}`],
+              基礎條件Gap: d[`gapBase_${inst}`],
+              教保作為Gap: d[`gapAction_${inst}`],
+              延長收托Gap: d[`gapExtend_${inst}`],
+              其他Gap: d[`gapOther_${inst}`]
+            }))
+          };
         } else if (surveySubTab === 'question') {
-          currentData = { type: 'survey_question', district: selectedDistrict.name, instType: mainSelectedInstType, question: selectedQuestion, data: questionStats };
+          const qText = SURVEY_QUESTIONS.find(q => q.id === selectedQuestion)?.short;
+          currentData = {
+            圖表類型: `滿意度分析-逐題檢視(${qText})`,
+            行政區: selectedDistrict.name,
+            機構類型: inst,
+            資料列表: questionStats.map(d => ({
+              年份: d.year,
+              需求程度: d[`req_${inst}`],
+              滿意程度: d[`perf_${inst}`],
+              品質落差Gap: d[`gap_${inst}`]
+            }))
+          };
         } else {
-          currentData = { type: 'survey_priority', district: selectedDistrict.name, instType: mainSelectedInstType, years: selectedPriorityYears, data: priorityStats };
+          currentData = {
+            圖表類型: '家長最在意因素比較',
+            行政區: selectedDistrict.name,
+            機構類型: inst,
+            資料列表: priorityStats.map(d => {
+              let item = { 關注因素: d.name };
+              selectedPriorityYears.forEach(y => { item[y] = d[y]; });
+              return item;
+            })
+          };
         }
         break;
+
       default:
-        currentData = { data: [] };
+        currentData = { 資料: '無數據' };
     }
 
     try {
@@ -475,7 +551,6 @@ export default function MapC() {
       setIsAnalyzing(false);
     }
   };
-
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 flex flex-col items-center font-sans">
@@ -550,7 +625,7 @@ export default function MapC() {
             </div>
           </div>
 
-          {/* 👇 新增的 AI 數據描述區塊 👇 */}
+          {/* AI 數據描述區塊 */}
           <div className="bg-indigo-50/40 border border-indigo-100 p-4 rounded-xl flex flex-col gap-3">
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-bold text-indigo-800 flex items-center gap-2">
@@ -583,7 +658,6 @@ export default function MapC() {
               </div>
             )}
           </div>
-          {/* 👆 新增的 AI 數據描述區塊 👆 */}
 
           {activeTab === 'supply' && (
             <div className="flex flex-col gap-6 bg-white p-2">
@@ -617,7 +691,6 @@ export default function MapC() {
                           <YAxis tickLine={false} tick={{fill:'#64748b', fontSize:12}} />
                           <Tooltip formatter={(value, name) => [`${value} 人`, name]} />
                           
-                          {/* 📌 使用強制覆寫的自訂圖例元件 */}
                           <Legend content={<CustomSupplyLegend />} />
 
                           <Bar isAnimationActive={false} dataKey={`appEnroll_${mainSelectedInstType}`} name={`核定招收(${mainSelectedInstType})`} fill="#f59e0b" radius={[4,4,0,0]} />
@@ -745,7 +818,6 @@ export default function MapC() {
                     <span className="text-xs font-bold">選擇年份(可多選)：</span>
                     {yearsList.map(y => <button key={y} onClick={() => toggleSubYear(y)} className={`px-2 py-1 rounded text-xs transition-all ${selectedSubYears.includes(y) ? 'bg-purple-600 text-white shadow' : 'bg-slate-200 hover:bg-purple-100'}`}>{y}</button>)}
                   </div>
-                  {/* 新增了次分區選擇器，可自由勾選要顯示的次分區 */}
                   <div className="flex gap-2 items-center flex-wrap">
                     <span className="text-xs font-bold">選擇次分區(多選)：</span>
                     <button 
@@ -935,7 +1007,6 @@ export default function MapC() {
                               <YAxis tickLine={false} />
                               <Tooltip formatter={(value, name) => [`${value} 分`, name]} />
                               
-                              {/* 📌 使用強制覆寫的自訂圖例元件 */}
                               <Legend content={<CustomDimensionLegend />} />
 
                               <ReferenceLine y={0} stroke="#94a3b8" strokeDasharray="3 3" />
@@ -1128,7 +1199,6 @@ export default function MapC() {
         </div>
       </div>
 
-      {/* 🚀 自訂圖表元件已抽離至 CustomChartC.jsx，這裡直接呼叫它 */}
       <CustomChartC />
 
     </div>
