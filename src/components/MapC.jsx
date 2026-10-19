@@ -162,7 +162,7 @@ export default function MapC() {
   const [aiAnalysisResult, setAiAnalysisResult] = useState('');
   const [aiAnalysisError, setAiAnalysisError] = useState('');
 
-  // --- 👇 加入絕對鎖定順序的 Custom Legend 元件 👇 ---
+  // --- 加入絕對鎖定順序的 Custom Legend 元件 ---
   const CustomSupplyLegend = () => (
     <div className="flex justify-center gap-6 mt-4 text-sm text-slate-600 font-bold">
       <div className="flex items-center gap-2">
@@ -196,7 +196,7 @@ export default function MapC() {
       </div>
     </div>
   );
-  // --- 👆 加入絕對鎖定順序的 Custom Legend 元件 👆 ---
+  // --- 加入絕對鎖定順序的 Custom Legend 元件 ---
 
   const handleSelectDistrict = (id) => {
     const foundData = districtsMapping.find(item => item.id === id);
@@ -404,6 +404,24 @@ export default function MapC() {
     return result.filter(r => selectedPriorityYears.some(y => r[y] > 0)); 
   }, [selectedDistrict, mainSelectedInstType, selectedPriorityYears]);
 
+  // --- 解析 AI 回傳的 Markdown 粗體語法 ---
+  const renderFormattedText = (text) => {
+    if (!text) return null;
+    // 利用正規表達式找出 **包起來的文字**
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        // 拔掉前後的 **，並套用加粗與顏色樣式
+        return (
+          <strong key={index} className="font-extrabold text-indigo-900">
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      return part; // 一般文字直接回傳
+    });
+  };
+
   // --- AI 分析處理函式 ---
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
@@ -439,12 +457,12 @@ export default function MapC() {
 
     try {
       const response = await fetch('https://taipei-map.vercel.app/api/analyze', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ dataString: JSON.stringify(currentData) })
-});
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ dataString: JSON.stringify(currentData) })
+      });
 
       if (!response.ok) throw new Error('API 請求失敗');
       
@@ -537,24 +555,31 @@ export default function MapC() {
             <div className="flex justify-between items-center">
               <h3 className="text-sm font-bold text-indigo-800 flex items-center gap-2">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-                AI 數據客觀描述
+                AI分析
               </h3>
               <button
                 onClick={handleAnalyze}
                 disabled={isAnalyzing}
                 className={`text-xs px-4 py-2 rounded-lg font-bold transition-all shadow-sm ${isAnalyzing ? 'bg-indigo-300 text-white cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
               >
-                {isAnalyzing ? '分析生成中...' : '生成當前圖表描述'}
+                {isAnalyzing ? '分析生成中...' : '生成當前圖表分析'}
               </button>
             </div>
             
             {aiAnalysisError && (
               <div className="text-sm text-red-600 font-medium">{aiAnalysisError}</div>
             )}
+
+            {isAnalyzing && (
+              <div className="text-sm text-indigo-600 bg-indigo-50 p-4 rounded-lg border border-indigo-100 flex items-center gap-3 animate-pulse">
+                <svg className="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                AI 正在深度讀取數據並撰寫分析，請稍候...
+              </div>
+            )}
             
-            {aiAnalysisResult && (
+            {!isAnalyzing && aiAnalysisResult && (
               <div className="text-sm text-slate-700 bg-white p-4 rounded-lg border border-indigo-100 whitespace-pre-wrap leading-relaxed shadow-inner">
-                {aiAnalysisResult}
+                {renderFormattedText(aiAnalysisResult)}
               </div>
             )}
           </div>

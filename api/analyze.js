@@ -50,4 +50,4 @@ ${dataString}`;
       details: error.message || error.toString() 
     });
   }
-}
+} 
