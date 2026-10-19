@@ -30,7 +30,7 @@ const SURVEY_QUESTIONS = [
   { id: "10", text: "10.每日大肌肉活動量", short: "10.大肌肉活動" },
   { id: "11", text: "11.安全教育課程實施", short: "11.安全教育課程" },
   { id: "12", text: "12.特色課程實施情形", short: "12.特色課程" },
-  { id: "13", text: "13.戶外體驗活動多元", short: "13.戶外體驗活動" },
+  { id: "13", text: "13.户戶外體驗活動多元", short: "13.戶外體驗活動" },
   { id: "14", text: "14.家長接送方便程度", short: "14.接送方便" },
   { id: "15", text: "15.親師溝通管道暢通", short: "15.親師溝通" },
   { id: "16", text: "16.親子活動充分參與", short: "16.親子活動" },
@@ -108,7 +108,6 @@ const safeParse = (val) => {
   return isNaN(num) ? 0 : num;
 };
 
-// 保留此方法供其他可能的需求使用
 const getGapColor = (val) => {
   if (val === null || val === undefined || val === '-') return 'inherit';
   const num = Number(val);
@@ -120,8 +119,6 @@ const getGapColor = (val) => {
 
 const renderShapeDot = (props, shape, isGapLine = false, opacity = 1) => {
   const { cx, cy, stroke, key } = props;
-  
-  // 🎯 修正：讓圖表上的節點顏色與折線 (stroke) 一致，不再使用 getGapColor 動態覆蓋，以吻合下方圖例
   const fill = isGapLine ? stroke : '#ffffff';
   const borderStroke = stroke;
   const dotStyle = { stroke: borderStroke, strokeWidth: 2, fill: fill, opacity: opacity };
@@ -193,6 +190,11 @@ export default function CustomChartC() {
     { id: 'basic___appEnroll', name: '基本: 核定招收', axisId: 'people', color: '#818cf8', chartType: 'line', category: 'basic' },
     { id: 'basic___stuAmount', name: '基本: 實際在園', axisId: 'people', color: '#34d399', chartType: 'line', category: 'basic' }
   ]);
+
+  // --- 🤖 AI 分析相關 State ---
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [aiAnalysisResult, setAiAnalysisResult] = useState('');
+  const [aiAnalysisError, setAiAnalysisError] = useState('');
 
   const validDistrictNames = useMemo(() => districtsMapping.filter(d => d.id !== '台北市').map(d => norm(d.name)), []);
 
@@ -465,6 +467,75 @@ export default function CustomChartC() {
     return index % 2 === 0 ? 'left' : 'right'; 
   };
 
+  // --- 解析 AI 回傳的 Markdown 粗體語法 ---
+  const renderFormattedText = (text) => {
+    if (!text) return null;
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return (
+          <strong key={index} className="font-extrabold text-indigo-900">
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      return part;
+    });
+  };
+
+  // 🚀 AI 分析處理函式：精簡過濾出與表格完全對應的資料
+  const handleAnalyze = async () => {
+    setIsAnalyzing(true);
+    setAiAnalysisResult('');
+    setAiAnalysisError('');
+
+    // 直接使用與 Excel 匯出相同的邏輯，只傳遞使用者選擇顯示的資料點，極大化提升速度
+    const formattedData = customChartData.map(row => {
+      let newRow = { '年份': row.name };
+      activeMetrics.forEach(m => { 
+        customSelectedInstTypes.forEach(instType => {
+          customSelectedRegions.forEach(r => {
+            const key = `${m.id}___${r}___${instType}`;
+            if (row[key] !== undefined) {
+              newRow[`${r} - ${m.name} [${instType}]`] = row[key];
+            }
+          });
+        });
+      });
+      return newRow;
+    });
+
+    const currentData = {
+      圖表類型: '跨區域/跨指標自訂比較分析',
+      比較維度: {
+        年份範圍: customSelectedYears,
+        區域清單: customSelectedRegions,
+        機構類型: customSelectedInstTypes
+      },
+      資料列表: formattedData
+    };
+
+    try {
+      const response = await fetch('https://taipei-map.vercel.app/api/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ dataString: JSON.stringify(currentData) })
+      });
+
+      if (!response.ok) throw new Error('API 請求失敗');
+      
+      const data = await response.json();
+      setAiAnalysisResult(data.result);
+    } catch (error) {
+      console.error('AI 分析發生錯誤:', error);
+      setAiAnalysisError('無法取得分析結果，請確認網路連線或稍後再試。');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   const renderCustomChartLegend = (props) => {
     const { payload } = props;
     return (
@@ -548,6 +619,41 @@ export default function CustomChartC() {
           <button onClick={() => exportToPNG(customChartRef, `自訂圖表分析`)} className="text-xs bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors font-bold">輸出 PNG</button>
         </div>
       </div>
+
+      {/* 👇 新增的 AI 數據描述區塊 👇 */}
+      <div className="bg-indigo-50/40 border border-indigo-100 p-4 rounded-xl flex flex-col gap-3">
+        <div className="flex justify-between items-center">
+          <h3 className="text-sm font-bold text-indigo-800 flex items-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+            AI分析
+          </h3>
+          <button
+            onClick={handleAnalyze}
+            disabled={isAnalyzing || activeMetrics.length === 0 || customSelectedRegions.length === 0}
+            className={`text-xs px-4 py-2 rounded-lg font-bold transition-all shadow-sm ${isAnalyzing || activeMetrics.length === 0 || customSelectedRegions.length === 0 ? 'bg-indigo-300 text-white cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
+          >
+            {isAnalyzing ? '分析生成中...' : '生成當前圖表分析'}
+          </button>
+        </div>
+        
+        {aiAnalysisError && (
+          <div className="text-sm text-red-600 font-medium">{aiAnalysisError}</div>
+        )}
+
+        {isAnalyzing && (
+          <div className="text-sm text-indigo-600 bg-indigo-50 p-4 rounded-lg border border-indigo-100 flex items-center gap-3 animate-pulse">
+            <svg className="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            AI 正在深度讀取數據並撰寫分析，請稍候...
+          </div>
+        )}
+        
+        {!isAnalyzing && aiAnalysisResult && (
+          <div className="text-sm text-slate-700 bg-white p-4 rounded-lg border border-indigo-100 whitespace-pre-wrap leading-relaxed shadow-inner">
+            {renderFormattedText(aiAnalysisResult)}
+          </div>
+        )}
+      </div>
+      {/* 👆 新增的 AI 數據描述區塊 👆 */}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
@@ -839,7 +945,6 @@ export default function CustomChartC() {
                           strokeWidth={isHovered ? 5 : 2} 
                           opacity={hoveredMetricId && !isHovered ? 0.2 : 1} 
                           dot={(props) => {
-                            // 🎯 修正：傳入原本的折線顏色 (series.color) 供 renderShapeDot 渲染
                             const strokeColor = series.color;
                             return renderShapeDot({...props, stroke: strokeColor}, series.shape, series.isGapMetric, 1);
                           }}
