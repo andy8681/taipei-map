@@ -4,7 +4,7 @@ npm run dev
 
 網址更新
 git add .
-git commit -m"0823"
+git commit -m"更新"
 git push
 
 npm run deploy
