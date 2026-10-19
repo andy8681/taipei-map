@@ -438,13 +438,13 @@ export default function MapC() {
     }
 
     try {
-      const response = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ dataString: JSON.stringify(currentData) })
-      });
+      const response = await fetch('https://taipei-map.vercel.app/api/analyze', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ dataString: JSON.stringify(currentData) })
+});
 
       if (!response.ok) throw new Error('API 請求失敗');
       
