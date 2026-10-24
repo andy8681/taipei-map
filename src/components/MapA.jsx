@@ -60,7 +60,7 @@ const COLORS_PALETTE = ['#818cf8', '#34d399', '#fbbf24', '#fb7185', '#c084fc', '
 const INST_COLORS = { '全部': '#64748b', '公立': '#3b82f6', '非營利': '#10b981', '準公共': '#f59e0b', '私立': '#ec4899', '職場互助教保服務中心': '#8b5cf6' };
 
 const barRadius = 4;
-const yearsList = ['112年', '113年', '114年'];
+const yearsList = ['112學年度', '113學年度', '114學年度'];
 const rawYears = ['112', '113', '114'];
 const instTypesList = ['全部', '公立', '非營利', '準公共', '私立', '職場互助教保服務中心'];
 
@@ -144,12 +144,12 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState(''); 
   
   const [mainSelectedInstType, setMainSelectedInstType] = useState('全部'); 
-  const [selectedSubYears, setSelectedSubYears] = useState(['113年']); 
+  const [selectedSubYears, setSelectedSubYears] = useState(['113學年度']); 
   const [selectedSubDistricts, setSelectedSubDistricts] = useState([]);
   
   const [surveySubTab, setSurveySubTab] = useState('dimension'); 
   const [selectedQuestion, setSelectedQuestion] = useState('01');
-  const [selectedPriorityYears, setSelectedPriorityYears] = useState(['112年', '113年', '114年']);
+  const [selectedPriorityYears, setSelectedPriorityYears] = useState(['112學年度', '113學年度', '114學年度']);
 
   const supplyChartRef = useRef(null);
   const institutionChartRef = useRef(null);
@@ -233,7 +233,7 @@ export default function App() {
     if (!enrollmentData || !populationData) return [];
     let popDataArray = selectedDistrict.id === '台北市' ? populationData.taipei_city_total || [] : populationData.districts?.[selectedDistrict.name] || [];
     return rawYears.map(year => {
-      let yearData = enrollmentData.filter(d => String(d.學年度).replace('年','') === year);
+      let yearData = enrollmentData.filter(d => String(d.學年度).replace(/年|學年度/g,'') === year);
       if (selectedDistrict.id !== '台北市') yearData = yearData.filter(d => norm(d.行政區) === norm(selectedDistrict.name));
       else yearData = yearData.filter(d => validDistrictNames.includes(norm(d.行政區)));
       
@@ -244,7 +244,7 @@ export default function App() {
         childPop = sum > 0 ? sum : '-';
       }
 
-      let entry = { year: `${year}年`, childPopulation: childPop };
+      let entry = { year: `${year}學年度`, childPopulation: childPop };
       let hasData = false;
 
       const inst = mainSelectedInstType;
@@ -271,8 +271,8 @@ export default function App() {
     if (!institutionCountData || !selectedDistrict) return [];
     const distKey = Object.keys(institutionCountData).find(k => norm(k) === norm(selectedDistrict.id === '台北市' ? '台北市' : selectedDistrict.name));
     const data = institutionCountData[distKey] || [];
-    return data.filter(d => rawYears.includes(String(d.學年度).replace('年',''))).map(d => ({
-      year: `${d.學年度}年`, 
+    return data.filter(d => rawYears.includes(String(d.學年度).replace(/年|學年度/g,''))).map(d => ({
+      year: `${String(d.學年度).replace(/年|學年度/g,'')}學年度`, 
       publicCount: safeParse(d.公立), 
       nonProfitCount: safeParse(d.非營利), 
       quasiPublicCount: safeParse(d.準公共), 
@@ -289,8 +289,8 @@ export default function App() {
     let result = [];
     rawSubDistricts.filter(sub => selectedSubDistricts.includes(sub.name)).forEach(sub => {
         selectedSubYears.forEach(year => {
-           const cleanYear = year.replace('年', ''); 
-           const yearStat = sub.yearly_stats?.find(y => String(y.year).replace('年', '') === cleanYear);
+           const cleanYear = year.replace('學年度', ''); 
+           const yearStat = sub.yearly_stats?.find(y => String(y.year).replace(/年|學年度/g, '') === cleanYear);
            if (yearStat) result.push({ name: `${sub.name} (${year})`, subName: sub.name, year: year, appEnroll: safeParse(yearStat.appEnroll), stuAmount: safeParse(yearStat.stuAmount), occupancyRate: yearStat.occupancyRate || 0 });
         });
       });
@@ -304,18 +304,18 @@ export default function App() {
     return popDataArray
       .filter(data => rawYears.includes(String(data.year)))
       .map(data => ({
-        year: `${data.year}年`, total: safeParse(data.total), changeRatio: data.growth_rate !== null ? data.growth_rate : null, age0: safeParse(data.age_0), age1: safeParse(data.age_1), age2: safeParse(data.age_2), age3: safeParse(data.age_3), age4: safeParse(data.age_4), age5: safeParse(data.age_5)
+        year: `${data.year}學年度`, total: safeParse(data.total), changeRatio: data.growth_rate !== null ? data.growth_rate : null, age0: safeParse(data.age_0), age1: safeParse(data.age_1), age2: safeParse(data.age_2), age3: safeParse(data.age_3), age4: safeParse(data.age_4), age5: safeParse(data.age_5)
       }));
   }, [selectedDistrict]);
 
   const surveyStats = useMemo(() => {
     if (!surveyData || !selectedDistrict) return [];
     const targetName = selectedDistrict.id === '台北市' ? '台北市整體' : selectedDistrict.name;
-    const filtered = surveyData.filter(d => norm(d.分區) === norm(targetName) && rawYears.includes(String(d.年份).replace('年',''))).sort((a, b) => a.年份 - b.年份);
+    const filtered = surveyData.filter(d => norm(d.分區) === norm(targetName) && rawYears.includes(String(d.年份).replace(/年|學年度/g,''))).sort((a, b) => a.年份 - b.年份);
     
     return rawYears.map(year => {
       const yearData = filtered.find(d => String(d.年份) === year);
-      let entry = { year: `${year}年`, raw: yearData };
+      let entry = { year: `${year}學年度`, raw: yearData };
       let totalSample = 0;
       
       const inst = mainSelectedInstType;
@@ -340,11 +340,11 @@ export default function App() {
   const questionStats = useMemo(() => {
     if (!surveyData || !selectedDistrict) return [];
     const targetName = selectedDistrict.id === '台北市' ? '台北市整體' : selectedDistrict.name;
-    const filtered = surveyData.filter(d => norm(d.分區) === norm(targetName) && rawYears.includes(String(d.年份).replace('年','')));
+    const filtered = surveyData.filter(d => norm(d.分區) === norm(targetName) && rawYears.includes(String(d.年份).replace(/年|學年度/g,'')));
     
     return rawYears.map(year => {
       const yearData = filtered.find(d => String(d.年份) === year);
-      let entry = { year: `${year}年` };
+      let entry = { year: `${year}學年度` };
       let hasData = false;
       
       const inst = mainSelectedInstType;
@@ -367,7 +367,7 @@ export default function App() {
   const priorityStats = useMemo(() => {
     if (!surveyData || !selectedDistrict) return [];
     const targetName = selectedDistrict.id === '台北市' ? '台北市整體' : selectedDistrict.name;
-    const filtered = surveyData.filter(d => norm(d.分區) === norm(targetName) && rawYears.includes(String(d.年份).replace('年','')));
+    const filtered = surveyData.filter(d => norm(d.分區) === norm(targetName) && rawYears.includes(String(d.年份).replace(/年|學年度/g,'')));
     
     const shortKeys = {
       "(01)公立或私立": "公私立", "(02)接送方便": "接送方便", "(03)收托時間長短（含寒暑假）": "收托時間",
@@ -381,7 +381,7 @@ export default function App() {
     result.forEach(r => {
       selectedPriorityYears.forEach(yearStr => {
         r[yearStr] = 0;
-        const d = filtered.find(x => `${x.年份}年` === yearStr);
+        const d = filtered.find(x => `${String(x.年份).replace(/年|學年度/g, '')}學年度` === yearStr);
         if (d) {
           const jsonInst = toJSONInst(mainSelectedInstType); 
           const source = mainSelectedInstType === '全部' ? d : d.機構別?.[jsonInst];
@@ -405,7 +405,7 @@ export default function App() {
       
       <header className="text-center mb-8 w-full max-w-7xl">
         <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800 mb-2">臺北市幼兒教育資源與人口供需整合儀表板</h1>
-        <p className="text-slate-500 text-sm md:text-base mb-2">資料年份限定: 112年 ~ 114年 - 整合機構數量與次分區招生概況</p>
+        <p className="text-slate-500 text-sm md:text-base mb-2">資料學年度限定: 112學年度 ~ 114學年度 - 整合機構數量與次分區招生概況</p>
       </header>
 
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6 mb-12">
@@ -512,7 +512,7 @@ export default function App() {
                           <Bar isAnimationActive={false} dataKey={`stuAmount_${mainSelectedInstType}`} name={`實際在園(${mainSelectedInstType})`} fill="#3b82f6" radius={[4,4,0,0]} />
                         </BarChart>
                       </ResponsiveContainer>
-                    ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域或所選機構尚無符合年份之資料</div>)}
+                    ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域或所選機構尚無符合學年度之資料</div>)}
                   </div>
                   
                   {currentSupplyData.length > 0 && currentSupplyData.some(d => d[`appEnroll_${mainSelectedInstType}`] > 0 || d[`stuAmount_${mainSelectedInstType}`] > 0) && (
@@ -520,7 +520,7 @@ export default function App() {
                       <table className="w-full text-sm text-center text-slate-600">
                         <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 whitespace-nowrap">
                           <tr>
-                            <th className="px-4 py-3 text-left border-r border-slate-100">年份</th>
+                            <th className="px-4 py-3 text-left border-r border-slate-100">學年度</th>
                             <th className="px-4 py-3 border-r border-slate-100">機構類型</th>
                             <th className="px-4 py-3 border-r border-slate-100">核定招收人數</th>
                             <th className="px-4 py-3 border-r border-slate-100">實際在園人數</th>
@@ -584,7 +584,7 @@ export default function App() {
                           <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="publicRatio" name="公共化佔比 (%)" stroke="#64748b" strokeWidth={4} />
                         </ComposedChart>
                       </ResponsiveContainer>
-                    ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無符合年份之資料</div>)}
+                    ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無符合學年度之資料</div>)}
                   </div>
 
                   {institutionData.length > 0 && (
@@ -592,7 +592,7 @@ export default function App() {
                       <table className="w-full text-sm text-center text-slate-600">
                         <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 whitespace-nowrap">
                           <tr>
-                            <th className="px-3 py-3 text-left border-r border-slate-100">年份</th>
+                            <th className="px-3 py-3 text-left border-r border-slate-100">學年度</th>
                             <th className="px-3 py-3 border-r border-slate-100">公立</th>
                             <th className="px-3 py-3 border-r border-slate-100">非營利</th>
                             <th className="px-3 py-3 border-r border-slate-100">準公共</th>
@@ -630,7 +630,7 @@ export default function App() {
               <div className="flex justify-between flex-col md:flex-row gap-4">
                 <div className="flex flex-col gap-2">
                   <div className="flex gap-2 items-center flex-wrap">
-                    <span className="text-xs font-bold">選擇年份(可多選)：</span>
+                    <span className="text-xs font-bold">選擇學年度(可多選)：</span>
                     {yearsList.map(y => <button key={y} onClick={() => toggleSubYear(y)} className={`px-2 py-1 rounded text-xs transition-all ${selectedSubYears.includes(y) ? 'bg-purple-600 text-white shadow' : 'bg-slate-200 hover:bg-purple-100'}`}>{y}</button>)}
                   </div>
                   {/* 新增了次分區選擇器，可自由勾選要顯示的次分區 */}
@@ -677,7 +677,7 @@ export default function App() {
                           <Bar isAnimationActive={false} dataKey="stuAmount" name="實際在園人數" fill="#a855f7" radius={barRadius} />
                         </BarChart>
                       </ResponsiveContainer>
-                    ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">請至少選擇一個次分區與年份</div>)}
+                    ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">請至少選擇一個次分區與學年度</div>)}
                   </div>
 
                   {currentSubDistrictsForYear.length > 0 && (
@@ -685,7 +685,7 @@ export default function App() {
                       <table className="w-full text-sm text-center text-slate-600">
                         <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 whitespace-nowrap">
                           <tr>
-                            <th className="px-4 py-3 text-left border-r border-slate-100">次分區(年份)</th>
+                            <th className="px-4 py-3 text-left border-r border-slate-100">次分區(學年度)</th>
                             <th className="px-4 py-3 border-r border-slate-100">核定招收人數</th>
                             <th className="px-4 py-3 border-r border-slate-100">實際在園人數</th>
                             <th className="px-4 py-3">招生率(%)<div className="text-[10px] font-normal text-slate-500 mt-0.5">招生率＝實際招收÷核定招收</div></th>
@@ -733,7 +733,7 @@ export default function App() {
                           <Line isAnimationActive={false} yAxisId="right" type="monotone" dataKey="changeRatio" name="學齡前設籍人口增減率（%）" stroke="#ef4444" strokeWidth={2} connectNulls />
                         </LineChart>
                       </ResponsiveContainer>
-                    ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無符合年份之資料</div>)}
+                    ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域尚無符合學年度之資料</div>)}
                   </div>
 
                   {cityPopulationData.length > 0 && (
@@ -741,7 +741,7 @@ export default function App() {
                       <table className="w-full text-sm text-center text-slate-600">
                         <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 whitespace-nowrap">
                           <tr>
-                            <th className="px-4 py-3 text-left border-r border-slate-100">年份</th>
+                            <th className="px-4 py-3 text-left border-r border-slate-100">學年度</th>
                             <th className="px-4 py-3 border-r border-slate-100">學齡前設籍人數</th>
                             <th className="px-4 py-3">學齡前設籍人口增減率（%）</th>
                           </tr>
@@ -782,16 +782,20 @@ export default function App() {
                 </div>
               </div>
 
-              {(surveySubTab === 'dimension' || surveySubTab === 'question') && (
-                <div className="bg-blue-50/50 border border-blue-100 p-4 rounded-xl flex items-start gap-3">
-                  <span className="text-xl">💡</span>
-                  <div className="text-sm text-slate-700 w-full">
+              {/* 💡 滿意度提示區塊（包含三大子分頁都共同顯示的就讀學年度提醒，Gap公式則視分頁顯示） */}
+              <div className="bg-blue-50/50 border border-blue-100 p-4 rounded-xl flex items-start gap-3 mt-2">
+                <span className="text-xl">💡</span>
+                <div className="text-sm text-slate-700 w-full flex flex-col gap-1">
+                  {(surveySubTab === 'dimension' || surveySubTab === 'question') && (
                     <p className="font-bold text-slate-800 flex justify-between items-center">
                       <span>Gap 品質落差公式：滿意度 － 需求度</span>
                     </p>
-                  </div>
+                  )}
+                  <p className="font-bold text-slate-800">
+                    目前標示之學年度為幼兒實際就讀學年度
+                  </p>
                 </div>
-              )}
+              </div>
 
               <div className="flex justify-between items-center border-b pb-2 mt-2">
                 <div className="flex">
@@ -841,7 +845,7 @@ export default function App() {
                           <table className="w-full text-sm text-center text-slate-600">
                             <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 whitespace-nowrap">
                               <tr>
-                                <th className="px-4 py-3 text-left border-r border-slate-100">年份</th>
+                                <th className="px-4 py-3 text-left border-r border-slate-100">學年度</th>
                                 <th className="px-4 py-3 border-r border-slate-100">機構類型</th>
                                 <th className="px-4 py-3 border-r border-slate-100">有效樣本數</th>
                                 <th className="px-4 py-3 border-r border-slate-100">基礎條件</th>
@@ -913,7 +917,7 @@ export default function App() {
                           <table className="w-full text-sm text-center text-slate-600">
                             <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 whitespace-nowrap">
                               <tr>
-                                <th className="px-4 py-3 text-left border-r border-slate-100">年份</th>
+                                <th className="px-4 py-3 text-left border-r border-slate-100">學年度</th>
                                 <th className="px-4 py-3 border-r border-slate-100">機構類型</th>
                                 <th className="px-4 py-3 border-r border-slate-100">需求程度</th>
                                 <th className="px-4 py-3 border-r border-slate-100">滿意程度</th>
@@ -951,7 +955,7 @@ export default function App() {
                 <div className="flex flex-col gap-4">
                   <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border flex flex-col gap-4">
                     <div className="flex gap-2 items-center flex-wrap mb-1 border-b border-slate-200 pb-3">
-                      <span className="text-xs font-bold text-slate-600">選擇年份(影響排序與堆疊)：</span>
+                      <span className="text-xs font-bold text-slate-600">選擇學年度(影響排序與堆疊)：</span>
                       {yearsList.map(y => (
                         <button 
                           key={y} 
@@ -964,7 +968,7 @@ export default function App() {
                     </div>
 
                     <div ref={surveyChartRef} className="bg-white p-2 md:p-4 rounded-xl">
-                      <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 家長最在意因素年度比較 {`(${mainSelectedInstType})`}</h3>
+                      <h3 className="text-sm font-bold text-slate-700 mb-3 text-center md:text-left">{selectedDistrict.name} 家長最在意因素學年度比較 {`(${mainSelectedInstType})`}</h3>
                       <div className="h-96">
                         {priorityStats.length > 0 ? (
                           <ResponsiveContainer width="100%" height="100%">
@@ -979,7 +983,7 @@ export default function App() {
                               ))}
                             </BarChart>
                           </ResponsiveContainer>
-                        ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域、年份或所選機構尚無最在意因素資料</div>)}
+                        ) : (<div className="w-full h-full flex items-center justify-center text-slate-400">目前區域、學年度或所選機構尚無最在意因素資料</div>)}
                       </div>
 
                       {priorityStats.length > 0 && (

@@ -82,7 +82,7 @@ const SURVEY_SUB_OPTIONS = [
 
 const COLORS_PALETTE = ['#818cf8', '#34d399', '#fbbf24', '#fb7185', '#c084fc', '#2dd4bf', '#f472b6', '#a78bfa', '#f87171', '#60a5fa'];
 const REGION_COLORS = ['#3b82f6', '#f97316']; 
-const yearsList = ['112年', '113年', '114年'];
+const yearsList = ['112學年度', '113學年度', '114學年度'];
 const instTypesList = ['全部', '公立', '非營利', '準公共', '私立', '職場互助教保服務中心'];
 
 // 擴充調色盤，確保不同項目差異顯著
@@ -177,7 +177,7 @@ export default function CustomChartB() {
   const customChartRef = useRef(null);
 
   const [customSelectedInstTypes, setCustomSelectedInstTypes] = useState(['全部']); 
-  const [customSelectedYears, setCustomSelectedYears] = useState(['112年', '113年', '114年']);
+  const [customSelectedYears, setCustomSelectedYears] = useState(['112學年度', '113學年度', '114學年度']);
   const [customSelectedRegions, setCustomSelectedRegions] = useState(['臺北市']);
   const [customSelectedMainDistrict, setCustomSelectedMainDistrict] = useState('');
   
@@ -319,8 +319,8 @@ export default function CustomChartB() {
   const customChartData = useMemo(() => {
     let result = [];
     customSelectedYears.forEach(year => {
-      const yearStr = year.replace('年', '');
-      // X 軸統一為年份
+      const yearStr = year.replace('學年度', '');
+      // X 軸統一為學年度
       let entry = { name: year, year };
       
       const eDataYear = enrollmentData.filter(d => String(d.學年度).replace('年','') === yearStr);
@@ -457,7 +457,7 @@ export default function CustomChartB() {
 
   const handleExportCustomExcel = () => {
     const formattedData = customChartData.map(row => {
-      let newRow = { '年份': row.name };
+      let newRow = { '學年度': row.name };
       activeMetrics.forEach(m => { 
         customSelectedInstTypes.forEach(instType => {
           customSelectedRegions.forEach(r => {
@@ -565,6 +565,9 @@ export default function CustomChartB() {
     return null;
   };
 
+  // 判斷是否選擇了 滿意度 或 優先因素
+  const hasSurveyOrPriority = activeMetrics.some(m => m.category === 'survey' || m.category === 'priority');
+
   return (
     <div className="w-full max-w-7xl bg-white p-6 md:p-8 rounded-3xl shadow-md border border-slate-200 flex flex-col gap-6">
       
@@ -581,7 +584,7 @@ export default function CustomChartB() {
         <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col gap-5">
           <h3 className="font-bold text-slate-700 text-sm border-b border-slate-200 pb-2">1. 選擇基礎變數 (時空)</h3>
           <div className="flex flex-col gap-2">
-            <span className="text-xs font-bold text-slate-500">📅 選擇對比年份：</span>
+            <span className="text-xs font-bold text-slate-500">📅 選擇對比學年度：</span>
             <div className="flex gap-2 flex-wrap">
               {yearsList.map(y => (
                 <button 
@@ -779,6 +782,13 @@ export default function CustomChartB() {
         </div>
       </div>
 
+      {hasSurveyOrPriority && (
+        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 mt-2 text-sm text-slate-700 font-bold space-y-1">
+          <p>Gap 品質落差公式：滿意度 － 需求度</p>
+          <p>目前標示之學年度為幼兒實際就讀學年度</p>
+        </div>
+      )}
+
       <div className="bg-slate-50 p-4 md:p-5 rounded-2xl border mt-2">
         {activeMetrics.some(m => m.id.includes('publicRatio')) && (
           <div className="text-rose-600 text-xs md:text-sm font-bold bg-rose-50 p-3 rounded-xl mb-4 border border-rose-200 shadow-sm">
@@ -894,7 +904,7 @@ export default function CustomChartB() {
                   })}
                 </ComposedChart>
               </ResponsiveContainer>
-            ) : (<div className="w-full h-full flex items-center justify-center text-slate-400 font-bold">請至少選擇一個地區、年份與指標加入圖表</div>)}
+            ) : (<div className="w-full h-full flex items-center justify-center text-slate-400 font-bold">請至少選擇一個地區、學年度與指標加入圖表</div>)}
           </div>
         </div>
       </div>
@@ -904,7 +914,7 @@ export default function CustomChartB() {
           <table className="w-full text-sm text-left text-slate-600">
             <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
               <tr>
-                <th className="px-4 py-3 border-r border-slate-100 whitespace-nowrap">年份</th>
+                <th className="px-4 py-3 border-r border-slate-100 whitespace-nowrap">學年度</th>
                 {activeMetrics.flatMap(m => 
                   customSelectedInstTypes.flatMap(inst => 
                     customSelectedRegions.map(r => (
