@@ -19,8 +19,6 @@
         body { background-color: #f3f4f6; }
         /* 強制 PDF 分頁樣式 */
         .pdf-page-break { page-break-before: always; }
-        /* 隱藏不想被印出的元素 */
-        .no-print { display: none !important; }
     </style>
 </head>
 <body class="p-6">
@@ -60,21 +58,20 @@
             </div>
         </div>
 
-        <!-- PDF 分頁標記 (雷達圖後) -->
-        <div class="pdf-page-break"></div>
+        <!-- PDF 分頁標記 1 (動態控制) -->
+        <div id="page-break-1"></div>
 
         <!-- ================= 第 2 頁內容：前三個構面 ================= -->
         <div id="section-scores-1">
-            <h3 class="text-xl font-bold text-gray-700 mb-4 pb-2 border-b-2 border-blue-500">各構面與逐題平均得分 (1/2)</h3>
+            <h3 class="text-xl font-bold text-gray-700 mb-4 pb-2 border-b-2 border-blue-500">各構面與逐題平均得分</h3>
             <div id="dims-page-1" class="space-y-6"></div>
         </div>
 
-        <!-- PDF 分頁標記 (前三個構面後) -->
-        <div class="pdf-page-break"></div>
+        <!-- PDF 分頁標記 2 (動態控制) -->
+        <div id="page-break-2"></div>
 
         <!-- ================= 第 3 頁內容：後兩個構面 ================= -->
         <div id="section-scores-2" class="mt-8">
-            <h3 class="text-xl font-bold text-gray-700 mb-4 pb-2 border-b-2 border-blue-500">各構面與逐題平均得分 (2/2)</h3>
             <div id="dims-page-2" class="space-y-6"></div>
         </div>
     </div>
@@ -87,11 +84,11 @@
         <div class="space-y-3 mb-6">
             <label class="flex items-center space-x-3 cursor-pointer">
                 <input type="checkbox" id="checkRadar" checked class="form-checkbox h-5 w-5 text-blue-600">
-                <span class="text-gray-700">五大構面雷達圖 (第1頁)</span>
+                <span class="text-gray-700">五大構面雷達圖</span>
             </label>
             <label class="flex items-center space-x-3 cursor-pointer">
                 <input type="checkbox" id="checkScores" checked class="form-checkbox h-5 w-5 text-blue-600">
-                <span class="text-gray-700">各構面與逐題分數 (第2-3頁)</span>
+                <span class="text-gray-700">各構面與逐題分數</span>
             </label>
         </div>
         <div class="flex justify-end gap-3 border-t pt-4">
@@ -103,7 +100,6 @@
 </div>
 
 <script>
-    // 25題核心題目定義 (根據圖片與文字提供)
     const dimensionsConfig = [
         {
             name: "可靠性",
@@ -157,10 +153,9 @@
         }
     ];
 
-    let globalResults = []; // 儲存分析結果
-    let myChart = null; // Chart.js 實例
+    let globalResults = []; 
+    let myChart = null; 
 
-    // 監聽檔案上傳
     document.getElementById('fileInput').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -192,7 +187,6 @@
         let results = [];
         let radarScores = [];
 
-        // 清空之前的渲染
         document.getElementById('dims-page-1').innerHTML = '';
         document.getElementById('dims-page-2').innerHTML = '';
 
@@ -202,7 +196,6 @@
             let questionsData = [];
 
             dim.questions.forEach(qText => {
-                // 模糊比對找出欄位 index
                 let colIndex = headers.findIndex(h => typeof h === 'string' && h.replace(/\s/g, '').includes(qText.replace(/\s/g, '')));
                 
                 let qAvg = 0;
@@ -238,7 +231,6 @@
                 questions: questionsData
             });
 
-            // 渲染 HTML
             renderDimensionGroup(dim.name, dimAvg, questionsData, dimIndex);
         });
 
@@ -269,7 +261,6 @@
             </div>
         `;
 
-        // 前三個構面放 Page 1，後兩個放 Page 2
         if (dimIndex < 3) {
             document.getElementById('dims-page-1').insertAdjacentHTML('beforeend', containerHtml);
         } else {
@@ -279,11 +270,7 @@
 
     function drawRadarChart(scores) {
         const ctx = document.getElementById('radarChart').getContext('2d');
-        
-        // 銷毀舊圖表避免重疊重繪錯誤
-        if (myChart) {
-            myChart.destroy();
-        }
+        if (myChart) { myChart.destroy(); }
 
         myChart = new Chart(ctx, {
             type: 'radar',
@@ -298,40 +285,28 @@
                     pointBackgroundColor: 'rgba(59, 130, 246, 1)',
                     pointRadius: 4,
                     pointHoverRadius: 7,
-                    pointHitRadius: 40 // 大幅增加滑鼠觸發判定範圍 (只要靠近線就會顯示數字)
+                    pointHitRadius: 40 
                 }]
             },
             options: {
                 responsive: true,
-                interaction: {
-                    mode: 'nearest',
-                    intersect: false // 不需確實碰到點，靠近即可觸發
-                },
+                interaction: { mode: 'nearest', intersect: false },
                 scales: {
                     r: {
                         angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
                         grid: { color: 'rgba(0, 0, 0, 0.1)' },
-                        pointLabels: {
-                            font: { size: 14, weight: 'bold' },
-                            color: '#374151'
-                        },
-                        min: 0,
-                        max: 5,
-                        ticks: { stepSize: 1 }
+                        pointLabels: { font: { size: 14, weight: 'bold' }, color: '#374151' },
+                        min: 0, max: 5, ticks: { stepSize: 1 }
                     }
                 },
-                plugins: {
-                    legend: { display: false }
-                }
+                plugins: { legend: { display: false } }
             }
         });
     }
 
-    // Modal 控制
     function openExportModal() { document.getElementById('exportModal').classList.remove('hidden'); }
     function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
 
-    // 執行匯出
     function executeExport(type) {
         closeExportModal();
         
@@ -347,35 +322,46 @@
         const radarSection = document.getElementById('section-radar');
         const scoresSection1 = document.getElementById('section-scores-1');
         const scoresSection2 = document.getElementById('section-scores-2');
-        const pageBreaks = document.querySelectorAll('.pdf-page-break');
+        const pb1 = document.getElementById('page-break-1');
+        const pb2 = document.getElementById('page-break-2');
 
-        // 依據勾選狀態暫時隱藏元素
+        // 先重置所有顯示狀態與換頁標記
+        radarSection.classList.remove('hidden');
+        scoresSection1.classList.remove('hidden');
+        scoresSection2.classList.remove('hidden');
+        pb1.className = ''; 
+        pb2.className = '';
+
+        // 依據勾選項目隱藏區塊
         if (!showRadar) radarSection.classList.add('hidden');
         if (!showScores) {
             scoresSection1.classList.add('hidden');
             scoresSection2.classList.add('hidden');
-            pageBreaks.forEach(pb => pb.classList.add('hidden')); // 隱藏所有強制分頁
-        } else if (!showRadar && showScores) {
-            // 如果不印雷達只印分數，隱藏第一個分頁標記
-            if(pageBreaks[0]) pageBreaks[0].classList.add('hidden'); 
         }
 
-        // --- 修正截斷與偏移的核心動作 ---
-        // 在截圖前，將畫面強制滾動回頂部，防止 html2canvas 算錯 Y 軸位置造成偏移
-        window.scrollTo(0, 0); 
+        // 動態分配 PDF 換頁標記（避免套件讀到標籤而切出空白頁）
+        if (type === 'pdf') {
+            if (showRadar && showScores) {
+                // 全選：雷達圖(頁1) -> 換頁 -> 構面1~3(頁2) -> 換頁 -> 構面4~5(頁3)
+                pb1.className = 'pdf-page-break';
+                pb2.className = 'pdf-page-break';
+            } else if (!showRadar && showScores) {
+                // 只選分數：構面1~3(頁1) -> 換頁 -> 構面4~5(頁2)
+                pb2.className = 'pdf-page-break';
+            }
+            // 只選雷達圖：不需要任何換頁標記
+        }
+
+        window.scrollTo(0, 0); // 防截斷防偏移
 
         if (type === 'pdf') {
             const opt = {
-                margin:       10, // 四邊留白 10mm
+                margin:       10, 
                 filename:     '服務品質滿意度分析報表.pdf',
                 image:        { type: 'jpeg', quality: 1 },
-                html2canvas:  { 
-                    scale: 2, 
-                    useCORS: true,
-                    scrollY: 0 // 強制從頂部抓取
-                },
+                html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: ['css', 'legacy'], before: '.pdf-page-break' } // 綁定分頁樣式
+                pagebreak:    { mode: ['css', 'legacy'], before: '.pdf-page-break' } 
             };
 
             html2pdf().set(opt).from(reportEl).save().then(() => {
@@ -383,9 +369,6 @@
             });
         } 
         else if (type === 'png') {
-            // PNG 不處理分頁，全部印在同一張長圖
-            pageBreaks.forEach(pb => pb.classList.add('hidden'));
-            
             html2canvas(reportEl, { scale: 2, scrollY: 0, backgroundColor: "#ffffff" }).then(canvas => {
                 let link = document.createElement('a');
                 link.download = '服務品質滿意度分析報表.png';
@@ -395,37 +378,28 @@
             });
         }
 
-        // 復原顯示狀態的內部函式
         function restoreVisibility() {
             radarSection.classList.remove('hidden');
             scoresSection1.classList.remove('hidden');
             scoresSection2.classList.remove('hidden');
-            pageBreaks.forEach(pb => pb.classList.remove('hidden'));
+            pb1.className = '';
+            pb2.className = '';
         }
     }
 
-    // CSV 匯出邏輯 (將所有結果攤平匯出)
     function downloadCSV() {
         if (globalResults.length === 0) return;
-
-        let csvContent = "\uFEFF"; // BOM for Excel UTF-8
-        csvContent += "構面名稱,構面平均得分,題號,題目內容,逐題平均得分\n";
-
+        let csvContent = "\uFEFF構面名稱,構面平均得分,題號,題目內容,逐題平均得分\n";
         globalResults.forEach(dim => {
             dim.questions.forEach((q, i) => {
                 csvContent += `${dim.dimension},${dim.avg},Q${i+1},"${q.text}",${q.score}\n`;
             });
         });
-
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", "滿意度分析數據.csv");
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
+        link.href = URL.createObjectURL(blob);
+        link.download = "滿意度分析數據.csv";
         link.click();
-        document.body.removeChild(link);
     }
 </script>
 
