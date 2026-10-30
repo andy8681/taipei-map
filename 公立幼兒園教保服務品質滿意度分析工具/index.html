@@ -311,24 +311,6 @@
         const ctx = document.getElementById('radarChart').getContext('2d');
         if (myChart) { myChart.destroy(); }
 
-        // --- 自動偵測與縮放雷達圖上下限 (優化版) ---
-        const numScores = scores.map(Number);
-        const maxScore = Math.max(...numScores);
-        const minScore = Math.min(...numScores);
-
-        // 1. 上限：取比最高分大一點點的最接近 0.1 刻度，確保最高分貼近最外圈 (最多差一格)
-        let chartMax = Math.ceil((maxScore + 0.05) * 10) / 10;
-        if (chartMax > 5) chartMax = 5;
-
-        // 2. 下限：取比最低分低大約 0.1~0.2 的刻度，確保最低分保有空間不觸底
-        let chartMin = Math.floor((minScore - 0.15) * 10) / 10;
-        if (chartMin < 0) chartMin = 0;
-
-        // 3. 確保圖表上下限差距至少有 0.5，讓刻度間距好看
-        if (chartMax - chartMin < 0.5) {
-            chartMin = Math.max(0, chartMax - 0.5);
-        }
-
         myChart = new Chart(ctx, {
             type: 'radar',
             data: {
@@ -353,9 +335,9 @@
                         angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
                         grid: { color: 'rgba(0, 0, 0, 0.1)' },
                         pointLabels: { font: { size: 14, weight: 'bold' }, color: '#374151' },
-                        min: chartMin,  // 緊貼下限
-                        max: chartMax   // 緊貼上限
-                        // Chart.js 會依據這裡的上下限自動切割最適合的等距刻度線
+                        min: 3,         // 固定下限 3
+                        max: 5,         // 固定上限 5
+                        ticks: { stepSize: 0.5 } // 固定間距 0.5
                     }
                 },
                 plugins: { legend: { display: false } }
