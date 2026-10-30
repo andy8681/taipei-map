@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公立幼兒園教保服務品質滿意度分析工具</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS (Excel 解析) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <!-- Chart.js (雷達圖) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2pdf.js (匯出 PDF/PNG) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- html2canvas (備用匯出 PNG) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        body { background-color: #f3f4f6; }
+        /* 強制 PDF 分頁樣式 */
+        .pdf-page-break { page-break-before: always; }
+        /* 隱藏不想被印出的元素 */
+        .no-print { display: none !important; }
+    </style>
+</head>
+<body class="p-6">
+
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- 頂部標題與上傳區 -->
+    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">教保服務品質滿意度 (25題核心版) 自動分析工具</h1>
+        <p class="text-sm text-gray-500 mb-6">請上傳由 Google 表單匯出的 Excel (.xlsx) 或 CSV 檔案</p>
+        
+        <label class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+            <span>選擇檔案並自動分析</span>
+            <input type="file" id="fileInput" accept=".xlsx, .xls, .csv" class="hidden" />
+        </label>
+        <p id="fileName" class="mt-3 text-sm text-gray-600 hidden"></p>
+    </div>
+
+    <!-- 操作按鈕區 (分析後顯示) -->
+    <div id="actionArea" class="hidden flex justify-end gap-3">
+        <button onclick="downloadCSV()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
+            下載數據 CSV
+        </button>
+        <button onclick="openExportModal()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded shadow">
+            匯出圖文報表 (PDF/PNG)
+        </button>
+    </div>
+
+    <!-- 報表預覽區塊 (設定底色純白，避免輸出透明黑底) -->
+    <div id="reportContainer" class="bg-white p-8 rounded-lg shadow-md hidden">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-8" id="reportTitle">服務品質滿意度分析報告</h2>
+        
+        <!-- ================= 第 1 頁內容：雷達圖 ================= -->
+        <div id="section-radar" class="mb-10 flex justify-center items-center flex-col">
+            <h3 class="text-xl font-bold text-gray-700 mb-4">五大構面平均得分雷達圖</h3>
+            <div class="w-full max-w-lg">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+
+        <!-- PDF 分頁標記 (雷達圖後) -->
+        <div class="pdf-page-break"></div>
+
+        <!-- ================= 第 2 頁內容：前三個構面 ================= -->
+        <div id="section-scores-1">
+            <h3 class="text-xl font-bold text-gray-700 mb-4 pb-2 border-b-2 border-blue-500">各構面與逐題平均得分 (1/2)</h3>
+            <div id="dims-page-1" class="space-y-6"></div>
+        </div>
+
+        <!-- PDF 分頁標記 (前三個構面後) -->
+        <div class="pdf-page-break"></div>
+
+        <!-- ================= 第 3 頁內容：後兩個構面 ================= -->
+        <div id="section-scores-2" class="mt-8">
+            <h3 class="text-xl font-bold text-gray-700 mb-4 pb-2 border-b-2 border-blue-500">各構面與逐題平均得分 (2/2)</h3>
+            <div id="dims-page-2" class="space-y-6"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 匯出選項 Modal -->
+<div id="exportModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-xl w-96">
+        <h3 class="text-xl font-bold mb-4">請選擇報表匯出內容</h3>
+        <div class="space-y-3 mb-6">
+            <label class="flex items-center space-x-3 cursor-pointer">
+                <input type="checkbox" id="checkRadar" checked class="form-checkbox h-5 w-5 text-blue-600">
+                <span class="text-gray-700">五大構面雷達圖 (第1頁)</span>
+            </label>
+            <label class="flex items-center space-x-3 cursor-pointer">
+                <input type="checkbox" id="checkScores" checked class="form-checkbox h-5 w-5 text-blue-600">
+                <span class="text-gray-700">各構面與逐題分數 (第2-3頁)</span>
+            </label>
+        </div>
+        <div class="flex justify-end gap-3 border-t pt-4">
+            <button onclick="closeExportModal()" class="px-4 py-2 text-gray-500 hover:bg-gray-100 rounded">取消</button>
+            <button onclick="executeExport('png')" class="px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded">下載 PNG</button>
+            <button onclick="executeExport('pdf')" class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded shadow">下載 PDF</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 25題核心題目定義 (根據圖片與文字提供)
+    const dimensionsConfig = [
+        {
+            name: "可靠性",
+            questions: [
+                "幼兒園師資穩定且流動率低。",
+                "幼兒園重視孩子的生活教育與生活自理能力，並落實於教學中。",
+                "我能很明顯地感受到孩子在幼兒園的學習進步。",
+                "幼兒園推動幼小銜接活動，有助於幼兒日後順利銜接國小學習。",
+                "我覺得幼兒園的教保品質很好，優於其他類型的幼兒園。"
+            ]
+        },
+        {
+            name: "保證性",
+            questions: [
+                "老師具備專業的幼教知能與教保能力。",
+                "孩子的班級老師間互動與合作默契良好。",
+                "老師能運用多元創新的教學方法引發孩子學習興趣。",
+                "幼兒園提供的午餐與點心符合均衡營養原則。",
+                "國小校長/園長能熟悉且能充分掌握幼兒園的運作現況。"
+            ]
+        },
+        {
+            name: "有形性",
+            questions: [
+                "幼兒園能為孩子留存完整的學習歷程記錄（如成長檔案、學習單、照片）。",
+                "幼兒園的環境能保持整潔，讓幼兒感到舒適。",
+                "幼兒園提供幼兒充足的活動與探索空間。",
+                "幼兒園的環境與設施設備能有安全防護，讓我感到安心。",
+                "幼兒園能適時更新或汰換教具與設備。"
+            ]
+        },
+        {
+            name: "同理性",
+            questions: [
+                "幼兒園的學習內容豐富，符合孩子的需要。",
+                "幼兒園能規劃適切的戶外教學活動，豐富幼兒的學習與探索。",
+                "老師能提供充足的合作學習機會，鼓勵孩子發展社交技巧與合作能力。",
+                "幼兒園能規劃溫馨的家長接送環境，讓我在接送孩子時感受到被重視與關懷。",
+                "幼兒園的延長照顧服務時間（含課後、寒暑假）安排合宜，能減輕我的教保負擔。"
+            ]
+        },
+        {
+            name: "反應性",
+            questions: [
+                "幼兒園能提供充分且多元的親師聯繫管道（如官方公務信箱、LINE、電話、面談）。",
+                "幼兒園能積極連結並善用社區資源（如圖書館、公園、超商等）。",
+                "幼兒園規劃的上學及放學接送流程順暢且便利。",
+                "幼兒園能即時透過網站或社群媒體（如FB、LINE）更新園務資訊。",
+                "幼兒園教職員工對於我提出的問題或需求，能提供有效且快速的回應。"
+            ]
+        }
+    ];
+
+    let globalResults = []; // 儲存分析結果
+    let myChart = null; // Chart.js 實例
+
+    // 監聽檔案上傳
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        document.getElementById('fileName').textContent = "已載入：" + file.name;
+        document.getElementById('fileName').classList.remove('hidden');
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            
+            analyzeData(jsonData);
+        };
+        reader.readAsArrayBuffer(file);
+    });
+
+    function analyzeData(data) {
+        if (data.length < 2) {
+            alert('檔案內容為空或格式錯誤！');
+            return;
+        }
+
+        const headers = data[0];
+        const rows = data.slice(1);
+        let results = [];
+        let radarScores = [];
+
+        // 清空之前的渲染
+        document.getElementById('dims-page-1').innerHTML = '';
+        document.getElementById('dims-page-2').innerHTML = '';
+
+        dimensionsConfig.forEach((dim, dimIndex) => {
+            let dimTotalScore = 0;
+            let dimValidCount = 0;
+            let questionsData = [];
+
+            dim.questions.forEach(qText => {
+                // 模糊比對找出欄位 index
+                let colIndex = headers.findIndex(h => typeof h === 'string' && h.replace(/\s/g, '').includes(qText.replace(/\s/g, '')));
+                
+                let qAvg = 0;
+                if (colIndex !== -1) {
+                    let sum = 0;
+                    let count = 0;
+                    rows.forEach(row => {
+                        let val = parseFloat(row[colIndex]);
+                        if (!isNaN(val) && val >= 1 && val <= 5) {
+                            sum += val;
+                            count++;
+                        }
+                    });
+                    if (count > 0) {
+                        qAvg = sum / count;
+                        dimTotalScore += sum;
+                        dimValidCount += count;
+                    }
+                }
+
+                questionsData.push({
+                    text: qText,
+                    score: qAvg > 0 ? qAvg.toFixed(2) : '無數據'
+                });
+            });
+
+            let dimAvg = dimValidCount > 0 ? (dimTotalScore / dimValidCount).toFixed(2) : 0;
+            radarScores.push(dimAvg);
+
+            results.push({
+                dimension: dim.name,
+                avg: dimAvg,
+                questions: questionsData
+            });
+
+            // 渲染 HTML
+            renderDimensionGroup(dim.name, dimAvg, questionsData, dimIndex);
+        });
+
+        globalResults = results;
+        document.getElementById('reportContainer').classList.remove('hidden');
+        document.getElementById('actionArea').classList.remove('hidden');
+        
+        drawRadarChart(radarScores);
+    }
+
+    function renderDimensionGroup(dimName, dimAvg, questionsData, dimIndex) {
+        let qHtml = questionsData.map((q, i) => `
+            <div class="flex justify-between items-center py-2 border-b border-gray-100 last:border-0 text-sm">
+                <div class="text-gray-600 flex-1 pr-4">Q${i+1}. ${q.text}</div>
+                <div class="font-mono text-blue-600 font-medium">${q.score}</div>
+            </div>
+        `).join('');
+
+        let containerHtml = `
+            <div class="bg-gray-50 p-5 rounded-lg border border-gray-200 break-inside-avoid mb-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h4 class="text-lg font-bold text-gray-800">${dimName}</h4>
+                    <span class="bg-blue-100 text-blue-800 py-1 px-3 rounded-full font-bold">平均: ${dimAvg}</span>
+                </div>
+                <div class="bg-white p-4 rounded border border-gray-100">
+                    ${qHtml}
+                </div>
+            </div>
+        `;
+
+        // 前三個構面放 Page 1，後兩個放 Page 2
+        if (dimIndex < 3) {
+            document.getElementById('dims-page-1').insertAdjacentHTML('beforeend', containerHtml);
+        } else {
+            document.getElementById('dims-page-2').insertAdjacentHTML('beforeend', containerHtml);
+        }
+    }
+
+    function drawRadarChart(scores) {
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        
+        // 銷毀舊圖表避免重疊重繪錯誤
+        if (myChart) {
+            myChart.destroy();
+        }
+
+        myChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['可靠性', '保證性', '有形性', '同理性', '反應性'],
+                datasets: [{
+                    label: '構面平均分數',
+                    data: scores,
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                    pointRadius: 4,
+                    pointHoverRadius: 7,
+                    pointHitRadius: 40 // 大幅增加滑鼠觸發判定範圍 (只要靠近線就會顯示數字)
+                }]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'nearest',
+                    intersect: false // 不需確實碰到點，靠近即可觸發
+                },
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                        pointLabels: {
+                            font: { size: 14, weight: 'bold' },
+                            color: '#374151'
+                        },
+                        min: 0,
+                        max: 5,
+                        ticks: { stepSize: 1 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+
+    // Modal 控制
+    function openExportModal() { document.getElementById('exportModal').classList.remove('hidden'); }
+    function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
+
+    // 執行匯出
+    function executeExport(type) {
+        closeExportModal();
+        
+        const showRadar = document.getElementById('checkRadar').checked;
+        const showScores = document.getElementById('checkScores').checked;
+
+        if (!showRadar && !showScores) {
+            alert('請至少勾選一項匯出內容！');
+            return;
+        }
+
+        const reportEl = document.getElementById('reportContainer');
+        const radarSection = document.getElementById('section-radar');
+        const scoresSection1 = document.getElementById('section-scores-1');
+        const scoresSection2 = document.getElementById('section-scores-2');
+        const pageBreaks = document.querySelectorAll('.pdf-page-break');
+
+        // 依據勾選狀態暫時隱藏元素
+        if (!showRadar) radarSection.classList.add('hidden');
+        if (!showScores) {
+            scoresSection1.classList.add('hidden');
+            scoresSection2.classList.add('hidden');
+            pageBreaks.forEach(pb => pb.classList.add('hidden')); // 隱藏所有強制分頁
+        } else if (!showRadar && showScores) {
+            // 如果不印雷達只印分數，隱藏第一個分頁標記
+            if(pageBreaks[0]) pageBreaks[0].classList.add('hidden'); 
+        }
+
+        // --- 修正截斷與偏移的核心動作 ---
+        // 在截圖前，將畫面強制滾動回頂部，防止 html2canvas 算錯 Y 軸位置造成偏移
+        window.scrollTo(0, 0); 
+
+        if (type === 'pdf') {
+            const opt = {
+                margin:       10, // 四邊留白 10mm
+                filename:     '服務品質滿意度分析報表.pdf',
+                image:        { type: 'jpeg', quality: 1 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true,
+                    scrollY: 0 // 強制從頂部抓取
+                },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['css', 'legacy'], before: '.pdf-page-break' } // 綁定分頁樣式
+            };
+
+            html2pdf().set(opt).from(reportEl).save().then(() => {
+                restoreVisibility();
+            });
+        } 
+        else if (type === 'png') {
+            // PNG 不處理分頁，全部印在同一張長圖
+            pageBreaks.forEach(pb => pb.classList.add('hidden'));
+            
+            html2canvas(reportEl, { scale: 2, scrollY: 0, backgroundColor: "#ffffff" }).then(canvas => {
+                let link = document.createElement('a');
+                link.download = '服務品質滿意度分析報表.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                restoreVisibility();
+            });
+        }
+
+        // 復原顯示狀態的內部函式
+        function restoreVisibility() {
+            radarSection.classList.remove('hidden');
+            scoresSection1.classList.remove('hidden');
+            scoresSection2.classList.remove('hidden');
+            pageBreaks.forEach(pb => pb.classList.remove('hidden'));
+        }
+    }
+
+    // CSV 匯出邏輯 (將所有結果攤平匯出)
+    function downloadCSV() {
+        if (globalResults.length === 0) return;
+
+        let csvContent = "\uFEFF"; // BOM for Excel UTF-8
+        csvContent += "構面名稱,構面平均得分,題號,題目內容,逐題平均得分\n";
+
+        globalResults.forEach(dim => {
+            dim.questions.forEach((q, i) => {
+                csvContent += `${dim.dimension},${dim.avg},Q${i+1},"${q.text}",${q.score}\n`;
+            });
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "滿意度分析數據.csv");
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
+</body>
+</html>
