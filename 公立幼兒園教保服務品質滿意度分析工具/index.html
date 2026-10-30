@@ -46,33 +46,30 @@
         </button>
     </div>
 
-    <!-- 報表預覽區塊 (設定底色純白，避免輸出透明黑底) -->
+    <!-- 報表預覽區塊 (外層負責顯示 padding 與陰影) -->
     <div id="reportContainer" class="bg-white p-8 rounded-lg shadow-md hidden">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-8" id="reportTitle">服務品質滿意度分析報告</h2>
-        
-        <!-- ================= 第 1 頁內容：雷達圖 ================= -->
-        <div id="section-radar" class="mb-10 flex justify-center items-center flex-col">
-            <h3 class="text-xl font-bold text-gray-700 mb-4">五大構面平均得分雷達圖</h3>
-            <div class="w-full max-w-lg">
-                <canvas id="radarChart"></canvas>
+        <!-- 匯出內容區塊 (內層，無額外 padding，防 PDF 空白頁) -->
+        <div id="exportContent" class="bg-white">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8" id="reportTitle">服務品質滿意度分析報告</h2>
+            
+            <!-- ================= 區塊 1：雷達圖 ================= -->
+            <div id="section-radar" class="mb-10 flex justify-center items-center flex-col">
+                <h3 class="text-xl font-bold text-gray-700 mb-4">五大構面平均得分雷達圖</h3>
+                <div class="w-full max-w-lg">
+                    <canvas id="radarChart"></canvas>
+                </div>
             </div>
-        </div>
 
-        <!-- PDF 分頁標記 1 (動態控制) -->
-        <div id="page-break-1"></div>
+            <!-- ================= 區塊 2：前兩個構面 ================= -->
+            <div id="section-scores-1">
+                <h3 class="text-xl font-bold text-gray-700 mb-4 pb-2 border-b-2 border-blue-500">各構面與逐題平均得分</h3>
+                <div id="dims-page-1" class="space-y-6"></div>
+            </div>
 
-        <!-- ================= 第 2 頁內容：前三個構面 ================= -->
-        <div id="section-scores-1">
-            <h3 class="text-xl font-bold text-gray-700 mb-4 pb-2 border-b-2 border-blue-500">各構面與逐題平均得分</h3>
-            <div id="dims-page-1" class="space-y-6"></div>
-        </div>
-
-        <!-- PDF 分頁標記 2 (動態控制) -->
-        <div id="page-break-2"></div>
-
-        <!-- ================= 第 3 頁內容：後兩個構面 ================= -->
-        <div id="section-scores-2" class="mt-8">
-            <div id="dims-page-2" class="space-y-6"></div>
+            <!-- ================= 區塊 3：後三個構面 ================= -->
+            <div id="section-scores-2" class="mt-8">
+                <div id="dims-page-2" class="space-y-6"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -261,7 +258,8 @@
             </div>
         `;
 
-        if (dimIndex < 3) {
+        // 改為前 2 個構面在第一頁，後 3 個構面在第二頁
+        if (dimIndex < 2) {
             document.getElementById('dims-page-1').insertAdjacentHTML('beforeend', containerHtml);
         } else {
             document.getElementById('dims-page-2').insertAdjacentHTML('beforeend', containerHtml);
@@ -319,44 +317,42 @@
         }
 
         const reportEl = document.getElementById('reportContainer');
+        const exportContent = document.getElementById('exportContent'); // PDF 專用，去除多餘 padding
         const radarSection = document.getElementById('section-radar');
         const scoresSection1 = document.getElementById('section-scores-1');
         const scoresSection2 = document.getElementById('section-scores-2');
-        const pb1 = document.getElementById('page-break-1');
-        const pb2 = document.getElementById('page-break-2');
 
-        // 先重置所有顯示狀態與換頁標記
+        // 重置狀態
         radarSection.classList.remove('hidden');
         scoresSection1.classList.remove('hidden');
         scoresSection2.classList.remove('hidden');
-        pb1.className = ''; 
-        pb2.className = '';
+        scoresSection1.classList.remove('pdf-page-break');
+        scoresSection2.classList.remove('pdf-page-break');
+        scoresSection2.classList.add('mt-8'); // 恢復預設間距
 
-        // 依據勾選項目隱藏區塊
         if (!showRadar) radarSection.classList.add('hidden');
         if (!showScores) {
             scoresSection1.classList.add('hidden');
             scoresSection2.classList.add('hidden');
         }
 
-        // 動態分配 PDF 換頁標記（避免套件讀到標籤而切出空白頁）
+        // 動態掛載 PDF 換頁標記 (直接掛在區塊上)
         if (type === 'pdf') {
             if (showRadar && showScores) {
-                // 全選：雷達圖(頁1) -> 換頁 -> 構面1~3(頁2) -> 換頁 -> 構面4~5(頁3)
-                pb1.className = 'pdf-page-break';
-                pb2.className = 'pdf-page-break';
+                scoresSection1.classList.add('pdf-page-break');
+                scoresSection2.classList.add('pdf-page-break');
+                scoresSection2.classList.remove('mt-8'); // 在新頁首移除上方間隔，避免內容被往下推擠
             } else if (!showRadar && showScores) {
-                // 只選分數：構面1~3(頁1) -> 換頁 -> 構面4~5(頁2)
-                pb2.className = 'pdf-page-break';
+                scoresSection2.classList.add('pdf-page-break');
+                scoresSection2.classList.remove('mt-8'); // 同上
             }
-            // 只選雷達圖：不需要任何換頁標記
         }
 
-        window.scrollTo(0, 0); // 防截斷防偏移
+        window.scrollTo(0, 0); // 確保畫面在頂部，防截斷
 
         if (type === 'pdf') {
             const opt = {
-                margin:       10, 
+                margin:       10, // A4 標準留白
                 filename:     '服務品質滿意度分析報表.pdf',
                 image:        { type: 'jpeg', quality: 1 },
                 html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
@@ -364,11 +360,11 @@
                 pagebreak:    { mode: ['css', 'legacy'], before: '.pdf-page-break' } 
             };
 
-            html2pdf().set(opt).from(reportEl).save().then(() => {
-                restoreVisibility();
-            });
+            // 【重點修改】傳入 exportContent 而非 reportContainer，解決因外層 padding 導致的第三張空白頁
+            html2pdf().set(opt).from(exportContent).save().then(() => restoreVisibility());
         } 
         else if (type === 'png') {
+            // PNG 繼續傳入 reportContainer，保留陰影與美觀外框
             html2canvas(reportEl, { scale: 2, scrollY: 0, backgroundColor: "#ffffff" }).then(canvas => {
                 let link = document.createElement('a');
                 link.download = '服務品質滿意度分析報表.png';
@@ -382,8 +378,9 @@
             radarSection.classList.remove('hidden');
             scoresSection1.classList.remove('hidden');
             scoresSection2.classList.remove('hidden');
-            pb1.className = '';
-            pb2.className = '';
+            scoresSection1.classList.remove('pdf-page-break');
+            scoresSection2.classList.remove('pdf-page-break');
+            scoresSection2.classList.add('mt-8');
         }
     }
 
