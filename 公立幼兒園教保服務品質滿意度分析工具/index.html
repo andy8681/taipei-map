@@ -19,6 +19,8 @@
         body { background-color: #f3f4f6; }
         /* 強制 PDF 分頁樣式 */
         .pdf-page-break { page-break-before: always; }
+        /* 拖曳上傳區的互動效果 */
+        .dragover { background-color: #eff6ff !important; border-color: #3b82f6 !important; }
     </style>
 </head>
 <body class="p-6">
@@ -27,13 +29,19 @@
     <!-- 頂部標題與上傳區 -->
     <div class="bg-white p-6 rounded-lg shadow-md text-center">
         <h1 class="text-2xl font-bold text-gray-800 mb-4">教保服務品質滿意度 (25題核心版) 自動分析工具</h1>
-        <p class="text-sm text-gray-500 mb-6">請上傳由 Google 表單匯出的 Excel (.xlsx) 或 CSV 檔案</p>
         
-        <label class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-            <span>選擇檔案並自動分析</span>
-            <input type="file" id="fileInput" accept=".xlsx, .xls, .csv" class="hidden" />
-        </label>
-        <p id="fileName" class="mt-3 text-sm text-gray-600 hidden"></p>
+        <!-- 拖曳上傳區塊 -->
+        <div id="dropZone" class="border-2 border-dashed border-gray-300 bg-gray-50 transition-colors rounded-lg p-10 flex flex-col items-center justify-center">
+            <svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            <p class="text-gray-600 mb-4 font-medium">請點擊下方按鈕，或將 Excel/CSV 檔案拖曳至此虛線框內</p>
+            <label class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors">
+                <span>選擇檔案並自動分析</span>
+                <input type="file" id="fileInput" accept=".xlsx, .xls, .csv" class="hidden" />
+            </label>
+            <p id="fileName" class="mt-4 text-sm text-blue-600 font-bold hidden"></p>
+        </div>
     </div>
 
     <!-- 操作按鈕區 (分析後顯示) -->
@@ -46,9 +54,8 @@
         </button>
     </div>
 
-    <!-- 報表預覽區塊 (外層負責顯示 padding 與陰影) -->
+    <!-- 報表預覽區塊 -->
     <div id="reportContainer" class="bg-white p-8 rounded-lg shadow-md hidden">
-        <!-- 匯出內容區塊 (內層，無額外 padding，防 PDF 空白頁) -->
         <div id="exportContent" class="bg-white">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-8" id="reportTitle">服務品質滿意度分析報告</h2>
             
@@ -153,11 +160,11 @@
     let globalResults = []; 
     let myChart = null; 
 
-    document.getElementById('fileInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
+    // --- 檔案處理共用邏輯 ---
+    function processFile(file) {
         if (!file) return;
 
-        document.getElementById('fileName').textContent = "已載入：" + file.name;
+        document.getElementById('fileName').textContent = "已成功載入：" + file.name;
         document.getElementById('fileName').classList.remove('hidden');
 
         const reader = new FileReader();
@@ -171,6 +178,41 @@
             analyzeData(jsonData);
         };
         reader.readAsArrayBuffer(file);
+    }
+
+    // --- 點擊按鈕上傳 ---
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        processFile(e.target.files[0]);
+    });
+
+    // --- 拖曳上傳功能 (Drag & Drop) ---
+    const dropZone = document.getElementById('dropZone');
+    
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            const file = e.dataTransfer.files[0];
+            const validExtensions = ['xlsx', 'xls', 'csv'];
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            
+            if (validExtensions.includes(fileExtension)) {
+                processFile(file);
+            } else {
+                alert("請上傳正確的 Excel (.xlsx) 或 CSV 檔案格式！");
+            }
+        }
     });
 
     function analyzeData(data) {
@@ -258,7 +300,6 @@
             </div>
         `;
 
-        // 改為前 2 個構面在第一頁，後 3 個構面在第二頁
         if (dimIndex < 2) {
             document.getElementById('dims-page-1').insertAdjacentHTML('beforeend', containerHtml);
         } else {
@@ -269,6 +310,24 @@
     function drawRadarChart(scores) {
         const ctx = document.getElementById('radarChart').getContext('2d');
         if (myChart) { myChart.destroy(); }
+
+        // --- 自動偵測與縮放雷達圖上下限 (優化版) ---
+        const numScores = scores.map(Number);
+        const maxScore = Math.max(...numScores);
+        const minScore = Math.min(...numScores);
+
+        // 1. 上限：取比最高分大一點點的最接近 0.1 刻度，確保最高分貼近最外圈 (最多差一格)
+        let chartMax = Math.ceil((maxScore + 0.05) * 10) / 10;
+        if (chartMax > 5) chartMax = 5;
+
+        // 2. 下限：取比最低分低大約 0.1~0.2 的刻度，確保最低分保有空間不觸底
+        let chartMin = Math.floor((minScore - 0.15) * 10) / 10;
+        if (chartMin < 0) chartMin = 0;
+
+        // 3. 確保圖表上下限差距至少有 0.5，讓刻度間距好看
+        if (chartMax - chartMin < 0.5) {
+            chartMin = Math.max(0, chartMax - 0.5);
+        }
 
         myChart = new Chart(ctx, {
             type: 'radar',
@@ -294,7 +353,9 @@
                         angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
                         grid: { color: 'rgba(0, 0, 0, 0.1)' },
                         pointLabels: { font: { size: 14, weight: 'bold' }, color: '#374151' },
-                        min: 0, max: 5, ticks: { stepSize: 1 }
+                        min: chartMin,  // 緊貼下限
+                        max: chartMax   // 緊貼上限
+                        // Chart.js 會依據這裡的上下限自動切割最適合的等距刻度線
                     }
                 },
                 plugins: { legend: { display: false } }
@@ -317,18 +378,17 @@
         }
 
         const reportEl = document.getElementById('reportContainer');
-        const exportContent = document.getElementById('exportContent'); // PDF 專用，去除多餘 padding
+        const exportContent = document.getElementById('exportContent');
         const radarSection = document.getElementById('section-radar');
         const scoresSection1 = document.getElementById('section-scores-1');
         const scoresSection2 = document.getElementById('section-scores-2');
 
-        // 重置狀態
         radarSection.classList.remove('hidden');
         scoresSection1.classList.remove('hidden');
         scoresSection2.classList.remove('hidden');
         scoresSection1.classList.remove('pdf-page-break');
         scoresSection2.classList.remove('pdf-page-break');
-        scoresSection2.classList.add('mt-8'); // 恢復預設間距
+        scoresSection2.classList.add('mt-8');
 
         if (!showRadar) radarSection.classList.add('hidden');
         if (!showScores) {
@@ -336,23 +396,22 @@
             scoresSection2.classList.add('hidden');
         }
 
-        // 動態掛載 PDF 換頁標記 (直接掛在區塊上)
         if (type === 'pdf') {
             if (showRadar && showScores) {
                 scoresSection1.classList.add('pdf-page-break');
                 scoresSection2.classList.add('pdf-page-break');
-                scoresSection2.classList.remove('mt-8'); // 在新頁首移除上方間隔，避免內容被往下推擠
+                scoresSection2.classList.remove('mt-8'); 
             } else if (!showRadar && showScores) {
                 scoresSection2.classList.add('pdf-page-break');
-                scoresSection2.classList.remove('mt-8'); // 同上
+                scoresSection2.classList.remove('mt-8'); 
             }
         }
 
-        window.scrollTo(0, 0); // 確保畫面在頂部，防截斷
+        window.scrollTo(0, 0); 
 
         if (type === 'pdf') {
             const opt = {
-                margin:       10, // A4 標準留白
+                margin:       10, 
                 filename:     '服務品質滿意度分析報表.pdf',
                 image:        { type: 'jpeg', quality: 1 },
                 html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
@@ -360,11 +419,9 @@
                 pagebreak:    { mode: ['css', 'legacy'], before: '.pdf-page-break' } 
             };
 
-            // 【重點修改】傳入 exportContent 而非 reportContainer，解決因外層 padding 導致的第三張空白頁
             html2pdf().set(opt).from(exportContent).save().then(() => restoreVisibility());
         } 
         else if (type === 'png') {
-            // PNG 繼續傳入 reportContainer，保留陰影與美觀外框
             html2canvas(reportEl, { scale: 2, scrollY: 0, backgroundColor: "#ffffff" }).then(canvas => {
                 let link = document.createElement('a');
                 link.download = '服務品質滿意度分析報表.png';
