@@ -104,55 +104,57 @@
 </div>
 
 <script>
+    // 定義 25 題的標準顯示文字與其對應的題號 (1~25)
+    // 我們將使用題號去抓取表單資料，但畫面呈現時仍會印出此處定義的漂亮標準字串
     const dimensionsConfig = [
         {
             name: "可靠性",
             questions: [
-                "幼兒園師資穩定且流動率低。",
-                "幼兒園重視孩子的生活教育與生活自理能力，並落實於教學中。",
-                "我能很明顯地感受到孩子在幼兒園的學習進步。",
-                "幼兒園推動幼小銜接活動，有助於幼兒日後順利銜接國小學習。",
-                "我覺得幼兒園的教保品質很好，優於其他類型的幼兒園。"
+                { qNum: 1, text: "幼兒園師資穩定且流動率低。" },
+                { qNum: 2, text: "幼兒園重視孩子的生活教育與生活自理能力，並落實於教學中。" },
+                { qNum: 3, text: "我能很明顯地感受到孩子在幼兒園的學習進步。" },
+                { qNum: 4, text: "幼兒園推動幼小銜接活動，有助於幼兒日後順利銜接國小學習。" },
+                { qNum: 5, text: "我覺得幼兒園的教保品質很好，優於其他類型的幼兒園。" }
             ]
         },
         {
             name: "保證性",
             questions: [
-                "老師具備專業的幼教知能與教保能力。",
-                "孩子的班級老師間互動與合作默契良好。",
-                "老師能運用多元創新的教學方法引發孩子學習興趣。",
-                "幼兒園提供的午餐與點心符合均衡營養原則。",
-                "國小校長/園長能熟悉且能充分掌握幼兒園的運作現況。"
+                { qNum: 6, text: "老師具備專業的幼教知能與教保能力。" },
+                { qNum: 7, text: "孩子的班級老師間互動與合作默契良好。" },
+                { qNum: 8, text: "老師能運用多元創新的教學方法引發孩子學習興趣。" },
+                { qNum: 9, text: "幼兒園提供的午餐與點心符合均衡營養原則。" },
+                { qNum: 10, text: "國小校長/園長能熟悉且能充分掌握幼兒園的運作現況。" }
             ]
         },
         {
             name: "有形性",
             questions: [
-                "幼兒園能為孩子留存完整的學習歷程記錄（如成長檔案、學習單、照片）。",
-                "幼兒園的環境能保持整潔，讓幼兒感到舒適。",
-                "幼兒園提供幼兒充足的活動與探索空間。",
-                "幼兒園的環境與設施設備能有安全防護，讓我感到安心。",
-                "幼兒園能適時更新或汰換教具與設備。"
+                { qNum: 11, text: "幼兒園能為孩子留存完整的學習歷程記錄（如成長檔案、學習單、照片）。" },
+                { qNum: 12, text: "幼兒園的環境能保持整潔，讓幼兒感到舒適。" },
+                { qNum: 13, text: "幼兒園提供幼兒充足的活動與探索空間。" },
+                { qNum: 14, text: "幼兒園的環境與設施設備能有安全防護，讓我感到安心。" },
+                { qNum: 15, text: "幼兒園能適時更新或汰換教具與設備。" }
             ]
         },
         {
             name: "同理性",
             questions: [
-                "幼兒園的學習內容豐富，符合孩子的需要。",
-                "幼兒園能規劃適切的戶外教學活動，豐富幼兒的學習與探索。",
-                "老師能提供充足的合作學習機會，鼓勵孩子發展社交技巧與合作能力。",
-                "幼兒園能規劃溫馨的家長接送環境，讓我在接送孩子時感受到被重視與關懷。",
-                "幼兒園的延長照顧服務時間（含課後、寒暑假）安排合宜，能減輕我的教保負擔。"
+                { qNum: 16, text: "幼兒園的學習內容豐富，符合孩子的需要。" },
+                { qNum: 17, text: "幼兒園能規劃適切的戶外教學活動，豐富幼兒的學習與探索。" },
+                { qNum: 18, text: "老師能提供充足的合作學習機會，鼓勵孩子發展社交技巧與合作能力。" },
+                { qNum: 19, text: "幼兒園能規劃溫馨的家長接送環境，讓我在接送孩子時感受到被重視與關懷。" },
+                { qNum: 20, text: "幼兒園的延長照顧服務時間（含課後、寒暑假）安排合宜，能減輕我的教保負擔。" }
             ]
         },
         {
             name: "反應性",
             questions: [
-                "幼兒園能提供充分且多元的親師聯繫管道（如官方公務信箱、LINE、電話、面談）。",
-                "幼兒園能積極連結並善用社區資源（如圖書館、公園、超商等）。",
-                "幼兒園規劃的上學及放學接送流程順暢且便利。",
-                "幼兒園能即時透過網站或社群媒體（如FB、LINE）更新園務資訊。",
-                "幼兒園教職員工對於我提出的問題或需求，能提供有效且快速的回應。"
+                { qNum: 21, text: "幼兒園能提供充分且多元的親師聯繫管道（如官方公務信箱、LINE、電話、面談）。" },
+                { qNum: 22, text: "幼兒園能積極連結並善用社區資源（如圖書館、公園、超商等）。" },
+                { qNum: 23, text: "幼兒園規劃的上學及放學接送流程順暢且便利。" },
+                { qNum: 24, text: "幼兒園能即時透過網站或社群媒體（如FB、LINE）更新園務資訊。" },
+                { qNum: 25, text: "幼兒園教職員工對於我提出的問題或需求，能提供有效且快速的回應。" }
             ]
         }
     ];
@@ -160,7 +162,6 @@
     let globalResults = []; 
     let myChart = null; 
 
-    // --- 檔案處理共用邏輯 ---
     function processFile(file) {
         if (!file) return;
 
@@ -180,12 +181,10 @@
         reader.readAsArrayBuffer(file);
     }
 
-    // --- 點擊按鈕上傳 ---
     document.getElementById('fileInput').addEventListener('change', function(e) {
         processFile(e.target.files[0]);
     });
 
-    // --- 拖曳上傳功能 (Drag & Drop) ---
     const dropZone = document.getElementById('dropZone');
     
     dropZone.addEventListener('dragover', (e) => {
@@ -201,7 +200,6 @@
     dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
         dropZone.classList.remove('dragover');
-        
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             const file = e.dataTransfer.files[0];
             const validExtensions = ['xlsx', 'xls', 'csv'];
@@ -226,19 +224,51 @@
         let results = [];
         let radarScores = [];
 
+        // 清空現有報表
         document.getElementById('dims-page-1').innerHTML = '';
         document.getElementById('dims-page-2').innerHTML = '';
+
+        // 建立「題號對應到欄位 Index」的對照表
+        // 我們要過濾掉基本資料題，只抓取 "數字." 或 "數字 " 開頭的欄位，且數字介於 1~25 之間
+        let questionColMap = {};
+        
+        // 要排除的干擾關鍵字 (避免有些園所自己加題號但不是滿意度題目)
+        const excludeKeywords = ["最高學歷", "子女數", "2歲前", "送托", "行政區", "曾就讀", "哪些管道", "了解幼兒園"];
+
+        headers.forEach((headerStr, colIdx) => {
+            if (typeof headerStr !== 'string') return;
+            
+            // 如果欄位名稱包含排除關鍵字，直接跳過
+            if (excludeKeywords.some(kw => headerStr.includes(kw))) return;
+
+            // 使用正則表達式嘗試抓取開頭的數字 (例如 "1.", "1 ", "1．", "1、")
+            const match = headerStr.trim().match(/^(\d+)[\.\s、．]/);
+            if (match) {
+                const qNum = parseInt(match[1], 10);
+                // 確保只抓取 1 ~ 25 題，不理會 25 題之後的擴充題
+                if (qNum >= 1 && qNum <= 25) {
+                    questionColMap[qNum] = colIdx;
+                }
+            }
+        });
+
+        // 檢查是否至少抓到一些題目，如果都沒抓到可能表單連題號都沒打
+        if (Object.keys(questionColMap).length === 0) {
+            alert("無法在表單表頭中辨識到「1. ~ 25.」的題號格式，請確認匯出格式是否正確。");
+            return;
+        }
 
         dimensionsConfig.forEach((dim, dimIndex) => {
             let dimTotalScore = 0;
             let dimValidCount = 0;
             let questionsData = [];
 
-            dim.questions.forEach(qText => {
-                let colIndex = headers.findIndex(h => typeof h === 'string' && h.replace(/\s/g, '').includes(qText.replace(/\s/g, '')));
+            dim.questions.forEach(qDef => {
+                let colIndex = questionColMap[qDef.qNum];
                 
                 let qAvg = 0;
-                if (colIndex !== -1) {
+                // 只有在表頭有找到這題時才計算
+                if (colIndex !== undefined && colIndex !== -1) {
                     let sum = 0;
                     let count = 0;
                     rows.forEach(row => {
@@ -256,7 +286,8 @@
                 }
 
                 questionsData.push({
-                    text: qText,
+                    qNum: qDef.qNum,
+                    text: qDef.text,
                     score: qAvg > 0 ? qAvg.toFixed(2) : '無數據'
                 });
             });
@@ -281,9 +312,9 @@
     }
 
     function renderDimensionGroup(dimName, dimAvg, questionsData, dimIndex) {
-        let qHtml = questionsData.map((q, i) => `
+        let qHtml = questionsData.map(q => `
             <div class="flex justify-between items-center py-2 border-b border-gray-100 last:border-0 text-sm">
-                <div class="text-gray-600 flex-1 pr-4">Q${i+1}. ${q.text}</div>
+                <div class="text-gray-600 flex-1 pr-4">Q${q.qNum}. ${q.text}</div>
                 <div class="font-mono text-blue-600 font-medium">${q.score}</div>
             </div>
         `).join('');
@@ -427,8 +458,8 @@
         if (globalResults.length === 0) return;
         let csvContent = "\uFEFF構面名稱,構面平均得分,題號,題目內容,逐題平均得分\n";
         globalResults.forEach(dim => {
-            dim.questions.forEach((q, i) => {
-                csvContent += `${dim.dimension},${dim.avg},Q${i+1},"${q.text}",${q.score}\n`;
+            dim.questions.forEach(q => {
+                csvContent += `${dim.dimension},${dim.avg},Q${q.qNum},"${q.text}",${q.score}\n`;
             });
         });
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
