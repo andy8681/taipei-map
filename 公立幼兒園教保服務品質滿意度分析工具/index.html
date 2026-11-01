@@ -67,6 +67,25 @@
                 </div>
             </div>
 
+            <!-- ================= 新增區塊：最高與最低分題 ================= -->
+            <div id="section-ranking" class="mb-10">
+                <h3 class="text-xl font-bold text-gray-700 mb-4 pb-2 border-b-2 border-blue-500">指標優勢與關注項目 (Top 3 & Bottom 3)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                        <h4 class="text-md font-bold text-green-800 mb-3 flex items-center">
+                            <span class="mr-2">🏆</span> 滿意度最高前三題
+                        </h4>
+                        <ul id="top-3-list" class="space-y-3"></ul>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                        <h4 class="text-md font-bold text-red-800 mb-3 flex items-center">
+                            <span class="mr-2">⚠️</span> 滿意度最低後三題
+                        </h4>
+                        <ul id="bottom-3-list" class="space-y-3"></ul>
+                    </div>
+                </div>
+            </div>
+
             <!-- ================= 區塊 2：前兩個構面 ================= -->
             <div id="section-scores-1">
                 <h3 class="text-xl font-bold text-gray-700 mb-4 pb-2 border-b-2 border-blue-500">各構面與逐題平均得分</h3>
@@ -91,6 +110,10 @@
                 <span class="text-gray-700">五大構面雷達圖</span>
             </label>
             <label class="flex items-center space-x-3 cursor-pointer">
+                <input type="checkbox" id="checkRanking" checked class="form-checkbox h-5 w-5 text-blue-600">
+                <span class="text-gray-700">最高與最低分排行</span>
+            </label>
+            <label class="flex items-center space-x-3 cursor-pointer">
                 <input type="checkbox" id="checkScores" checked class="form-checkbox h-5 w-5 text-blue-600">
                 <span class="text-gray-700">各構面與逐題分數</span>
             </label>
@@ -105,7 +128,6 @@
 
 <script>
     // 定義 25 題的標準顯示文字與其對應的題號 (1~25)
-    // 我們將使用題號去抓取表單資料，但畫面呈現時仍會印出此處定義的漂亮標準字串
     const dimensionsConfig = [
         {
             name: "可靠性",
@@ -223,36 +245,27 @@
         const rows = data.slice(1);
         let results = [];
         let radarScores = [];
+        let allValidQuestions = []; // 儲存所有有效題目以供排行
 
-        // 清空現有報表
         document.getElementById('dims-page-1').innerHTML = '';
         document.getElementById('dims-page-2').innerHTML = '';
 
-        // 建立「題號對應到欄位 Index」的對照表
-        // 我們要過濾掉基本資料題，只抓取 "數字." 或 "數字 " 開頭的欄位，且數字介於 1~25 之間
         let questionColMap = {};
-        
-        // 要排除的干擾關鍵字 (避免有些園所自己加題號但不是滿意度題目)
         const excludeKeywords = ["最高學歷", "子女數", "2歲前", "送托", "行政區", "曾就讀", "哪些管道", "了解幼兒園"];
 
         headers.forEach((headerStr, colIdx) => {
             if (typeof headerStr !== 'string') return;
-            
-            // 如果欄位名稱包含排除關鍵字，直接跳過
             if (excludeKeywords.some(kw => headerStr.includes(kw))) return;
 
-            // 使用正則表達式嘗試抓取開頭的數字 (例如 "1.", "1 ", "1．", "1、")
             const match = headerStr.trim().match(/^(\d+)[\.\s、．]/);
             if (match) {
                 const qNum = parseInt(match[1], 10);
-                // 確保只抓取 1 ~ 25 題，不理會 25 題之後的擴充題
                 if (qNum >= 1 && qNum <= 25) {
                     questionColMap[qNum] = colIdx;
                 }
             }
         });
 
-        // 檢查是否至少抓到一些題目，如果都沒抓到可能表單連題號都沒打
         if (Object.keys(questionColMap).length === 0) {
             alert("無法在表單表頭中辨識到「1. ~ 25.」的題號格式，請確認匯出格式是否正確。");
             return;
@@ -267,29 +280,52 @@
                 let colIndex = questionColMap[qDef.qNum];
                 
                 let qAvg = 0;
-                // 只有在表頭有找到這題時才計算
+                let sum = 0;
+                let count = 0;
+                let scoreCounts = {1:0, 2:0, 3:0, 4:0, 5:0}; // 記錄各分數筆數
+                
                 if (colIndex !== undefined && colIndex !== -1) {
-                    let sum = 0;
-                    let count = 0;
                     rows.forEach(row => {
                         let val = parseFloat(row[colIndex]);
                         if (!isNaN(val) && val >= 1 && val <= 5) {
                             sum += val;
                             count++;
+                            scoreCounts[val]++;
                         }
                     });
                     if (count > 0) {
                         qAvg = sum / count;
                         dimTotalScore += sum;
                         dimValidCount += count;
+                        
+                        // 計算低分細節
+                        let lowCount = scoreCounts[1] + scoreCounts[2];
+                        let lowPct = ((lowCount / count) * 100).toFixed(1);
+
+                        allValidQuestions.push({
+                            qNum: qDef.qNum,
+                            text: qDef.text,
+                            score: parseFloat(qAvg.toFixed(2))
+                        });
+                        
+                        questionsData.push({
+                            qNum: qDef.qNum,
+                            text: qDef.text,
+                            score: qAvg.toFixed(2),
+                            score1Count: scoreCounts[1],
+                            score2Count: scoreCounts[2],
+                            lowPct: lowPct,
+                            hasData: true
+                        });
+                    } else {
+                        questionsData.push({
+                            qNum: qDef.qNum,
+                            text: qDef.text,
+                            score: '無數據',
+                            hasData: false
+                        });
                     }
                 }
-
-                questionsData.push({
-                    qNum: qDef.qNum,
-                    text: qDef.text,
-                    score: qAvg > 0 ? qAvg.toFixed(2) : '無數據'
-                });
             });
 
             let dimAvg = dimValidCount > 0 ? (dimTotalScore / dimValidCount).toFixed(2) : 0;
@@ -304,6 +340,12 @@
             renderDimensionGroup(dim.name, dimAvg, questionsData, dimIndex);
         });
 
+        // 處理前三名與後三名邏輯
+        let sortedQuestions = [...allValidQuestions].sort((a, b) => b.score - a.score);
+        let top3 = sortedQuestions.slice(0, 3);
+        let bottom3 = [...allValidQuestions].sort((a, b) => a.score - b.score).slice(0, 3);
+        renderRankings(top3, bottom3);
+
         globalResults = results;
         document.getElementById('reportContainer').classList.remove('hidden');
         document.getElementById('actionArea').classList.remove('hidden');
@@ -311,13 +353,50 @@
         drawRadarChart(radarScores);
     }
 
+    function renderRankings(top3, bottom3) {
+        const createListItem = (q, rankText, color) => `
+            <li class="flex justify-between items-start text-sm border-b border-${color}-200 pb-2 last:border-0 last:pb-0">
+                <span class="text-gray-700 flex-1 pr-2">
+                    <span class="font-bold text-${color}-700 mr-1">[${rankText}]</span> 
+                    (Q${q.qNum}) ${q.text}
+                </span>
+                <span class="font-mono font-bold text-${color}-700">${q.score.toFixed(2)}</span>
+            </li>
+        `;
+
+        document.getElementById('top-3-list').innerHTML = top3.map((q, i) => createListItem(q, `Top ${i+1}`, 'green')).join('');
+        document.getElementById('bottom-3-list').innerHTML = bottom3.map((q, i) => createListItem(q, `倒數 ${i+1}`, 'red')).join('');
+    }
+
     function renderDimensionGroup(dimName, dimAvg, questionsData, dimIndex) {
-        let qHtml = questionsData.map(q => `
-            <div class="flex justify-between items-center py-2 border-b border-gray-100 last:border-0 text-sm">
-                <div class="text-gray-600 flex-1 pr-4">Q${q.qNum}. ${q.text}</div>
-                <div class="font-mono text-blue-600 font-medium">${q.score}</div>
+        let qHtml = questionsData.map(q => {
+            let lowScoreLabel = "";
+            if(q.hasData) {
+                // 若有 1 分或 2 分的資料，則標示出來
+                if(q.score1Count > 0 || q.score2Count > 0) {
+                    lowScoreLabel = `
+                        <div class="mt-1 text-xs bg-red-50 text-red-600 px-2 py-1 rounded inline-block border border-red-100">
+                            ⚠️ 關注回覆：1分 ${q.score1Count} 筆, 2分 ${q.score2Count} 筆 (低分佔總回覆 ${q.lowPct}%)
+                        </div>
+                    `;
+                } else {
+                    lowScoreLabel = `
+                        <div class="mt-1 text-xs bg-gray-50 text-gray-400 px-2 py-1 rounded inline-block">
+                            無 1~2 分之低分回覆
+                        </div>
+                    `;
+                }
+            }
+
+            return `
+            <div class="py-3 border-b border-gray-100 last:border-0">
+                <div class="flex justify-between items-start text-sm">
+                    <div class="text-gray-700 flex-1 pr-4 font-medium leading-relaxed">Q${q.qNum}. ${q.text}</div>
+                    <div class="font-mono text-blue-600 font-bold text-lg">${q.score}</div>
+                </div>
+                ${lowScoreLabel}
             </div>
-        `).join('');
+        `}).join('');
 
         let containerHtml = `
             <div class="bg-gray-50 p-5 rounded-lg border border-gray-200 break-inside-avoid mb-4">
@@ -383,9 +462,10 @@
         closeExportModal();
         
         const showRadar = document.getElementById('checkRadar').checked;
+        const showRanking = document.getElementById('checkRanking').checked;
         const showScores = document.getElementById('checkScores').checked;
 
-        if (!showRadar && !showScores) {
+        if (!showRadar && !showRanking && !showScores) {
             alert('請至少勾選一項匯出內容！');
             return;
         }
@@ -393,28 +473,34 @@
         const reportEl = document.getElementById('reportContainer');
         const exportContent = document.getElementById('exportContent');
         const radarSection = document.getElementById('section-radar');
+        const rankingSection = document.getElementById('section-ranking');
         const scoresSection1 = document.getElementById('section-scores-1');
         const scoresSection2 = document.getElementById('section-scores-2');
 
+        // 預設全展開以準備處理
         radarSection.classList.remove('hidden');
+        rankingSection.classList.remove('hidden');
         scoresSection1.classList.remove('hidden');
         scoresSection2.classList.remove('hidden');
+        
         scoresSection1.classList.remove('pdf-page-break');
         scoresSection2.classList.remove('pdf-page-break');
         scoresSection2.classList.add('mt-8');
 
+        // 根據勾選隱藏區塊
         if (!showRadar) radarSection.classList.add('hidden');
+        if (!showRanking) rankingSection.classList.add('hidden');
         if (!showScores) {
             scoresSection1.classList.add('hidden');
             scoresSection2.classList.add('hidden');
         }
 
+        // 處理 PDF 換頁邏輯 (簡化處理：若有各構面分數，為確保版面通常在此斷頁)
         if (type === 'pdf') {
-            if (showRadar && showScores) {
+            if (showScores && (showRadar || showRanking)) {
                 scoresSection1.classList.add('pdf-page-break');
-                scoresSection2.classList.add('pdf-page-break');
-                scoresSection2.classList.remove('mt-8'); 
-            } else if (!showRadar && showScores) {
+            }
+            if (showScores) {
                 scoresSection2.classList.add('pdf-page-break');
                 scoresSection2.classList.remove('mt-8'); 
             }
@@ -446,6 +532,7 @@
 
         function restoreVisibility() {
             radarSection.classList.remove('hidden');
+            rankingSection.classList.remove('hidden');
             scoresSection1.classList.remove('hidden');
             scoresSection2.classList.remove('hidden');
             scoresSection1.classList.remove('pdf-page-break');
@@ -456,16 +543,21 @@
 
     function downloadCSV() {
         if (globalResults.length === 0) return;
-        let csvContent = "\uFEFF構面名稱,構面平均得分,題號,題目內容,逐題平均得分\n";
+        // 加入新的 CSV 標頭
+        let csvContent = "\uFEFF構面名稱,構面平均得分,題號,題目內容,逐題平均得分,1分回覆筆數,2分回覆筆數,低分(1-2分)佔比(%)\n";
+        
         globalResults.forEach(dim => {
             dim.questions.forEach(q => {
-                csvContent += `${dim.dimension},${dim.avg},Q${q.qNum},"${q.text}",${q.score}\n`;
+                let s1 = q.hasData ? q.score1Count : 0;
+                let s2 = q.hasData ? q.score2Count : 0;
+                let lowPct = q.hasData ? q.lowPct : 0;
+                csvContent += `${dim.dimension},${dim.avg},Q${q.qNum},"${q.text}",${q.score},${s1},${s2},${lowPct}%\n`;
             });
         });
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = "滿意度分析數據.csv";
+        link.download = "滿意度分析數據_含低分統計.csv";
         link.click();
     }
 </script>
