@@ -32,7 +32,7 @@
         
         <!-- 園所名稱輸入框 -->
         <div class="mb-5">
-            <input type="text" id="schoolNameInput" placeholder="請先輸入園所名稱 (選填，將顯示於報表上方)" class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+            <input type="text" id="schoolNameInput" value="（您的幼兒園名稱）幼兒園" placeholder="請輸入園所名稱 (選填，可隨時修改，將顯示於報表上方)" class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
         </div>
 
         <!-- 拖曳上傳區塊 -->
@@ -62,10 +62,11 @@
     <!-- 報表預覽區塊 -->
     <div id="reportContainer" class="bg-white p-8 rounded-lg shadow-md hidden">
         <div id="exportContent" class="bg-white">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8" id="reportTitle">
-                <span id="displaySchoolName" class="block text-2xl text-gray-600 mb-2 font-semibold hidden"></span>
-                服務品質滿意度分析報告
-            </h2>
+            <!-- 報表標題區塊 -->
+            <div class="text-center mb-8">
+                <h2 id="displaySchoolName" class="text-2xl text-gray-600 mb-2 font-semibold hidden"></h2>
+                <h2 class="text-3xl font-bold text-gray-800" id="reportTitle">服務品質滿意度分析報告</h2>
+            </div>
             
             <!-- ================= 區塊 1：雷達圖 ================= -->
             <div id="section-radar" class="mb-10 flex justify-center items-center flex-col">
@@ -135,7 +136,18 @@
 </div>
 
 <script>
-    // 定義 25 題的標準顯示文字與其對應的題號 (1~25)
+    // 即時綁定園所名稱輸入，使用者若在載入後才輸入，報表也能同步更新並匯出
+    document.getElementById('schoolNameInput').addEventListener('input', function(e) {
+        const displaySchool = document.getElementById('displaySchoolName');
+        const val = e.target.value.trim();
+        if (val) {
+            displaySchool.textContent = val;
+            displaySchool.classList.remove('hidden');
+        } else {
+            displaySchool.classList.add('hidden');
+        }
+    });
+
     const dimensionsConfig = [
         {
             name: "可靠性",
@@ -192,6 +204,16 @@
     let globalResults = []; 
     let myChart = null; 
 
+    function handleSchoolNamePrompt() {
+        const schoolInput = document.getElementById('schoolNameInput');
+        const userResponse = prompt("請確認或輸入園所名稱（將顯示於報表上方）：", schoolInput.value);
+        if (userResponse !== null) {
+            schoolInput.value = userResponse.trim();
+            // 觸發 input 事件讓畫面即時更新
+            schoolInput.dispatchEvent(new Event('input'));
+        }
+    }
+
     function processFile(file) {
         if (!file) return;
 
@@ -212,7 +234,12 @@
     }
 
     document.getElementById('fileInput').addEventListener('change', function(e) {
-        processFile(e.target.files[0]);
+        if(e.target.files.length > 0) {
+            handleSchoolNamePrompt();
+            processFile(e.target.files[0]);
+            // 清空 file input，以便使用者能重複上傳同一個檔案
+            e.target.value = '';
+        }
     });
 
     const dropZone = document.getElementById('dropZone');
@@ -236,6 +263,7 @@
             const fileExtension = file.name.split('.').pop().toLowerCase();
             
             if (validExtensions.includes(fileExtension)) {
+                handleSchoolNamePrompt();
                 processFile(file);
             } else {
                 alert("請上傳正確的 Excel (.xlsx) 或 CSV 檔案格式！");
@@ -253,7 +281,7 @@
         const rows = data.slice(1);
         let results = [];
         let radarScores = [];
-        let allValidQuestions = []; // 儲存所有有效題目以供排行
+        let allValidQuestions = [];
 
         document.getElementById('dims-page-1').innerHTML = '';
         document.getElementById('dims-page-2').innerHTML = '';
@@ -290,7 +318,7 @@
                 let qAvg = 0;
                 let sum = 0;
                 let count = 0;
-                let scoreCounts = {1:0, 2:0, 3:0, 4:0, 5:0}; // 記錄各分數筆數
+                let scoreCounts = {1:0, 2:0, 3:0, 4:0, 5:0};
                 
                 if (colIndex !== undefined && colIndex !== -1) {
                     rows.forEach(row => {
@@ -306,7 +334,6 @@
                         dimTotalScore += sum;
                         dimValidCount += count;
                         
-                        // 計算低分細節
                         let lowCount = scoreCounts[1] + scoreCounts[2];
                         let lowPct = ((lowCount / count) * 100).toFixed(1);
 
@@ -348,13 +375,12 @@
             renderDimensionGroup(dim.name, dimAvg, questionsData, dimIndex);
         });
 
-        // 處理前三名與後三名邏輯
         let sortedQuestions = [...allValidQuestions].sort((a, b) => b.score - a.score);
         let top3 = sortedQuestions.slice(0, 3);
         let bottom3 = [...allValidQuestions].sort((a, b) => a.score - b.score).slice(0, 3);
         renderRankings(top3, bottom3);
 
-        // 顯示園所名稱邏輯
+        // 初始化顯示園所名稱
         const schoolInput = document.getElementById('schoolNameInput').value.trim();
         const displaySchool = document.getElementById('displaySchoolName');
         if (schoolInput) {
@@ -390,7 +416,6 @@
         let qHtml = questionsData.map(q => {
             let lowScoreLabel = "";
             if(q.hasData) {
-                // 若有 1 分或 2 分的資料，則標示出來
                 if(q.score1Count > 0 || q.score2Count > 0) {
                     lowScoreLabel = `
                         <div class="mt-1 text-xs bg-red-50 text-red-600 px-2 py-1 rounded inline-block border border-red-100">
@@ -463,9 +488,9 @@
                         angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
                         grid: { color: 'rgba(0, 0, 0, 0.1)' },
                         pointLabels: { font: { size: 14, weight: 'bold' }, color: '#374151' },
-                        min: 3,         // 固定下限 3
-                        max: 5,         // 固定上限 5
-                        ticks: { stepSize: 0.5 } // 固定間距 0.5
+                        min: 3,         
+                        max: 5,         
+                        ticks: { stepSize: 0.5 } 
                     }
                 },
                 plugins: { legend: { display: false } }
@@ -473,7 +498,19 @@
         });
     }
 
-    function openExportModal() { document.getElementById('exportModal').classList.remove('hidden'); }
+    function openExportModal() { 
+        // 點擊匯出前再次確認確保最新的園所名稱有被抓到
+        const schoolInput = document.getElementById('schoolNameInput').value.trim();
+        const displaySchool = document.getElementById('displaySchoolName');
+        if (schoolInput) {
+            displaySchool.textContent = schoolInput;
+            displaySchool.classList.remove('hidden');
+        } else {
+            displaySchool.classList.add('hidden');
+        }
+        
+        document.getElementById('exportModal').classList.remove('hidden'); 
+    }
     function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
 
     function executeExport(type) {
@@ -495,7 +532,6 @@
         const scoresSection1 = document.getElementById('section-scores-1');
         const scoresSection2 = document.getElementById('section-scores-2');
 
-        // 預設全展開以準備處理
         radarSection.classList.remove('hidden');
         rankingSection.classList.remove('hidden');
         scoresSection1.classList.remove('hidden');
@@ -505,7 +541,6 @@
         scoresSection2.classList.remove('pdf-page-break');
         scoresSection2.classList.add('mt-8');
 
-        // 根據勾選隱藏區塊
         if (!showRadar) radarSection.classList.add('hidden');
         if (!showRanking) rankingSection.classList.add('hidden');
         if (!showScores) {
@@ -513,7 +548,6 @@
             scoresSection2.classList.add('hidden');
         }
 
-        // 處理 PDF 換頁邏輯 (簡化處理：若有各構面分數，為確保版面通常在此斷頁)
         if (type === 'pdf') {
             if (showScores && (showRadar || showRanking)) {
                 scoresSection1.classList.add('pdf-page-break');
@@ -561,7 +595,6 @@
 
     function downloadCSV() {
         if (globalResults.length === 0) return;
-        // 加入新的 CSV 標頭，注意換行符號需在同一行以避免字串未結束錯誤
         let csvContent = "\uFEFF構面名稱,構面平均得分,題號,題目內容,逐題平均得分,1分回覆筆數,2分回覆筆數,低分(1-2分)佔比(%)\n";
         
         globalResults.forEach(dim => {
