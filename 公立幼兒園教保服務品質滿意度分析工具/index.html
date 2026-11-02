@@ -30,6 +30,11 @@
     <div class="bg-white p-6 rounded-lg shadow-md text-center">
         <h1 class="text-2xl font-bold text-gray-800 mb-4">教保服務品質滿意度 (25題核心版) 自動分析工具</h1>
         
+        <!-- 園所名稱輸入框 -->
+        <div class="mb-5">
+            <input type="text" id="schoolNameInput" placeholder="請先輸入園所名稱 (選填，將顯示於報表上方)" class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+        </div>
+
         <!-- 拖曳上傳區塊 -->
         <div id="dropZone" class="border-2 border-dashed border-gray-300 bg-gray-50 transition-colors rounded-lg p-10 flex flex-col items-center justify-center">
             <svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -57,7 +62,10 @@
     <!-- 報表預覽區塊 -->
     <div id="reportContainer" class="bg-white p-8 rounded-lg shadow-md hidden">
         <div id="exportContent" class="bg-white">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8" id="reportTitle">服務品質滿意度分析報告</h2>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8" id="reportTitle">
+                <span id="displaySchoolName" class="block text-2xl text-gray-600 mb-2 font-semibold hidden"></span>
+                服務品質滿意度分析報告
+            </h2>
             
             <!-- ================= 區塊 1：雷達圖 ================= -->
             <div id="section-radar" class="mb-10 flex justify-center items-center flex-col">
@@ -346,6 +354,16 @@
         let bottom3 = [...allValidQuestions].sort((a, b) => a.score - b.score).slice(0, 3);
         renderRankings(top3, bottom3);
 
+        // 顯示園所名稱邏輯
+        const schoolInput = document.getElementById('schoolNameInput').value.trim();
+        const displaySchool = document.getElementById('displaySchoolName');
+        if (schoolInput) {
+            displaySchool.textContent = schoolInput;
+            displaySchool.classList.remove('hidden');
+        } else {
+            displaySchool.classList.add('hidden');
+        }
+
         globalResults = results;
         document.getElementById('reportContainer').classList.remove('hidden');
         document.getElementById('actionArea').classList.remove('hidden');
@@ -543,7 +561,7 @@
 
     function downloadCSV() {
         if (globalResults.length === 0) return;
-        // 加入新的 CSV 標頭，\n 必須與字串在同一行
+        // 加入新的 CSV 標頭，注意換行符號需在同一行以避免字串未結束錯誤
         let csvContent = "\uFEFF構面名稱,構面平均得分,題號,題目內容,逐題平均得分,1分回覆筆數,2分回覆筆數,低分(1-2分)佔比(%)\n";
         
         globalResults.forEach(dim => {
@@ -551,7 +569,6 @@
                 let s1 = q.hasData ? q.score1Count : 0;
                 let s2 = q.hasData ? q.score2Count : 0;
                 let lowPct = q.hasData ? q.lowPct : 0;
-                // \n 必須與字串在同一行
                 csvContent += `${dim.dimension},${dim.avg},Q${q.qNum},"${q.text}",${q.score},${s1},${s2},${lowPct}%\n`;
             });
         });
