@@ -79,7 +79,7 @@
                     </div>
                     <div class="bg-red-50 p-4 rounded-lg border border-red-200">
                         <h4 class="text-md font-bold text-red-800 mb-3 flex items-center">
-                            <span class="mr-2">⚠️</span> 滿意度最低後三題
+                            <span class="mr-2">⚠️</span> 滿意度最需關注項目
                         </h4>
                         <ul id="bottom-3-list" class="space-y-3"></ul>
                     </div>
@@ -365,7 +365,7 @@
         `;
 
         document.getElementById('top-3-list').innerHTML = top3.map((q, i) => createListItem(q, `Top ${i+1}`, 'green')).join('');
-        document.getElementById('bottom-3-list').innerHTML = bottom3.map((q, i) => createListItem(q, `倒數 ${i+1}`, 'red')).join('');
+        document.getElementById('bottom-3-list').innerHTML = bottom3.map((q, i) => createListItem(q, `${i+1}`, 'red')).join('');
     }
 
     function renderDimensionGroup(dimName, dimAvg, questionsData, dimIndex) {
@@ -543,7 +543,7 @@
 
     function downloadCSV() {
         if (globalResults.length === 0) return;
-        // 加入新的 CSV 標頭
+        // 加入新的 CSV 標頭，\n 必須與字串在同一行
         let csvContent = "\uFEFF構面名稱,構面平均得分,題號,題目內容,逐題平均得分,1分回覆筆數,2分回覆筆數,低分(1-2分)佔比(%)\n";
         
         globalResults.forEach(dim => {
@@ -551,6 +551,7 @@
                 let s1 = q.hasData ? q.score1Count : 0;
                 let s2 = q.hasData ? q.score2Count : 0;
                 let lowPct = q.hasData ? q.lowPct : 0;
+                // \n 必須與字串在同一行
                 csvContent += `${dim.dimension},${dim.avg},Q${q.qNum},"${q.text}",${q.score},${s1},${s2},${lowPct}%\n`;
             });
         });
